@@ -11,8 +11,8 @@ final class SyncManager {
         static let calculationMethod = "sync_calculationMethod"
         static let asrMethod = "sync_asrMethod"
         static let highLatitudeRule = "sync_highLatitudeRule"
+        static let tahajjudMode = "sync_tahajjudNotificationMode"
         static let fajrMode = "sync_fajrNotificationMode"
-        static let sunriseMode = "sync_sunriseNotificationMode"
         static let dhuhrMode = "sync_dhuhrNotificationMode"
         static let asrMode = "sync_asrNotificationMode"
         static let maghribMode = "sync_maghribNotificationMode"
@@ -42,8 +42,8 @@ final class SyncManager {
         store.set(preferences.calculationMethodRawValue, forKey: SyncKeys.calculationMethod)
         store.set(preferences.asrJuristicMethodRawValue, forKey: SyncKeys.asrMethod)
         store.set(preferences.highLatitudeRuleRawValue, forKey: SyncKeys.highLatitudeRule)
+        store.set(preferences.tahajjudNotificationMode, forKey: SyncKeys.tahajjudMode)
         store.set(preferences.fajrNotificationMode, forKey: SyncKeys.fajrMode)
-        store.set(preferences.sunriseNotificationMode, forKey: SyncKeys.sunriseMode)
         store.set(preferences.dhuhrNotificationMode, forKey: SyncKeys.dhuhrMode)
         store.set(preferences.asrNotificationMode, forKey: SyncKeys.asrMode)
         store.set(preferences.maghribNotificationMode, forKey: SyncKeys.maghribMode)
@@ -66,11 +66,11 @@ final class SyncManager {
         if let rule = store.string(forKey: SyncKeys.highLatitudeRule), !rule.isEmpty {
             preferences.highLatitudeRuleRawValue = rule
         }
+        if let mode = store.string(forKey: SyncKeys.tahajjudMode), !mode.isEmpty {
+            preferences.tahajjudNotificationMode = mode
+        }
         if let mode = store.string(forKey: SyncKeys.fajrMode), !mode.isEmpty {
             preferences.fajrNotificationMode = mode
-        }
-        if let mode = store.string(forKey: SyncKeys.sunriseMode), !mode.isEmpty {
-            preferences.sunriseNotificationMode = mode
         }
         if let mode = store.string(forKey: SyncKeys.dhuhrMode), !mode.isEmpty {
             preferences.dhuhrNotificationMode = mode

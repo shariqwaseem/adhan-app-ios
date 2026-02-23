@@ -9,18 +9,15 @@ struct HomeView: View {
                 TimeOfDayBackground(prayerEntries: viewModel.prayerEntries)
 
                 ScrollView {
-                    VStack(spacing: 16) {
-                        headerSection
-                            .glassCard()
-                        ramadanSection
+                    VStack(spacing: 12) {
                         countdownSection
-                            .glassCard()
                         prayerListSection
                     }
-                    .padding()
+                    .padding(.horizontal)
+                    .padding(.top, 4)
                 }
             }
-            .navigationTitle("Home")
+            .navigationTitle(viewModel.cityName.isEmpty ? "Adhan" : viewModel.cityName)
             .toolbarColorScheme(.dark, for: .navigationBar)
             .onAppear {
                 viewModel.calculateToday()
@@ -28,64 +25,35 @@ struct HomeView: View {
         }
     }
 
-    // MARK: - Header
-
-    private var headerSection: some View {
-        VStack(spacing: 4) {
-            HStack {
-                Image(systemName: "location.fill")
-                    .font(.caption)
-                Text(viewModel.cityName)
-                    .font(.subheadline.weight(.medium))
-            }
-
-            Text(viewModel.hijriDate)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-        }
-    }
-
     // MARK: - Countdown
 
+    @ViewBuilder
     private var countdownSection: some View {
-        Group {
-            if let next = viewModel.nextPrayer {
-                VStack(spacing: 8) {
-                    Text(next.prayer.localizedName)
-                        .font(.title3.weight(.medium))
-                        .foregroundStyle(.secondary)
-
-                    TimelineView(.periodic(from: .now, by: 1.0)) { context in
-                        let remaining = next.adjustedTime.timeIntervalSince(context.date)
+        if let next = viewModel.nextPrayer {
+            HStack {
+                TimelineView(.periodic(from: .now, by: 1.0)) { context in
+                    let remaining = next.adjustedTime.timeIntervalSince(context.date)
+                    VStack(alignment: .leading, spacing: 2) {
                         if remaining > 0 {
                             Text(formattedCountdown(remaining))
-                                .font(.system(size: 48, weight: .bold, design: .rounded))
+                                .font(.system(size: 52, weight: .bold, design: .rounded))
                                 .monospacedDigit()
                                 .contentTransition(.numericText())
+                            Text("till \(next.prayer.localizedName)")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
                         } else {
-                            Text("Now")
-                                .font(.system(size: 48, weight: .bold, design: .rounded))
+                            Text(next.prayer.localizedName)
+                                .font(.system(size: 52, weight: .bold, design: .rounded))
+                            Text("now")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
                         }
                     }
-
-                    Text(next.adjustedTime, style: .time)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
                 }
+                Spacer()
             }
-        }
-    }
-
-    // MARK: - Ramadan
-
-    @ViewBuilder
-    private var ramadanSection: some View {
-        let ramadanService = RamadanDetectionService()
-        let fajr = viewModel.prayerEntries.first(where: { $0.prayer == .fajr })
-        let maghrib = viewModel.prayerEntries.first(where: { $0.prayer == .maghrib })
-        if let fajr, let maghrib,
-           let info = ramadanService.ramadanInfo(fajrTime: fajr.adjustedTime, maghribTime: maghrib.adjustedTime) {
-            RamadanBanner(ramadanInfo: info)
+            .glassCard()
         }
     }
 
@@ -101,7 +69,7 @@ struct HomeView: View {
                 }
             }
         }
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .glassEffect(.regular, in: .rect(cornerRadius: 20))
     }
 
     // MARK: - Helpers
@@ -112,9 +80,9 @@ struct HomeView: View {
         let minutes = (total % 3600) / 60
         let seconds = total % 60
         if hours > 0 {
-            return String(format: "%d:%02d:%02d", hours, minutes, seconds)
+            return "\(hours)h \(minutes)m \(seconds)s"
         }
-        return String(format: "%02d:%02d", minutes, seconds)
+        return "\(minutes)m \(seconds)s"
     }
 }
 
@@ -141,7 +109,6 @@ struct PrayerRow: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
-        .background(entry.isNext ? Color.accentColor.opacity(0.1) : .clear)
     }
 }
 

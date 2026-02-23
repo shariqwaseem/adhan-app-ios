@@ -47,13 +47,6 @@ final class NotificationScheduler {
                 case .silent:
                     continue
 
-                case .vibrate:
-                    let request = createNotificationRequest(for: entry, mode: .vibrate)
-                    do {
-                        try await center.add(request)
-                        scheduledCount += 1
-                    } catch { continue }
-
                 case .notification:
                     let request = createNotificationRequest(for: entry, mode: .notification)
                     do {
@@ -73,18 +66,48 @@ final class NotificationScheduler {
                     } catch { continue }
                 }
 
-                // Pre-reminder (for non-silent, non-alarm modes)
-                if mode == .vibrate || mode == .notification {
-                    let preMinutes = preReminderMinutes(for: entry.prayer, preferences: preferences)
-                    if preMinutes > 0, scheduledCount < maxNotifications {
-                        if let preRequest = createPreReminderRequest(for: entry, minutesBefore: preMinutes) {
-                            do {
-                                try await center.add(preRequest)
-                                scheduledCount += 1
-                            } catch { continue }
-                        }
-                    }
-                }
+            }
+        }
+    }
+
+    // MARK: - Test Fire
+
+    /// Fire a test notification/alarm in 5 seconds based on the given mode.
+    func fireTest(mode: PrayerNotificationMode) async -> String {
+        switch mode {
+        case .silent:
+            return "Silent mode — nothing to fire"
+
+        case .notification:
+            let content = UNMutableNotificationContent()
+            content.title = "Test Prayer"
+            content.body = "This is a test notification with sound"
+            content.sound = .default
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+            let request = UNNotificationRequest(identifier: "test_notif_\(Date().timeIntervalSince1970)", content: content, trigger: trigger)
+            do {
+                try await UNUserNotificationCenter.current().add(request)
+                return "Notification scheduled — fires in 5s"
+            } catch {
+                return "Error: \(error.localizedDescription)"
+            }
+
+        case .alarm:
+            // Request authorization first
+            await alarmManager.requestAuthorization()
+            guard alarmManager.isAuthorized else {
+                return "Alarm not authorized. Auth state: \(alarmManager.authError ?? "denied"). Check Settings > Apps > Athan."
+            }
+            let testTime = Date().addingTimeInterval(5)
+            do {
+                try await alarmManager.scheduleAlarm(
+                    for: .fajr,
+                    at: testTime,
+                    offsetMinutes: 0
+                )
+                return "Alarm scheduled — fires in 5s"
+            } catch {
+                return "Alarm error: \(error.localizedDescription)"
             }
         }
     }
@@ -105,8 +128,6 @@ final class NotificationScheduler {
         switch mode {
         case .notification:
             content.sound = .default
-        case .vibrate:
-            content.sound = nil
         case .silent, .alarm:
             break
         }
@@ -123,34 +144,6 @@ final class NotificationScheduler {
         return UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
     }
 
-    private func createPreReminderRequest(
-        for entry: PrayerTimeEntry,
-        minutesBefore: Int
-    ) -> UNNotificationRequest? {
-        guard let reminderTime = Calendar.current.date(byAdding: .minute, value: -minutesBefore, to: entry.adjustedTime),
-              reminderTime > Date() else { return nil }
-
-        let content = UNMutableNotificationContent()
-        content.title = String(
-            localized: "\(entry.prayer.localizedName) in \(minutesBefore) minutes"
-        )
-        content.body = String(
-            localized: "Prepare for \(entry.prayer.localizedName) prayer"
-        )
-        content.sound = .default
-        content.categoryIdentifier = "PRAYER_REMINDER"
-
-        let dateComponents = Calendar.current.dateComponents(
-            [.year, .month, .day, .hour, .minute, .second],
-            from: reminderTime
-        )
-        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-
-        let dateString = formatDateForId(entry.adjustedTime)
-        let identifier = "\(entry.prayer.rawValue)_\(dateString)_reminder"
-
-        return UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
-    }
 
     // MARK: - Preference Helpers
 
@@ -158,8 +151,8 @@ final class NotificationScheduler {
         guard let prefs = preferences else { return .notification }
         let raw: String
         switch prayer {
+        case .tahajjud: raw = prefs.tahajjudNotificationMode
         case .fajr: raw = prefs.fajrNotificationMode
-        case .sunrise: raw = prefs.sunriseNotificationMode
         case .dhuhr: raw = prefs.dhuhrNotificationMode
         case .asr: raw = prefs.asrNotificationMode
         case .maghrib: raw = prefs.maghribNotificationMode
@@ -171,24 +164,12 @@ final class NotificationScheduler {
     private func alarmOffset(for prayer: PrayerName, preferences: UserPreferences?) -> Int {
         guard let prefs = preferences else { return 0 }
         switch prayer {
+        case .tahajjud: return prefs.tahajjudAlarmOffset
         case .fajr: return prefs.fajrAlarmOffset
-        case .sunrise: return 0
         case .dhuhr: return prefs.dhuhrAlarmOffset
         case .asr: return prefs.asrAlarmOffset
         case .maghrib: return prefs.maghribAlarmOffset
         case .isha: return prefs.ishaAlarmOffset
-        }
-    }
-
-    private func preReminderMinutes(for prayer: PrayerName, preferences: UserPreferences?) -> Int {
-        guard let prefs = preferences else { return 0 }
-        switch prayer {
-        case .fajr: return prefs.fajrPreReminder
-        case .sunrise: return 0
-        case .dhuhr: return prefs.dhuhrPreReminder
-        case .asr: return prefs.asrPreReminder
-        case .maghrib: return prefs.maghribPreReminder
-        case .isha: return prefs.ishaPreReminder
         }
     }
 

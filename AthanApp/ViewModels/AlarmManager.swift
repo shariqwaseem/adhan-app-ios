@@ -6,6 +6,7 @@ import AlarmKit
 @MainActor
 final class AthanAlarmManager {
     var isAuthorized: Bool = false
+    var authError: String? = nil
     var scheduledAlarmIDs: [String: UUID] = [:]  // prayerName -> alarm UUID
 
     nonisolated(unsafe) private let manager = AlarmKit.AlarmManager.shared
@@ -14,8 +15,12 @@ final class AthanAlarmManager {
         do {
             let state = try await manager.requestAuthorization()
             isAuthorized = state == .authorized
+            if !isAuthorized {
+                authError = "Alarm permission denied. Go to Settings > Apps > Athan to enable."
+            }
         } catch {
             isAuthorized = false
+            authError = "Alarm auth error: \(error.localizedDescription)"
         }
     }
 
@@ -29,6 +34,14 @@ final class AthanAlarmManager {
         at prayerTime: Date,
         offsetMinutes: Int = 0
     ) async throws {
+        // Ensure authorized first
+        if !isAuthorized {
+            await requestAuthorization()
+        }
+        guard isAuthorized else {
+            throw AlarmScheduleError.notAuthorized(authError ?? "Alarm permission not granted")
+        }
+
         let alarmTime: Date
         if offsetMinutes > 0 {
             alarmTime = Calendar.current.date(byAdding: .minute, value: -offsetMinutes, to: prayerTime) ?? prayerTime
@@ -91,5 +104,15 @@ final class AthanAlarmManager {
     /// Get the current list of active alarms from AlarmKit.
     func activeAlarms() -> [Alarm] {
         (try? manager.alarms) ?? []
+    }
+}
+
+enum AlarmScheduleError: LocalizedError {
+    case notAuthorized(String)
+
+    var errorDescription: String? {
+        switch self {
+        case .notAuthorized(let msg): return msg
+        }
     }
 }

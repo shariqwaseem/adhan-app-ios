@@ -7,7 +7,7 @@ import Observation
 final class LocationManager: NSObject {
     var latitude: Double = 0
     var longitude: Double = 0
-    var cityName: String = "Unknown"
+    var cityName: String = "Set Location"
     var countryCode: String? = nil
     var authorizationStatus: CLAuthorizationStatus = .notDetermined
     var isAuthorized: Bool = false

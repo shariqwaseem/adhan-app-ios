@@ -3,7 +3,8 @@ import SwiftData
 
 struct SettingsView: View {
     @Environment(PrayerTimesViewModel.self) private var viewModel
-    @Environment(LocationManager.self) private var locationManager
+    @Environment(NotificationScheduler.self) private var scheduler
+    @Query private var preferences: [UserPreferences]
 
     var body: some View {
         NavigationStack {
@@ -12,27 +13,32 @@ struct SettingsView: View {
                     NavigationLink {
                         LocationSettings()
                     } label: {
-                        LabeledContent("City", value: locationManager.cityName)
+                        LabeledContent("City", value: viewModel.cityName.isEmpty ? "Not Set" : viewModel.cityName)
                     }
                 }
 
                 Section("Prayer Calculation") {
-                    LabeledContent("Method", value: viewModel.calculationMethod.rawValue)
-                    LabeledContent("Asr", value: viewModel.asrMethod.rawValue)
-                }
-
-                Section("Ramadan") {
-                    LabeledContent("Status") {
-                        let hijri = HijriDateService()
-                        if hijri.isRamadan(on: Date()) {
-                            if let day = hijri.ramadanDay(on: Date()) {
-                                Text("Day \(day)")
-                            }
-                        } else {
-                            Text("Not Ramadan")
-                                .foregroundStyle(.secondary)
+                    @Bindable var vm = viewModel
+                    Picker("Method", selection: $vm.calculationMethod) {
+                        ForEach(CalculationMethodInfo.allCases) { method in
+                            Text(method.rawValue).tag(method)
                         }
                     }
+                    .pickerStyle(.navigationLink)
+
+                    Picker("Asr Calculation", selection: $vm.asrMethod) {
+                        ForEach(AsrJuristicMethod.allCases) { method in
+                            Text(method.rawValue).tag(method)
+                        }
+                    }
+                    .pickerStyle(.navigationLink)
+
+                    Picker("High Latitude", selection: $vm.highLatitudeRule) {
+                        ForEach(HighLatitudeRuleOption.allCases) { rule in
+                            Text(rule.rawValue).tag(rule)
+                        }
+                    }
+                    .pickerStyle(.navigationLink)
                 }
 
                 Section("About") {
@@ -41,6 +47,27 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle("Settings")
+            .onChange(of: viewModel.calculationMethod) { _, _ in
+                viewModel.recalculate()
+                reschedule()
+            }
+            .onChange(of: viewModel.asrMethod) { _, _ in
+                viewModel.recalculate()
+                reschedule()
+            }
+            .onChange(of: viewModel.highLatitudeRule) { _, _ in
+                viewModel.recalculate()
+                reschedule()
+            }
+        }
+    }
+
+    private func reschedule() {
+        Task {
+            await scheduler.rescheduleAll(
+                prayerEntries: viewModel.multiDayTimes(),
+                preferences: preferences.first
+            )
         }
     }
 }
@@ -49,4 +76,5 @@ struct SettingsView: View {
     SettingsView()
         .environment(PrayerTimesViewModel())
         .environment(LocationManager())
+        .environment(NotificationScheduler())
 }

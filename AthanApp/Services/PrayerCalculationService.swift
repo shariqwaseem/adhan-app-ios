@@ -56,9 +56,28 @@ struct PrayerCalculationService: PrayerCalculationServiceProtocol {
 
         let now = Date()
 
+        // Calculate Tahajjud: last third of the night between previous Isha and today's Fajr
+        let tahajjudTime: Date = {
+            let fajr = prayerTimes.fajr
+            // Get yesterday's Isha for the night calculation
+            let cal = Calendar.current
+            if let yesterday = cal.date(byAdding: .day, value: -1, to: date) {
+                let yComponents = cal.dateComponents([.year, .month, .day], from: yesterday)
+                let yDateComponents = DateComponents(calendar: cal, year: yComponents.year, month: yComponents.month, day: yComponents.day)
+                if let yesterdayPrayers = PrayerTimes(coordinates: coordinates, date: yDateComponents, calculationParameters: params) {
+                    let isha = yesterdayPrayers.isha
+                    let nightDuration = fajr.timeIntervalSince(isha)
+                    // Last third of the night = Isha + (2/3 of night duration)
+                    return isha.addingTimeInterval(nightDuration * 2.0 / 3.0)
+                }
+            }
+            // Fallback: estimate last third as 2 hours before Fajr
+            return fajr.addingTimeInterval(-2 * 3600)
+        }()
+
         var entries = [
+            PrayerTimeEntry(prayer: .tahajjud, time: tahajjudTime, manualAdjustmentMinutes: adjustments[.tahajjud] ?? 0),
             PrayerTimeEntry(prayer: .fajr, time: prayerTimes.fajr, manualAdjustmentMinutes: adjustments[.fajr] ?? 0),
-            PrayerTimeEntry(prayer: .sunrise, time: prayerTimes.sunrise, manualAdjustmentMinutes: adjustments[.sunrise] ?? 0),
             PrayerTimeEntry(prayer: .dhuhr, time: prayerTimes.dhuhr, manualAdjustmentMinutes: adjustments[.dhuhr] ?? 0),
             PrayerTimeEntry(prayer: .asr, time: prayerTimes.asr, manualAdjustmentMinutes: adjustments[.asr] ?? 0),
             PrayerTimeEntry(prayer: .maghrib, time: prayerTimes.maghrib, manualAdjustmentMinutes: adjustments[.maghrib] ?? 0),

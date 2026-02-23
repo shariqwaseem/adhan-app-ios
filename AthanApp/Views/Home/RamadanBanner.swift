@@ -58,14 +58,7 @@ struct RamadanBanner: View {
             }
         }
         .padding()
-        .background(
-            .ultraThinMaterial.opacity(0.9),
-            in: RoundedRectangle(cornerRadius: 16)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .strokeBorder(.yellow.opacity(0.3), lineWidth: 1)
-        )
+        .glassEffect(.regular, in: .rect(cornerRadius: 20))
     }
 
     private func formattedTime(_ interval: TimeInterval) -> String {

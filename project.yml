@@ -30,7 +30,7 @@ targets:
       - path: AthanApp
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.athanapp.app
+        PRODUCT_BUNDLE_IDENTIFIER: com.shariqwaseem.athanapp
         INFOPLIST_FILE: AthanApp/Info.plist
         CODE_SIGN_ENTITLEMENTS: AthanApp/AthanApp.entitlements
         PRODUCT_NAME: Athan
@@ -55,13 +55,15 @@ targets:
       - path: AthanWidgets
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.athanapp.app.widgets
+        PRODUCT_BUNDLE_IDENTIFIER: com.shariqwaseem.athanapp.widgets
         INFOPLIST_FILE: AthanWidgets/Info.plist
         CODE_SIGN_ENTITLEMENTS: AthanWidgets/AthanWidgets.entitlements
         PRODUCT_NAME: AthanWidgets
         MARKETING_VERSION: "1.0.0"
         CURRENT_PROJECT_VERSION: "1"
         GENERATE_INFOPLIST_FILE: false
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: "Apple Development"
     dependencies:
       - package: Adhan
 
@@ -73,7 +75,7 @@ targets:
       - path: AthanAppTests
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.athanapp.tests
+        PRODUCT_BUNDLE_IDENTIFIER: com.shariqwaseem.athanapp.tests
         GENERATE_INFOPLIST_FILE: true
         TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Athan.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Athan"
         BUNDLE_LOADER: "$(TEST_HOST)"
@@ -88,7 +90,7 @@ targets:
       - path: AthanAppUITests
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.athanapp.uitests
+        PRODUCT_BUNDLE_IDENTIFIER: com.shariqwaseem.athanapp.uitests
         GENERATE_INFOPLIST_FILE: true
     dependencies:
       - target: AthanApp

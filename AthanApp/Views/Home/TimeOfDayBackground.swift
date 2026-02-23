@@ -4,31 +4,33 @@ struct TimeOfDayBackground: View {
     let prayerEntries: [PrayerTimeEntry]
 
     var body: some View {
-        TimelineView(.periodic(from: .now, by: 60)) { context in
-            let phase = currentPhase(at: context.date)
-            LinearGradient(
-                colors: phase.colors,
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .ignoresSafeArea()
-            .animation(.easeInOut(duration: 2), value: phase.name)
-        }
+        let phase = currentPhase(at: Date())
+        LinearGradient(
+            colors: phase.colors,
+            startPoint: .top,
+            endPoint: .bottom
+        )
+        .ignoresSafeArea()
     }
 
     private func currentPhase(at date: Date) -> TimePhase {
         guard !prayerEntries.isEmpty else { return .night }
 
         let fajr = prayerEntries.first(where: { $0.prayer == .fajr })?.adjustedTime
-        let sunrise = prayerEntries.first(where: { $0.prayer == .sunrise })?.adjustedTime
         let dhuhr = prayerEntries.first(where: { $0.prayer == .dhuhr })?.adjustedTime
         let asr = prayerEntries.first(where: { $0.prayer == .asr })?.adjustedTime
         let maghrib = prayerEntries.first(where: { $0.prayer == .maghrib })?.adjustedTime
         let isha = prayerEntries.first(where: { $0.prayer == .isha })?.adjustedTime
 
+        // Estimate sunrise as midpoint between fajr and dhuhr
+        let estimatedSunrise: Date? = {
+            guard let f = fajr, let d = dhuhr else { return nil }
+            return f.addingTimeInterval((d.timeIntervalSince(f)) * 0.3)
+        }()
+
         if let fajr, date < fajr {
             return .preFajr
-        } else if let sunrise, date < sunrise {
+        } else if let estimatedSunrise, date < estimatedSunrise {
             return .dawn
         } else if let dhuhr, date < dhuhr {
             return .morning

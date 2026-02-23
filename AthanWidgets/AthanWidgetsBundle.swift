@@ -106,8 +106,22 @@ struct PrayerTimelineProvider: TimelineProvider {
             return nil
         }
 
-        let names = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"]
-        let times = [prayerTimes.fajr, prayerTimes.sunrise, prayerTimes.dhuhr, prayerTimes.asr, prayerTimes.maghrib, prayerTimes.isha]
+        // Calculate Tahajjud: last third of the night
+        let tahajjudTime: Date = {
+            let cal = Calendar.current
+            if let yesterday = cal.date(byAdding: .day, value: -1, to: now) {
+                let yComps = cal.dateComponents([.year, .month, .day], from: yesterday)
+                let yDateComps = DateComponents(calendar: cal, year: yComps.year, month: yComps.month, day: yComps.day)
+                if let yPrayers = PrayerTimes(coordinates: coordinates, date: yDateComps, calculationParameters: params) {
+                    let nightDuration = prayerTimes.fajr.timeIntervalSince(yPrayers.isha)
+                    return yPrayers.isha.addingTimeInterval(nightDuration * 2.0 / 3.0)
+                }
+            }
+            return prayerTimes.fajr.addingTimeInterval(-2 * 3600)
+        }()
+
+        let names = ["Tahajjud", "Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"]
+        let times = [tahajjudTime, prayerTimes.fajr, prayerTimes.dhuhr, prayerTimes.asr, prayerTimes.maghrib, prayerTimes.isha]
 
         var prayers: [(name: String, time: Date, isNext: Bool)] = []
         var foundNext = false
@@ -143,8 +157,8 @@ struct PrayerTimelineProvider: TimelineProvider {
         return PrayerWidgetEntry(
             date: now,
             prayers: [
+                ("Tahajjud", cal.date(bySettingHour: 3, minute: 30, second: 0, of: now)!, false),
                 ("Fajr", cal.date(bySettingHour: 5, minute: 15, second: 0, of: now)!, false),
-                ("Sunrise", cal.date(bySettingHour: 6, minute: 30, second: 0, of: now)!, false),
                 ("Dhuhr", cal.date(bySettingHour: 12, minute: 30, second: 0, of: now)!, false),
                 ("Asr", cal.date(bySettingHour: 15, minute: 45, second: 0, of: now)!, false),
                 ("Maghrib", cal.date(bySettingHour: 18, minute: 42, second: 0, of: now)!, true),
@@ -354,8 +368,8 @@ struct PrayerWidgetEntryView: View {
 
     private func iconFor(_ name: String) -> String {
         switch name {
+        case "Tahajjud": return "moon.zzz.fill"
         case "Fajr": return "sun.horizon.fill"
-        case "Sunrise": return "sunrise.fill"
         case "Dhuhr": return "sun.max.fill"
         case "Asr": return "sun.min.fill"
         case "Maghrib": return "sunset.fill"

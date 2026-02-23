@@ -3,64 +3,72 @@ import SwiftUI
 struct LocationSettings: View {
     @Environment(LocationManager.self) private var locationManager
     @Environment(PrayerTimesViewModel.self) private var viewModel
+    @Environment(\.dismiss) private var dismiss
     @State private var searchText = ""
     @State private var searchResults: [(name: String, latitude: Double, longitude: Double, countryCode: String?)] = []
     @State private var isSearching = false
+    @State private var searchTask: Task<Void, Never>?
 
     var body: some View {
         List {
-            Section("Current Location") {
-                if locationManager.isAuthorized {
-                    LabeledContent("City", value: locationManager.cityName)
-                    LabeledContent("Coordinates") {
-                        Text("\(locationManager.latitude, specifier: "%.4f"), \(locationManager.longitude, specifier: "%.4f")")
-                            .font(.caption)
-                    }
-                    Button("Refresh Location") {
-                        locationManager.requestLocation()
-                    }
-                } else {
-                    Button("Enable Location Services") {
-                        locationManager.requestWhenInUsePermission()
-                    }
+            Section {
+                Button {
+                    locationManager.requestLocation()
+                    dismiss()
+                } label: {
+                    Label("Use Current Location", systemImage: "location.fill")
                 }
-
-                if let error = locationManager.locationError {
-                    Text(error)
-                        .font(.caption)
-                        .foregroundStyle(.red)
+            } footer: {
+                if viewModel.cityName.isEmpty == false {
+                    Text("Currently set to \(viewModel.cityName)")
                 }
             }
 
             Section("Search City") {
-                TextField("City name", text: $searchText)
+                TextField("Type a city name...", text: $searchText)
                     .textContentType(.addressCity)
-                    .onSubmit {
-                        performSearch()
-                    }
+                    .autocorrectionDisabled()
 
                 if isSearching {
-                    ProgressView()
+                    HStack {
+                        Spacer()
+                        ProgressView()
+                        Spacer()
+                    }
                 }
 
                 ForEach(Array(searchResults.enumerated()), id: \.offset) { _, result in
                     Button {
                         selectCity(result)
                     } label: {
-                        Text(result.name)
+                        Label {
+                            Text(result.name)
+                                .foregroundStyle(.primary)
+                        } icon: {
+                            Image(systemName: "mappin.circle.fill")
+                                .foregroundStyle(.secondary)
+                        }
                     }
                 }
             }
         }
         .navigationTitle("Location")
-    }
-
-    private func performSearch() {
-        guard !searchText.isEmpty else { return }
-        isSearching = true
-        Task {
-            searchResults = await locationManager.searchCity(searchText)
-            isSearching = false
+        .onChange(of: searchText) { _, newValue in
+            searchTask?.cancel()
+            let trimmed = newValue.trimmingCharacters(in: .whitespaces)
+            guard trimmed.count >= 2 else {
+                searchResults = []
+                return
+            }
+            searchTask = Task {
+                try? await Task.sleep(for: .milliseconds(400))
+                guard !Task.isCancelled else { return }
+                isSearching = true
+                let results = await locationManager.searchCity(trimmed)
+                guard !Task.isCancelled else { return }
+                searchResults = results
+                isSearching = false
+            }
         }
     }
 
@@ -71,7 +79,6 @@ struct LocationSettings: View {
             cityName: result.name,
             countryCode: result.countryCode
         )
-        searchResults = []
-        searchText = ""
+        dismiss()
     }
 }

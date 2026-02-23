@@ -1,17 +1,8 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "%.4f, %.4f" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$.4f, %2$.4f"
-          }
-        }
-      }
-    },
     "%@ in %lld minutes" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -102,6 +93,7 @@
       }
     },
     "Asr" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -132,22 +124,10 @@
     "Asr Calculation" : {
 
     },
-    "Calculation Method" : {
-
-    },
     "City" : {
 
     },
-    "City name" : {
-
-    },
-    "Coordinates" : {
-
-    },
-    "Current Location" : {
-
-    },
-    "Day %lld" : {
+    "Currently set to %@" : {
 
     },
     "Delivery Mode" : {
@@ -182,9 +162,6 @@
         }
       }
     },
-    "Enable Location Services" : {
-
-    },
     "Fajr" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -213,6 +190,9 @@
           }
         }
       }
+    },
+    "Fire Test in 5 seconds" : {
+
     },
     "High Latitude" : {
 
@@ -390,13 +370,10 @@
         }
       }
     },
-    "Manual Adjustment" : {
-
-    },
     "Method" : {
 
     },
-    "Not Ramadan" : {
+    "Mode" : {
 
     },
     "Notification Mode" : {
@@ -428,7 +405,11 @@
         }
       }
     },
+    "now" : {
+
+    },
     "Now" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -493,10 +474,8 @@
     "Prayer Engine" : {
 
     },
-    "Pre-Reminder" : {
-
-    },
     "Prepare for %@ prayer" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -581,6 +560,7 @@
       }
     },
     "Ramadan" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -609,9 +589,6 @@
       }
     },
     "Ramadan Day %lld" : {
-
-    },
-    "Refresh Location" : {
 
     },
     "Search City" : {
@@ -709,9 +686,6 @@
         }
       }
     },
-    "Status" : {
-
-    },
     "Stop" : {
 
     },
@@ -775,7 +749,22 @@
         }
       }
     },
+    "Test" : {
+
+    },
+    "till %@" : {
+
+    },
     "Today's Prayer Times" : {
+
+    },
+    "Triggers a test notification or alarm in 5 seconds. Works even with app open." : {
+
+    },
+    "Type a city name..." : {
+
+    },
+    "Use Current Location" : {
 
     },
     "Version" : {

@@ -1,8 +1,8 @@
 import Foundation
 
 enum PrayerName: String, CaseIterable, Identifiable, Sendable, Codable {
+    case tahajjud = "Tahajjud"
     case fajr = "Fajr"
-    case sunrise = "Sunrise"
     case dhuhr = "Dhuhr"
     case asr = "Asr"
     case maghrib = "Maghrib"
@@ -16,8 +16,8 @@ enum PrayerName: String, CaseIterable, Identifiable, Sendable, Codable {
 
     var systemImage: String {
         switch self {
+        case .tahajjud: return "moon.zzz.fill"
         case .fajr: return "sun.horizon.fill"
-        case .sunrise: return "sunrise.fill"
         case .dhuhr: return "sun.max.fill"
         case .asr: return "sun.min.fill"
         case .maghrib: return "sunset.fill"

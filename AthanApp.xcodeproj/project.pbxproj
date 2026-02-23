@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 63;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -116,13 +116,13 @@
 		AE8A9767151C609EEB186277 /* AlarmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmManager.swift; sourceTree = "<group>"; };
 		B103343411EFB1E337AF6153 /* PrayerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerDetailView.swift; sourceTree = "<group>"; };
 		BBEB408C548B53395DCB6F47 /* AthanWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthanWidgetsBundle.swift; sourceTree = "<group>"; };
-		BD9A7A1BA871548A4F3DC545 /* AthanWidgets.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = AthanWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		BD9A7A1BA871548A4F3DC545 /* AthanWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AthanWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		BDA589EB266BB3A48172D644 /* RamadanDetectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RamadanDetectionService.swift; sourceTree = "<group>"; };
 		BF064F669D2B2F20B3D4B07F /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		DC9EDB3F7D7574C2A6762EA1 /* PrayerTimesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTimesViewModel.swift; sourceTree = "<group>"; };
 		DD7455E9CD1D4B2FF469410E /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		E714A94C3FE82D0F663FD3A9 /* AthanAlarmAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthanAlarmAttributes.swift; sourceTree = "<group>"; };
-		E91F7C5477CAACFE30D81C41 /* AthanApp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = AthanApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E91F7C5477CAACFE30D81C41 /* Athan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Athan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA1E1C45B58CFA861A866551 /* AthanAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthanAppUITests.swift; sourceTree = "<group>"; };
 		EA99DF427BB2D4F453FEDE2E /* AthanWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AthanWidgets.entitlements; sourceTree = "<group>"; };
 		EAAF6A5FBF7F814B3FAEA242 /* GlassCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassCard.swift; sourceTree = "<group>"; };
@@ -226,7 +226,7 @@
 		7A113A55642E023AD81D5956 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E91F7C5477CAACFE30D81C41 /* AthanApp.app */,
+				E91F7C5477CAACFE30D81C41 /* Athan.app */,
 				57EF298D138CC60AA0290D44 /* AthanAppTests.xctest */,
 				5FDA4C092003AAEE20EB004B /* AthanAppUITests.xctest */,
 				BD9A7A1BA871548A4F3DC545 /* AthanWidgets.appex */,
@@ -419,7 +419,7 @@
 				2C7CA2BDF190369127133101 /* Adhan */,
 			);
 			productName = AthanApp;
-			productReference = E91F7C5477CAACFE30D81C41 /* AthanApp.app */;
+			productReference = E91F7C5477CAACFE30D81C41 /* Athan.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -463,7 +463,6 @@
 			packageReferences = (
 				8ED22B473EE1EF78205918E3 /* XCRemoteSwiftPackageReference "adhan-swift" */,
 			);
-			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -653,7 +652,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.athanapp.tests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shariqwaseem.athanapp.tests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Athan.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Athan";
@@ -664,7 +663,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = AthanWidgets/AthanWidgets.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MZT7CL443V;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = AthanWidgets/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
@@ -674,7 +676,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.athanapp.app.widgets;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shariqwaseem.athanapp.widgets;
 				PRODUCT_NAME = AthanWidgets;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -685,7 +687,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = AthanWidgets/AthanWidgets.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MZT7CL443V;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = AthanWidgets/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
@@ -695,7 +700,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.athanapp.app.widgets;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shariqwaseem.athanapp.widgets;
 				PRODUCT_NAME = AthanWidgets;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -709,6 +714,7 @@
 				CODE_SIGN_ENTITLEMENTS = AthanApp/AthanApp.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MZT7CL443V;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = AthanApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
@@ -717,7 +723,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.athanapp.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shariqwaseem.athanapp;
 				PRODUCT_NAME = Athan;
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -736,7 +742,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.athanapp.uitests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shariqwaseem.athanapp.uitests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = AthanApp;
@@ -754,7 +760,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.athanapp.tests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shariqwaseem.athanapp.tests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Athan.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Athan";
@@ -772,7 +778,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.athanapp.uitests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shariqwaseem.athanapp.uitests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = AthanApp;
@@ -845,6 +851,7 @@
 				CODE_SIGN_ENTITLEMENTS = AthanApp/AthanApp.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MZT7CL443V;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = AthanApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
@@ -853,7 +860,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.athanapp.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shariqwaseem.athanapp;
 				PRODUCT_NAME = Athan;
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;

@@ -4,6 +4,8 @@ import SwiftData
 struct PrayerDetailView: View {
     let prayer: PrayerName
     @Environment(\.modelContext) private var modelContext
+    @Environment(NotificationScheduler.self) private var scheduler
+    @Environment(PrayerTimesViewModel.self) private var viewModel
     @Query private var preferences: [UserPreferences]
 
     private var prefs: UserPreferences {
@@ -21,8 +23,6 @@ struct PrayerDetailView: View {
         List {
             deliveryModeSection
             alarmOffsetSection
-            preReminderSection
-            manualAdjustmentSection
         }
         .navigationTitle(prayer.localizedName)
     }
@@ -51,7 +51,7 @@ struct PrayerDetailView: View {
 
     @ViewBuilder
     private var alarmOffsetSection: some View {
-        if selectedMode == .alarm && prayer != .sunrise {
+        if selectedMode == .alarm {
             Section {
                 let offsetLabel = alarmOffsetValue == 0
                     ? "At prayer time"
@@ -65,36 +65,14 @@ struct PrayerDetailView: View {
         }
     }
 
-    // MARK: - Pre-Reminder Section
-
-    @ViewBuilder
-    private var preReminderSection: some View {
-        if prayer != .sunrise {
-            Section("Pre-Reminder") {
-                let label = preReminderMinutes > 0 ? "\(preReminderMinutes) minutes before" : "Off"
-                Stepper(label, value: preReminderBinding, in: 0...60, step: 5)
-            }
-        }
-    }
-
-    // MARK: - Manual Adjustment Section
-
-    private var manualAdjustmentSection: some View {
-        Section("Manual Adjustment") {
-            let label = adjustmentMinutes == 0
-                ? "No adjustment"
-                : "\(adjustmentMinutes > 0 ? "+" : "")\(adjustmentMinutes) min"
-            Stepper(label, value: adjustmentBinding, in: -30...30)
-        }
-    }
 
     // MARK: - Mode Get/Set
 
     private func getMode() -> PrayerNotificationMode {
         let raw: String
         switch prayer {
+        case .tahajjud: raw = prefs.tahajjudNotificationMode
         case .fajr: raw = prefs.fajrNotificationMode
-        case .sunrise: raw = prefs.sunriseNotificationMode
         case .dhuhr: raw = prefs.dhuhrNotificationMode
         case .asr: raw = prefs.asrNotificationMode
         case .maghrib: raw = prefs.maghribNotificationMode
@@ -105,12 +83,25 @@ struct PrayerDetailView: View {
 
     private func setMode(_ newValue: PrayerNotificationMode) {
         switch prayer {
+        case .tahajjud: prefs.tahajjudNotificationMode = newValue.rawValue
         case .fajr: prefs.fajrNotificationMode = newValue.rawValue
-        case .sunrise: prefs.sunriseNotificationMode = newValue.rawValue
         case .dhuhr: prefs.dhuhrNotificationMode = newValue.rawValue
         case .asr: prefs.asrNotificationMode = newValue.rawValue
         case .maghrib: prefs.maghribNotificationMode = newValue.rawValue
         case .isha: prefs.ishaNotificationMode = newValue.rawValue
+        }
+
+        Task {
+            if newValue == .alarm {
+                await scheduler.alarmManager.requestAuthorization()
+            } else if newValue == .notification {
+                await scheduler.requestPermission()
+            }
+            // Reschedule all notifications/alarms with updated preferences
+            await scheduler.rescheduleAll(
+                prayerEntries: viewModel.multiDayTimes(),
+                preferences: prefs
+            )
         }
     }
 
@@ -118,8 +109,8 @@ struct PrayerDetailView: View {
 
     private var alarmOffsetValue: Int {
         switch prayer {
+        case .tahajjud: return prefs.tahajjudAlarmOffset
         case .fajr: return prefs.fajrAlarmOffset
-        case .sunrise: return 0
         case .dhuhr: return prefs.dhuhrAlarmOffset
         case .asr: return prefs.asrAlarmOffset
         case .maghrib: return prefs.maghribAlarmOffset
@@ -132,8 +123,8 @@ struct PrayerDetailView: View {
             get: { alarmOffsetValue },
             set: { newValue in
                 switch prayer {
+                case .tahajjud: prefs.tahajjudAlarmOffset = newValue
                 case .fajr: prefs.fajrAlarmOffset = newValue
-                case .sunrise: break
                 case .dhuhr: prefs.dhuhrAlarmOffset = newValue
                 case .asr: prefs.asrAlarmOffset = newValue
                 case .maghrib: prefs.maghribAlarmOffset = newValue
@@ -143,63 +134,6 @@ struct PrayerDetailView: View {
         )
     }
 
-    // MARK: - Pre-Reminder
-
-    private var preReminderMinutes: Int {
-        switch prayer {
-        case .fajr: return prefs.fajrPreReminder
-        case .sunrise: return 0
-        case .dhuhr: return prefs.dhuhrPreReminder
-        case .asr: return prefs.asrPreReminder
-        case .maghrib: return prefs.maghribPreReminder
-        case .isha: return prefs.ishaPreReminder
-        }
-    }
-
-    private var preReminderBinding: Binding<Int> {
-        Binding(
-            get: { preReminderMinutes },
-            set: { newValue in
-                switch prayer {
-                case .fajr: prefs.fajrPreReminder = newValue
-                case .sunrise: break
-                case .dhuhr: prefs.dhuhrPreReminder = newValue
-                case .asr: prefs.asrPreReminder = newValue
-                case .maghrib: prefs.maghribPreReminder = newValue
-                case .isha: prefs.ishaPreReminder = newValue
-                }
-            }
-        )
-    }
-
-    // MARK: - Manual Adjustment
-
-    private var adjustmentMinutes: Int {
-        switch prayer {
-        case .fajr: return prefs.fajrManualAdjustment
-        case .sunrise: return prefs.sunriseManualAdjustment
-        case .dhuhr: return prefs.dhuhrManualAdjustment
-        case .asr: return prefs.asrManualAdjustment
-        case .maghrib: return prefs.maghribManualAdjustment
-        case .isha: return prefs.ishaManualAdjustment
-        }
-    }
-
-    private var adjustmentBinding: Binding<Int> {
-        Binding(
-            get: { adjustmentMinutes },
-            set: { newValue in
-                switch prayer {
-                case .fajr: prefs.fajrManualAdjustment = newValue
-                case .sunrise: prefs.sunriseManualAdjustment = newValue
-                case .dhuhr: prefs.dhuhrManualAdjustment = newValue
-                case .asr: prefs.asrManualAdjustment = newValue
-                case .maghrib: prefs.maghribManualAdjustment = newValue
-                case .isha: prefs.ishaManualAdjustment = newValue
-                }
-            }
-        )
-    }
 }
 
 // MARK: - Mode Row (extracted to help type-checker)

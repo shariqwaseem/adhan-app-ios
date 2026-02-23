@@ -2,6 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>com.athanapp.refresh</string>
+		<string>com.athanapp.processing</string>
+	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -22,11 +27,23 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAlarmKitUsageDescription</key>
+	<string>Athan uses alarms to alert you for prayer times, even when your phone is on silent.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Athan uses your location in the background to update prayer times when you move to a new area.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Athan needs your location to calculate accurate prayer times for your area.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
 		<false/>
 	</dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>location</string>
+		<string>processing</string>
+	</array>
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UISupportedInterfaceOrientations</key>
@@ -39,14 +56,6 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Athan needs your location to calculate accurate prayer times for your area.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Athan uses your location in the background to update prayer times when you move to a new area.</string>
-	<key>BGTaskSchedulerPermittedIdentifiers</key>
-	<array>
-		<string>com.athanapp.refresh</string>
 	</array>
 </dict>
 </plist>

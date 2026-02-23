@@ -65,7 +65,6 @@ enum HighLatitudeRuleOption: String, CaseIterable, Identifiable, Sendable {
 
 enum PrayerNotificationMode: String, CaseIterable, Identifiable, Sendable {
     case silent = "Silent"
-    case vibrate = "Vibrate"
     case notification = "Notification"
     case alarm = "Alarm"
 
@@ -74,7 +73,6 @@ enum PrayerNotificationMode: String, CaseIterable, Identifiable, Sendable {
     var systemImage: String {
         switch self {
         case .silent: return "bell.slash.fill"
-        case .vibrate: return "iphone.radiowaves.left.and.right"
         case .notification: return "bell.fill"
         case .alarm: return "alarm.fill"
         }
@@ -83,7 +81,6 @@ enum PrayerNotificationMode: String, CaseIterable, Identifiable, Sendable {
     var description: String {
         switch self {
         case .silent: return "No notification"
-        case .vibrate: return "Vibration only"
         case .notification: return "Standard notification with sound"
         case .alarm: return "Full athan alarm, bypasses Silent Mode"
         }

@@ -19,8 +19,8 @@ struct PrayerCalculationTests {
             adjustments: [:]
         )
         #expect(entries.count == 6)
-        #expect(entries[0].prayer == .fajr)
-        #expect(entries[1].prayer == .sunrise)
+        #expect(entries[0].prayer == .tahajjud)
+        #expect(entries[1].prayer == .fajr)
         #expect(entries[2].prayer == .dhuhr)
         #expect(entries[3].prayer == .asr)
         #expect(entries[4].prayer == .maghrib)

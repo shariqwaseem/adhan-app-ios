@@ -3,6 +3,7 @@ import SwiftData
 
 struct PrayerSettingsView: View {
     @Environment(PrayerTimesViewModel.self) private var viewModel
+    @Environment(NotificationScheduler.self) private var scheduler
     @Query private var preferences: [UserPreferences]
 
     private var prefs: UserPreferences? { preferences.first }
@@ -19,35 +20,8 @@ struct PrayerSettingsView: View {
                         }
                     }
                 }
-
-                Section("Calculation Method") {
-                    @Bindable var vm = viewModel
-                    Picker("Method", selection: $vm.calculationMethod) {
-                        ForEach(CalculationMethodInfo.allCases) { method in
-                            Text(method.rawValue).tag(method)
-                        }
-                    }
-                    .pickerStyle(.navigationLink)
-
-                    Picker("Asr Calculation", selection: $vm.asrMethod) {
-                        ForEach(AsrJuristicMethod.allCases) { method in
-                            Text(method.rawValue).tag(method)
-                        }
-                    }
-                    .pickerStyle(.navigationLink)
-
-                    Picker("High Latitude", selection: $vm.highLatitudeRule) {
-                        ForEach(HighLatitudeRuleOption.allCases) { rule in
-                            Text(rule.rawValue).tag(rule)
-                        }
-                    }
-                    .pickerStyle(.navigationLink)
-                }
             }
             .navigationTitle("Prayer")
-            .onChange(of: viewModel.calculationMethod) { _, _ in viewModel.recalculate() }
-            .onChange(of: viewModel.asrMethod) { _, _ in viewModel.recalculate() }
-            .onChange(of: viewModel.highLatitudeRule) { _, _ in viewModel.recalculate() }
         }
     }
 
@@ -82,8 +56,8 @@ struct PrayerSettingsView: View {
         guard let prefs = prefs else { return .notification }
         let raw: String
         switch prayer {
+        case .tahajjud: raw = prefs.tahajjudNotificationMode
         case .fajr: raw = prefs.fajrNotificationMode
-        case .sunrise: raw = prefs.sunriseNotificationMode
         case .dhuhr: raw = prefs.dhuhrNotificationMode
         case .asr: raw = prefs.asrNotificationMode
         case .maghrib: raw = prefs.maghribNotificationMode
@@ -96,4 +70,5 @@ struct PrayerSettingsView: View {
 #Preview {
     PrayerSettingsView()
         .environment(PrayerTimesViewModel())
+        .environment(NotificationScheduler())
 }

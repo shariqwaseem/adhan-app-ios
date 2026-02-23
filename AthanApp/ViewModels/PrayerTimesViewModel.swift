@@ -6,7 +6,7 @@ import Observation
 final class PrayerTimesViewModel {
     var prayerEntries: [PrayerTimeEntry] = []
     var hijriDate: String = ""
-    var cityName: String = "Loading..."
+    var cityName: String = ""
     var countryCode: String? = nil
     var nextPrayer: PrayerTimeEntry? = nil
     var currentPrayer: PrayerTimeEntry? = nil
@@ -32,6 +32,17 @@ final class PrayerTimesViewModel {
     ) {
         self.calculationService = calculationService
         self.hijriDateService = hijriDateService
+
+        // Restore last saved location
+        if let saved = SharedDataManager.loadLocation() {
+            self.latitude = saved.latitude
+            self.longitude = saved.longitude
+            self.cityName = saved.cityName
+            self.countryCode = saved.countryCode
+            if let code = saved.countryCode {
+                self.calculationMethod = CalculationMethodInfo.recommendedMethod(forCountryCode: code)
+            }
+        }
     }
 
     func calculateToday() {
@@ -100,10 +111,10 @@ final class PrayerTimesViewModel {
         calculateToday()
     }
 
-    func sevenDayTimes() -> [[PrayerTimeEntry]] {
+    func multiDayTimes() -> [[PrayerTimeEntry]] {
         calculationService.calculateMultipleDays(
             startDate: Date(),
-            days: 7,
+            days: Constants.NotificationBudget.daysToScheduleAhead,
             latitude: latitude,
             longitude: longitude,
             method: calculationMethod,
