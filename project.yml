@@ -1,0 +1,94 @@
+name: AthanApp
+options:
+  bundleIdPrefix: com.athanapp
+  deploymentTarget:
+    iOS: "26.0"
+  xcodeVersion: "26.0"
+  groupSortPosition: top
+  generateEmptyDirectories: true
+  minimumXcodeGenVersion: "2.40.0"
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    IPHONEOS_DEPLOYMENT_TARGET: "26.0"
+    CODE_SIGN_STYLE: Automatic
+    CODE_SIGN_IDENTITY: "Apple Development"
+
+packages:
+  Adhan:
+    url: https://github.com/batoulapps/adhan-swift
+    from: "1.3.0"
+
+targets:
+  AthanApp:
+    type: application
+    platform: iOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: AthanApp
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.athanapp.app
+        INFOPLIST_FILE: AthanApp/Info.plist
+        CODE_SIGN_ENTITLEMENTS: AthanApp/AthanApp.entitlements
+        PRODUCT_NAME: Athan
+        MARKETING_VERSION: "1.0.0"
+        CURRENT_PROJECT_VERSION: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        SWIFT_EMIT_LOC_STRINGS: "YES"
+        GENERATE_INFOPLIST_FILE: false
+    dependencies:
+      - package: Adhan
+      - target: AthanWidgets
+    scheme:
+      testTargets:
+        - AthanAppTests
+      gatherCoverageData: true
+
+  AthanWidgets:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: AthanWidgets
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.athanapp.app.widgets
+        INFOPLIST_FILE: AthanWidgets/Info.plist
+        CODE_SIGN_ENTITLEMENTS: AthanWidgets/AthanWidgets.entitlements
+        PRODUCT_NAME: AthanWidgets
+        MARKETING_VERSION: "1.0.0"
+        CURRENT_PROJECT_VERSION: "1"
+        GENERATE_INFOPLIST_FILE: false
+    dependencies:
+      - package: Adhan
+
+  AthanAppTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: AthanAppTests
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.athanapp.tests
+        GENERATE_INFOPLIST_FILE: true
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Athan.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Athan"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+    dependencies:
+      - target: AthanApp
+
+  AthanAppUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: AthanAppUITests
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.athanapp.uitests
+        GENERATE_INFOPLIST_FILE: true
+    dependencies:
+      - target: AthanApp
