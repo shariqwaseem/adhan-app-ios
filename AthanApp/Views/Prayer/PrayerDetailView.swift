@@ -7,6 +7,7 @@ struct PrayerDetailView: View {
     @Environment(NotificationScheduler.self) private var scheduler
     @Environment(PrayerTimesViewModel.self) private var viewModel
     @Query private var preferences: [UserPreferences]
+    @Query(sort: \CustomAlarm.createdAt) private var customAlarms: [CustomAlarm]
 
     private var prefs: UserPreferences {
         if let existing = preferences.first { return existing }
@@ -22,8 +23,10 @@ struct PrayerDetailView: View {
     var body: some View {
         List {
             deliveryModeSection
-            alarmOffsetSection
+            alarmSoundSection
+            preAlarmSection
         }
+        .animation(.default, value: selectedMode)
         .navigationTitle(prayer.localizedName)
     }
 
@@ -47,24 +50,106 @@ struct PrayerDetailView: View {
         }
     }
 
-    // MARK: - Alarm Offset Section
+    // MARK: - Alarm Sound Section
 
     @ViewBuilder
-    private var alarmOffsetSection: some View {
+    private var alarmSoundSection: some View {
         if selectedMode == .alarm {
-            Section {
-                let offsetLabel = alarmOffsetValue == 0
-                    ? "At prayer time"
-                    : "\(alarmOffsetValue) min before prayer"
-                Stepper(offsetLabel, value: alarmOffsetBinding, in: 0...30, step: 5)
-            } header: {
-                Text("Alarm Time Offset")
-            } footer: {
-                Text("Set how many minutes before the prayer time the alarm should ring.")
+            Section("Alarm Sound") {
+                NavigationLink {
+                    AdhanAudioSelectionView(prayer: prayer)
+                } label: {
+                    LabeledContent("Sound", value: currentAudioDisplayName)
+                }
             }
         }
     }
 
+    private var currentAudioDisplayName: String {
+        AdhanAudioCatalog.displayName(forID: getAudioSelection())
+    }
+
+    // MARK: - Pre-Alarm Section
+
+    private static let preAlarmOptions: [Int] = stride(from: 10, through: 120, by: 5).map { $0 }
+
+    @ViewBuilder
+    private var preAlarmSection: some View {
+        if (prayer == .fajr || prayer == .tahajjud) && selectedMode != .silent {
+            Section {
+                Toggle("Pre-Alarm", isOn: Binding(
+                    get: { getPreAlarmMinutes() > 0 },
+                    set: { enabled in
+                        setPreAlarmMinutes(enabled ? 30 : 0)
+                    }
+                ))
+
+                if getPreAlarmMinutes() > 0 {
+                    Picker("Time Before", selection: Binding(
+                        get: { getPreAlarmMinutes() },
+                        set: { setPreAlarmMinutes($0) }
+                    )) {
+                        ForEach(Self.preAlarmOptions, id: \.self) { minutes in
+                            Text(formattedPreAlarmTime(minutes)).tag(minutes)
+                        }
+                    }
+                }
+            } header: {
+                Text("Pre-Alarm")
+            } footer: {
+                Text("Rings before \(prayer.localizedName) using the same delivery mode and sound.")
+            }
+        }
+    }
+
+    private func formattedPreAlarmTime(_ minutes: Int) -> String {
+        if minutes < 60 {
+            return "\(minutes) minutes"
+        } else if minutes == 60 {
+            return "1 hour"
+        } else if minutes % 60 == 0 {
+            return "\(minutes / 60) hours"
+        } else {
+            return "\(minutes / 60)h \(minutes % 60)m"
+        }
+    }
+
+    private func getPreAlarmMinutes() -> Int {
+        switch prayer {
+        case .fajr: return prefs.fajrPreAlarmMinutes
+        case .tahajjud: return prefs.tahajjudPreAlarmMinutes
+        default: return 0
+        }
+    }
+
+    private func setPreAlarmMinutes(_ value: Int) {
+        switch prayer {
+        case .fajr: prefs.fajrPreAlarmMinutes = value
+        case .tahajjud: prefs.tahajjudPreAlarmMinutes = value
+        default: break
+        }
+
+        Task {
+            await scheduler.rescheduleAll(
+                prayerEntries: viewModel.multiDayTimes(),
+                preferences: prefs,
+                customAlarms: customAlarms
+            )
+        }
+    }
+
+    // MARK: - Audio Get/Set
+
+    private func getAudioSelection() -> String {
+        switch prayer {
+        case .tahajjud: return prefs.tahajjudAlarmAudio
+        case .fajr: return prefs.fajrAlarmAudio
+        case .dhuhr: return prefs.dhuhrAlarmAudio
+        case .asr: return prefs.asrAlarmAudio
+        case .maghrib: return prefs.maghribAlarmAudio
+        case .isha: return prefs.ishaAlarmAudio
+        }
+    }
 
     // MARK: - Mode Get/Set
 
@@ -97,73 +182,11 @@ struct PrayerDetailView: View {
             } else if newValue == .notification {
                 await scheduler.requestPermission()
             }
-            // Reschedule all notifications/alarms with updated preferences
             await scheduler.rescheduleAll(
                 prayerEntries: viewModel.multiDayTimes(),
-                preferences: prefs
+                preferences: prefs,
+                customAlarms: customAlarms
             )
         }
-    }
-
-    // MARK: - Alarm Offset
-
-    private var alarmOffsetValue: Int {
-        switch prayer {
-        case .tahajjud: return prefs.tahajjudAlarmOffset
-        case .fajr: return prefs.fajrAlarmOffset
-        case .dhuhr: return prefs.dhuhrAlarmOffset
-        case .asr: return prefs.asrAlarmOffset
-        case .maghrib: return prefs.maghribAlarmOffset
-        case .isha: return prefs.ishaAlarmOffset
-        }
-    }
-
-    private var alarmOffsetBinding: Binding<Int> {
-        Binding(
-            get: { alarmOffsetValue },
-            set: { newValue in
-                switch prayer {
-                case .tahajjud: prefs.tahajjudAlarmOffset = newValue
-                case .fajr: prefs.fajrAlarmOffset = newValue
-                case .dhuhr: prefs.dhuhrAlarmOffset = newValue
-                case .asr: prefs.asrAlarmOffset = newValue
-                case .maghrib: prefs.maghribAlarmOffset = newValue
-                case .isha: prefs.ishaAlarmOffset = newValue
-                }
-            }
-        )
-    }
-
-}
-
-// MARK: - Mode Row (extracted to help type-checker)
-
-private struct ModeRow: View {
-    let mode: PrayerNotificationMode
-    let isSelected: Bool
-    let onTap: () -> Void
-
-    var body: some View {
-        Button(action: onTap) {
-            HStack {
-                Image(systemName: mode.systemImage)
-                    .foregroundStyle(mode == .alarm ? .orange : .primary)
-                    .frame(width: 28)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(mode.rawValue)
-                        .font(.body)
-                    Text(mode.description)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                Spacer()
-                if isSelected {
-                    Image(systemName: "checkmark")
-                        .foregroundStyle(Color.accentColor)
-                        .fontWeight(.semibold)
-                }
-            }
-        }
-        .tint(.primary)
     }
 }

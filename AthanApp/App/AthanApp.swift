@@ -84,7 +84,7 @@ struct AthanApp: App {
     @State private var notificationScheduler = NotificationScheduler()
 
     var sharedModelContainer: ModelContainer = {
-        try! ModelContainer(for: UserPreferences.self)
+        try! ModelContainer(for: UserPreferences.self, CustomAlarm.self)
     }()
 
     var body: some Scene {
@@ -123,13 +123,20 @@ struct AthanApp: App {
         return try? sharedModelContainer.mainContext.fetch(descriptor).first
     }
 
+    @MainActor
+    private func fetchCustomAlarms() -> [CustomAlarm] {
+        let descriptor = FetchDescriptor<CustomAlarm>(sortBy: [SortDescriptor(\CustomAlarm.createdAt)])
+        return (try? sharedModelContainer.mainContext.fetch(descriptor)) ?? []
+    }
+
     /// Called every time the app comes to foreground — recalculates and reschedules everything.
     private func onBecameActive() {
         prayerTimesViewModel.calculateToday()
         Task { @MainActor in
             await notificationScheduler.rescheduleAll(
                 prayerEntries: prayerTimesViewModel.multiDayTimes(),
-                preferences: fetchPreferences()
+                preferences: fetchPreferences(),
+                customAlarms: fetchCustomAlarms()
             )
         }
     }
@@ -146,7 +153,8 @@ struct AthanApp: App {
         Task { @MainActor in
             await notificationScheduler.rescheduleAll(
                 prayerEntries: prayerTimesViewModel.multiDayTimes(),
-                preferences: fetchPreferences()
+                preferences: fetchPreferences(),
+                customAlarms: fetchCustomAlarms()
             )
         }
     }

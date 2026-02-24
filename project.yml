@@ -28,6 +28,8 @@ targets:
     deploymentTarget: "26.0"
     sources:
       - path: AthanApp
+      - path: AdhanAudio
+        type: folder
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.shariqwaseem.athanapp

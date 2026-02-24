@@ -10,25 +10,26 @@ final class QiblaViewModel: NSObject {
     var qiblaBearing: Double = 0
     var isAligned: Bool = false
 
-    private let manager = CLLocationManager()
+    private var manager: CLLocationManager?
     private let alignmentThreshold: Double = 5.0
     private var feedbackGenerator: UIImpactFeedbackGenerator?
 
-    override init() {
-        super.init()
-        manager.delegate = self
-    }
-
     func startUpdating() {
-        if CLLocationManager.headingAvailable() {
-            manager.startUpdatingHeading()
-            feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
-            feedbackGenerator?.prepare()
+        guard CLLocationManager.headingAvailable() else { return }
+
+        if manager == nil {
+            let m = CLLocationManager()
+            m.delegate = self
+            manager = m
         }
+
+        manager?.startUpdatingHeading()
+        feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
+        feedbackGenerator?.prepare()
     }
 
     func stopUpdating() {
-        manager.stopUpdatingHeading()
+        manager?.stopUpdatingHeading()
         feedbackGenerator = nil
     }
 

@@ -22,7 +22,8 @@ final class NotificationScheduler {
 
     func rescheduleAll(
         prayerEntries: [[PrayerTimeEntry]],
-        preferences: UserPreferences?
+        preferences: UserPreferences?,
+        customAlarms: [CustomAlarm] = []
     ) async {
         guard !isScheduling else { return }
         isScheduling = true
@@ -55,19 +56,128 @@ final class NotificationScheduler {
                     } catch { continue }
 
                 case .alarm:
-                    let offset = alarmOffset(for: entry.prayer, preferences: preferences)
+                    let audio = alarmAudio(for: entry.prayer, preferences: preferences)
                     do {
                         try await alarmManager.scheduleAlarm(
                             for: entry.prayer,
                             at: entry.adjustedTime,
-                            offsetMinutes: offset
+                            audioFileName: audio
                         )
                         scheduledCount += 1
                     } catch { continue }
                 }
 
+                // Pre-alarm scheduling (Fajr & Tahajjud only)
+                let preMinutes = preAlarmMinutes(for: entry.prayer, preferences: preferences)
+                if preMinutes > 0 {
+                    let preAlarmTime = entry.adjustedTime.addingTimeInterval(-Double(preMinutes) * 60)
+                    guard preAlarmTime > Date() else { continue }
+
+                    switch mode {
+                    case .silent:
+                        break
+                    case .notification:
+                        guard scheduledCount < maxNotifications else { break }
+                        let request = createPreAlarmNotificationRequest(
+                            for: entry,
+                            minutesBefore: preMinutes
+                        )
+                        do {
+                            try await center.add(request)
+                            scheduledCount += 1
+                        } catch { /* skip */ }
+
+                    case .alarm:
+                        let audio = alarmAudio(for: entry.prayer, preferences: preferences)
+                        do {
+                            try await alarmManager.schedulePreAlarm(
+                                for: entry.prayer,
+                                at: preAlarmTime,
+                                minutesBefore: preMinutes,
+                                audioFileName: audio
+                            )
+                        } catch { /* skip */ }
+                    }
+                }
+
             }
         }
+
+        // Schedule custom alarms
+        await scheduleCustomAlarms(customAlarms: customAlarms)
+    }
+
+    // MARK: - Custom Alarm Scheduling
+
+    private func scheduleCustomAlarms(customAlarms: [CustomAlarm]) async {
+        let calendar = Calendar.current
+        let now = Date()
+        let daysAhead = Constants.NotificationBudget.daysToScheduleAhead
+
+        for alarm in customAlarms {
+            guard alarm.isEnabled else { continue }
+
+            let mode = alarm.mode
+
+            for dayOffset in 0..<daysAhead {
+                guard let baseDate = calendar.date(byAdding: .day, value: dayOffset, to: now) else { continue }
+
+                var components = calendar.dateComponents([.year, .month, .day], from: baseDate)
+                components.hour = alarm.hour
+                components.minute = alarm.minute
+                components.second = 0
+
+                guard let alarmTime = calendar.date(from: components),
+                      alarmTime > now else { continue }
+
+                switch mode {
+                case .silent:
+                    continue
+
+                case .notification:
+                    let request = createCustomNotificationRequest(alarm: alarm, at: alarmTime, dayOffset: dayOffset)
+                    do {
+                        try await UNUserNotificationCenter.current().add(request)
+                    } catch { continue }
+
+                case .alarm:
+                    let audioPath: String? = alarm.alarmAudio.isEmpty
+                        ? nil
+                        : AdhanAudioCatalog.bundleRelativePath(forID: alarm.alarmAudio)
+                    do {
+                        try await alarmManager.scheduleCustomAlarm(
+                            id: alarm.id,
+                            title: alarm.title,
+                            at: alarmTime,
+                            audioFileName: audioPath
+                        )
+                    } catch { continue }
+                }
+            }
+        }
+    }
+
+    private func createCustomNotificationRequest(
+        alarm: CustomAlarm,
+        at time: Date,
+        dayOffset: Int
+    ) -> UNNotificationRequest {
+        let content = UNMutableNotificationContent()
+        content.title = alarm.title
+        content.body = "Custom alarm: \(alarm.title)"
+        content.categoryIdentifier = "CUSTOM_ALARM"
+        content.sound = .default
+
+        let dateComponents = Calendar.current.dateComponents(
+            [.year, .month, .day, .hour, .minute, .second],
+            from: time
+        )
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+
+        let dateString = formatDateForId(time)
+        let identifier = "custom_\(alarm.id.uuidString)_\(dateString)_d\(dayOffset)"
+
+        return UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
     }
 
     // MARK: - Test Fire
@@ -93,7 +203,6 @@ final class NotificationScheduler {
             }
 
         case .alarm:
-            // Request authorization first
             await alarmManager.requestAuthorization()
             guard alarmManager.isAuthorized else {
                 return "Alarm not authorized. Auth state: \(alarmManager.authError ?? "denied"). Check Settings > Apps > Athan."
@@ -102,8 +211,7 @@ final class NotificationScheduler {
             do {
                 try await alarmManager.scheduleAlarm(
                     for: .fajr,
-                    at: testTime,
-                    offsetMinutes: 0
+                    at: testTime
                 )
                 return "Alarm scheduled — fires in 5s"
             } catch {
@@ -161,16 +269,53 @@ final class NotificationScheduler {
         return PrayerNotificationMode(rawValue: raw) ?? .notification
     }
 
-    private func alarmOffset(for prayer: PrayerName, preferences: UserPreferences?) -> Int {
+    private func alarmAudio(for prayer: PrayerName, preferences: UserPreferences?) -> String? {
+        guard let prefs = preferences else { return nil }
+        let value: String
+        switch prayer {
+        case .tahajjud: value = prefs.tahajjudAlarmAudio
+        case .fajr: value = prefs.fajrAlarmAudio
+        case .dhuhr: value = prefs.dhuhrAlarmAudio
+        case .asr: value = prefs.asrAlarmAudio
+        case .maghrib: value = prefs.maghribAlarmAudio
+        case .isha: value = prefs.ishaAlarmAudio
+        }
+        guard !value.isEmpty else { return nil }
+        return AdhanAudioCatalog.bundleRelativePath(forID: value)
+    }
+
+    private func preAlarmMinutes(for prayer: PrayerName, preferences: UserPreferences?) -> Int {
         guard let prefs = preferences else { return 0 }
         switch prayer {
-        case .tahajjud: return prefs.tahajjudAlarmOffset
-        case .fajr: return prefs.fajrAlarmOffset
-        case .dhuhr: return prefs.dhuhrAlarmOffset
-        case .asr: return prefs.asrAlarmOffset
-        case .maghrib: return prefs.maghribAlarmOffset
-        case .isha: return prefs.ishaAlarmOffset
+        case .fajr: return prefs.fajrPreAlarmMinutes
+        case .tahajjud: return prefs.tahajjudPreAlarmMinutes
+        default: return 0
         }
+    }
+
+    private func createPreAlarmNotificationRequest(
+        for entry: PrayerTimeEntry,
+        minutesBefore: Int
+    ) -> UNNotificationRequest {
+        let content = UNMutableNotificationContent()
+        content.title = "\(entry.prayer.localizedName) in \(minutesBefore) min"
+        content.body = String(
+            localized: "Prepare for \(entry.prayer.localizedName) prayer"
+        )
+        content.categoryIdentifier = "PRAYER_PRE_ALARM"
+        content.sound = .default
+
+        let preAlarmTime = entry.adjustedTime.addingTimeInterval(-Double(minutesBefore) * 60)
+        let dateComponents = Calendar.current.dateComponents(
+            [.year, .month, .day, .hour, .minute, .second],
+            from: preAlarmTime
+        )
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+
+        let dateString = formatDateForId(entry.adjustedTime)
+        let identifier = "\(entry.prayer.rawValue)_\(dateString)_prealarm"
+
+        return UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
     }
 
     private func formatDateForId(_ date: Date) -> String {

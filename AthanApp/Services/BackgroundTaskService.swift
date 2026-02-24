@@ -134,11 +134,19 @@ struct BackgroundTaskService {
             return
         }
 
-        // 2. Load preferences from SwiftData
+        // 2. Load preferences and custom alarms from SwiftData
+        let container: ModelContainer? = try? ModelContainer(for: UserPreferences.self, CustomAlarm.self)
+
         let prefs: UserPreferences? = {
-            guard let container = try? ModelContainer(for: UserPreferences.self) else { return nil }
+            guard let container else { return nil }
             let descriptor = FetchDescriptor<UserPreferences>()
             return try? container.mainContext.fetch(descriptor).first
+        }()
+
+        let customAlarms: [CustomAlarm] = {
+            guard let container else { return [] }
+            let descriptor = FetchDescriptor<CustomAlarm>(sortBy: [SortDescriptor(\CustomAlarm.createdAt)])
+            return (try? container.mainContext.fetch(descriptor)) ?? []
         }()
 
         // 3. Determine calculation parameters from preferences or country code
@@ -185,7 +193,8 @@ struct BackgroundTaskService {
         let scheduler = NotificationScheduler()
         await scheduler.rescheduleAll(
             prayerEntries: multiDayEntries,
-            preferences: prefs
+            preferences: prefs,
+            customAlarms: customAlarms
         )
 
         // 6. Update widget data with today's times

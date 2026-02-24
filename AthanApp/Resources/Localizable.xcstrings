@@ -61,10 +61,14 @@
     "Alarm mode plays the full athan sound and bypasses Silent Mode. Requires Alarm permission." : {
 
     },
-    "Alarm Time Offset" : {
+    "Alarm name" : {
+
+    },
+    "Alarm Sound" : {
 
     },
     "Aligned with Qibla" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -124,10 +128,16 @@
     "Asr Calculation" : {
 
     },
+    "Cancel" : {
+
+    },
     "City" : {
 
     },
     "Currently set to %@" : {
+
+    },
+    "Delete Alarm" : {
 
     },
     "Delivery Mode" : {
@@ -162,6 +172,9 @@
         }
       }
     },
+    "Edit Alarm" : {
+
+    },
     "Fajr" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -191,13 +204,14 @@
         }
       }
     },
-    "Fire Test in 5 seconds" : {
+    "Fire in 5 seconds" : {
 
     },
     "High Latitude" : {
 
     },
     "Home" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -373,7 +387,13 @@
     "Method" : {
 
     },
-    "Mode" : {
+    "Name" : {
+
+    },
+    "New Alarm" : {
+
+    },
+    "No custom adhan audio selected. Set a prayer to Alarm mode and choose an adhan sound to test it here." : {
 
     },
     "Notification Mode" : {
@@ -437,9 +457,6 @@
         }
       }
     },
-    "Point the top of your device towards the arrow" : {
-
-    },
     "Prayer" : {
       "localizations" : {
         "ar" : {
@@ -471,11 +488,10 @@
     "Prayer Calculation" : {
 
     },
-    "Prayer Engine" : {
+    "Pre-Alarm" : {
 
     },
     "Prepare for %@ prayer" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -532,6 +548,7 @@
       }
     },
     "Qibla Direction" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -591,10 +608,16 @@
     "Ramadan Day %lld" : {
 
     },
-    "Search City" : {
+    "Result" : {
 
     },
-    "Set how many minutes before the prayer time the alarm should ring." : {
+    "Rings before %@ using the same delivery mode and sound." : {
+
+    },
+    "Save" : {
+
+    },
+    "Search City" : {
 
     },
     "Settings" : {
@@ -624,6 +647,9 @@
           }
         }
       }
+    },
+    "Shia" : {
+
     },
     "Silent" : {
       "extractionState" : "stale",
@@ -658,7 +684,6 @@
 
     },
     "Sound" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -720,6 +745,9 @@
     "Suhoor in %@" : {
 
     },
+    "Sunni" : {
+
+    },
     "Sunrise" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -752,13 +780,25 @@
     "Test" : {
 
     },
+    "Test Alarm (Default Sound)" : {
+
+    },
+    "Test Alarm with Adhan Audio" : {
+
+    },
+    "Test Notification" : {
+
+    },
     "till %@" : {
 
     },
-    "Today's Prayer Times" : {
+    "Time" : {
 
     },
-    "Triggers a test notification or alarm in 5 seconds. Works even with app open." : {
+    "Time Before" : {
+
+    },
+    "Triggers a test notification or alarm that fires 5 seconds from now." : {
 
     },
     "Type a city name..." : {

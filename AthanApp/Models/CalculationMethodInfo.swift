@@ -12,6 +12,7 @@ enum CalculationMethodInfo: String, CaseIterable, Identifiable, Sendable {
     case Qatar = "Qatar"
     case Singapore = "Singapore"
     case Tehran = "Institute of Geophysics, Tehran"
+    case Jafari = "Shia (Jafari)"
     case Turkey = "Diyanet İşleri Başkanlığı, Turkey"
     case Other = "Other"
 
@@ -38,6 +39,8 @@ enum CalculationMethodInfo: String, CaseIterable, Identifiable, Sendable {
             return .Singapore
         case "IR":
             return .Tehran
+        case "IQ", "BH", "LB":
+            return .Jafari
         case "TR":
             return .Turkey
         case "GB":

@@ -3,12 +3,8 @@ import SwiftUI
 struct MainTabView: View {
     var body: some View {
         TabView {
-            Tab("Home", systemImage: "clock.fill") {
+            Tab("Prayer", systemImage: "clock.fill") {
                 HomeView()
-            }
-
-            Tab("Prayer", systemImage: "bell.fill") {
-                PrayerSettingsView()
             }
 
             Tab("Qibla", systemImage: "location.north.fill") {
@@ -17,6 +13,10 @@ struct MainTabView: View {
 
             Tab("Settings", systemImage: "gearshape.fill") {
                 SettingsView()
+            }
+
+            Tab("Test", systemImage: "hammer.fill") {
+                TestView()
             }
         }
     }

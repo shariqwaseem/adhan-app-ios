@@ -5,6 +5,7 @@ struct SettingsView: View {
     @Environment(PrayerTimesViewModel.self) private var viewModel
     @Environment(NotificationScheduler.self) private var scheduler
     @Query private var preferences: [UserPreferences]
+    @Query(sort: \CustomAlarm.createdAt) private var customAlarms: [CustomAlarm]
 
     var body: some View {
         NavigationStack {
@@ -43,7 +44,6 @@ struct SettingsView: View {
 
                 Section("About") {
                     LabeledContent("Version", value: "1.0.0")
-                    LabeledContent("Prayer Engine", value: "Adhan Swift")
                 }
             }
             .navigationTitle("Settings")
@@ -66,7 +66,8 @@ struct SettingsView: View {
         Task {
             await scheduler.rescheduleAll(
                 prayerEntries: viewModel.multiDayTimes(),
-                preferences: preferences.first
+                preferences: preferences.first,
+                customAlarms: customAlarms
             )
         }
     }

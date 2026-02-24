@@ -1,13 +1,14 @@
 import Foundation
 import Observation
 import AlarmKit
+import ActivityKit
 
 @Observable
 @MainActor
 final class AthanAlarmManager {
     var isAuthorized: Bool = false
     var authError: String? = nil
-    var scheduledAlarmIDs: [String: UUID] = [:]  // prayerName -> alarm UUID
+    var scheduledAlarmIDs: [String: [UUID]] = [:]  // prayerName -> alarm UUIDs (one per scheduled day)
 
     nonisolated(unsafe) private let manager = AlarmKit.AlarmManager.shared
 
@@ -28,29 +29,18 @@ final class AthanAlarmManager {
         isAuthorized = manager.authorizationState == .authorized
     }
 
-    /// Schedule an alarm for a prayer at the given date, with an optional offset in minutes before.
+    /// Schedule an alarm for a prayer at the given date.
     func scheduleAlarm(
         for prayer: PrayerName,
         at prayerTime: Date,
-        offsetMinutes: Int = 0
+        audioFileName: String? = nil
     ) async throws {
-        // Ensure authorized first
         if !isAuthorized {
             await requestAuthorization()
         }
         guard isAuthorized else {
             throw AlarmScheduleError.notAuthorized(authError ?? "Alarm permission not granted")
         }
-
-        let alarmTime: Date
-        if offsetMinutes > 0 {
-            alarmTime = Calendar.current.date(byAdding: .minute, value: -offsetMinutes, to: prayerTime) ?? prayerTime
-        } else {
-            alarmTime = prayerTime
-        }
-
-        // Cancel existing alarm for this prayer if any
-        cancelAlarm(for: prayer)
 
         let alarmID = UUID()
 
@@ -77,26 +67,154 @@ final class AthanAlarmManager {
             tintColor: .green
         )
 
+        let sound: AlertConfiguration.AlertSound
+        if let name = audioFileName, !name.isEmpty {
+            sound = .named(name)
+        } else {
+            sound = .default
+        }
+
         let configuration = AlarmKit.AlarmManager.AlarmConfiguration.alarm(
-            schedule: .fixed(alarmTime),
-            attributes: attributes
+            schedule: .fixed(prayerTime),
+            attributes: attributes,
+            sound: sound
         )
 
         _ = try await manager.schedule(id: alarmID, configuration: configuration)
-        scheduledAlarmIDs[prayer.rawValue] = alarmID
+        scheduledAlarmIDs[prayer.rawValue, default: []].append(alarmID)
     }
 
-    /// Cancel alarm for a specific prayer.
+    /// Schedule an alarm for a custom alarm entry.
+    func scheduleCustomAlarm(
+        id: UUID,
+        title: String,
+        at alarmTime: Date,
+        audioFileName: String? = nil
+    ) async throws {
+        if !isAuthorized {
+            await requestAuthorization()
+        }
+        guard isAuthorized else {
+            throw AlarmScheduleError.notAuthorized(authError ?? "Alarm permission not granted")
+        }
+
+        let alarmID = UUID()
+
+        let presentation = AlarmPresentation(
+            alert: AlarmPresentation.Alert(
+                title: LocalizedStringResource(stringLiteral: title),
+                stopButton: AlarmButton(
+                    text: LocalizedStringResource(stringLiteral: "Stop"),
+                    textColor: .white,
+                    systemImageName: "stop.fill"
+                ),
+                secondaryButton: AlarmButton(
+                    text: LocalizedStringResource(stringLiteral: "Snooze"),
+                    textColor: .white,
+                    systemImageName: "clock.fill"
+                ),
+                secondaryButtonBehavior: .countdown
+            )
+        )
+
+        let attributes = AlarmAttributes<AthanAlarmMetadata>(
+            presentation: presentation,
+            metadata: AthanAlarmMetadata(prayerName: "custom_\(id.uuidString)", prayerTime: alarmTime),
+            tintColor: .green
+        )
+
+        let sound: AlertConfiguration.AlertSound
+        if let name = audioFileName, !name.isEmpty {
+            sound = .named(name)
+        } else {
+            sound = .default
+        }
+
+        let configuration = AlarmKit.AlarmManager.AlarmConfiguration.alarm(
+            schedule: .fixed(alarmTime),
+            attributes: attributes,
+            sound: sound
+        )
+
+        _ = try await manager.schedule(id: alarmID, configuration: configuration)
+        let trackingKey = "custom_\(id.uuidString)"
+        scheduledAlarmIDs[trackingKey, default: []].append(alarmID)
+    }
+
+    /// Schedule a pre-alarm that fires before a prayer.
+    func schedulePreAlarm(
+        for prayer: PrayerName,
+        at preAlarmTime: Date,
+        minutesBefore: Int,
+        audioFileName: String? = nil
+    ) async throws {
+        if !isAuthorized {
+            await requestAuthorization()
+        }
+        guard isAuthorized else {
+            throw AlarmScheduleError.notAuthorized(authError ?? "Alarm permission not granted")
+        }
+
+        let alarmID = UUID()
+
+        let title = "\(prayer.localizedName) in \(minutesBefore) min"
+        let presentation = AlarmPresentation(
+            alert: AlarmPresentation.Alert(
+                title: LocalizedStringResource(stringLiteral: title),
+                stopButton: AlarmButton(
+                    text: LocalizedStringResource(stringLiteral: "Stop"),
+                    textColor: .white,
+                    systemImageName: "stop.fill"
+                ),
+                secondaryButton: AlarmButton(
+                    text: LocalizedStringResource(stringLiteral: "Snooze"),
+                    textColor: .white,
+                    systemImageName: "clock.fill"
+                ),
+                secondaryButtonBehavior: .countdown
+            )
+        )
+
+        let attributes = AlarmAttributes<AthanAlarmMetadata>(
+            presentation: presentation,
+            metadata: AthanAlarmMetadata(prayerName: "\(prayer.rawValue)_prealarm", prayerTime: preAlarmTime),
+            tintColor: .orange
+        )
+
+        let sound: AlertConfiguration.AlertSound
+        if let name = audioFileName, !name.isEmpty {
+            sound = .named(name)
+        } else {
+            sound = .default
+        }
+
+        let configuration = AlarmKit.AlarmManager.AlarmConfiguration.alarm(
+            schedule: .fixed(preAlarmTime),
+            attributes: attributes,
+            sound: sound
+        )
+
+        _ = try await manager.schedule(id: alarmID, configuration: configuration)
+        let trackingKey = "\(prayer.rawValue)_prealarm"
+        scheduledAlarmIDs[trackingKey, default: []].append(alarmID)
+    }
+
+    /// Cancel all alarms for a specific prayer.
     func cancelAlarm(for prayer: PrayerName) {
-        guard let alarmID = scheduledAlarmIDs[prayer.rawValue] else { return }
-        try? manager.cancel(id: alarmID)
+        if let alarmIDs = scheduledAlarmIDs[prayer.rawValue] {
+            for alarmID in alarmIDs {
+                try? manager.cancel(id: alarmID)
+            }
+        }
         scheduledAlarmIDs.removeValue(forKey: prayer.rawValue)
     }
 
     /// Cancel all scheduled athan alarms.
     func cancelAll() {
-        for (_, alarmID) in scheduledAlarmIDs {
-            try? manager.cancel(id: alarmID)
+        if let alarms = try? manager.alarms {
+            for alarm in alarms {
+                try? manager.cancel(id: alarm.id)
+            }
         }
         scheduledAlarmIDs.removeAll()
     }

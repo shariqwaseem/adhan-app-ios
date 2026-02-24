@@ -15,14 +15,17 @@ final class UserPreferences {
     var maghribNotificationMode: String = PrayerNotificationMode.notification.rawValue
     var ishaNotificationMode: String = PrayerNotificationMode.notification.rawValue
 
-    // Alarm time offset (minutes before prayer time, 0 = at prayer time)
-    // Only used when mode is .alarm
-    var tahajjudAlarmOffset: Int = 0
-    var fajrAlarmOffset: Int = 0
-    var dhuhrAlarmOffset: Int = 0
-    var asrAlarmOffset: Int = 0
-    var maghribAlarmOffset: Int = 0
-    var ishaAlarmOffset: Int = 0
+    // Per-prayer alarm audio selection (filename without extension, "" = system default)
+    var tahajjudAlarmAudio: String = ""
+    var fajrAlarmAudio: String = ""
+    var dhuhrAlarmAudio: String = ""
+    var asrAlarmAudio: String = ""
+    var maghribAlarmAudio: String = ""
+    var ishaAlarmAudio: String = ""
+
+    // Pre-alarm: minutes before prayer (0 = disabled, 10–120)
+    var fajrPreAlarmMinutes: Int = 0
+    var tahajjudPreAlarmMinutes: Int = 0
 
     // Ramadan
     var ramadanAutoDetect: Bool = true
