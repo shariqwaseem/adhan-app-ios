@@ -1,7 +1,10 @@
 import Foundation
 import Observation
+
+#if canImport(AlarmKit)
 import AlarmKit
 import ActivityKit
+#endif
 
 @Observable
 @MainActor
@@ -10,23 +13,48 @@ final class AthanAlarmManager {
     var authError: String? = nil
     var scheduledAlarmIDs: [String: [UUID]] = [:]  // prayerName -> alarm UUIDs (one per scheduled day)
 
-    nonisolated(unsafe) private let manager = AlarmKit.AlarmManager.shared
+    nonisolated static var isAlarmSupported: Bool {
+        if #available(iOS 26, *) {
+            return true
+        }
+        return false
+    }
+
+    #if canImport(AlarmKit)
+    @available(iOS 26, *)
+    nonisolated private var _manager: AlarmKit.AlarmManager {
+        AlarmKit.AlarmManager.shared
+    }
+    #endif
 
     func requestAuthorization() async {
-        do {
-            let state = try await manager.requestAuthorization()
-            isAuthorized = state == .authorized
-            if !isAuthorized {
-                authError = "Alarm permission denied. Go to Settings > Apps > Athan to enable."
+        #if canImport(AlarmKit)
+        if #available(iOS 26, *) {
+            do {
+                let state = try await _manager.requestAuthorization()
+                isAuthorized = state == .authorized
+                if !isAuthorized {
+                    authError = "Alarm permission denied. Go to Settings > Apps > Athan to enable."
+                }
+            } catch {
+                isAuthorized = false
+                authError = "Alarm auth error: \(error.localizedDescription)"
             }
-        } catch {
-            isAuthorized = false
-            authError = "Alarm auth error: \(error.localizedDescription)"
+            return
         }
+        #endif
+        isAuthorized = false
+        authError = "Alarm mode requires iOS 26 or later."
     }
 
     func checkAuthorization() {
-        isAuthorized = manager.authorizationState == .authorized
+        #if canImport(AlarmKit)
+        if #available(iOS 26, *) {
+            isAuthorized = _manager.authorizationState == .authorized
+            return
+        }
+        #endif
+        isAuthorized = false
     }
 
     /// Schedule an alarm for a prayer at the given date.
@@ -35,53 +63,64 @@ final class AthanAlarmManager {
         at prayerTime: Date,
         audioFileName: String? = nil
     ) async throws {
-        if !isAuthorized {
-            await requestAuthorization()
-        }
-        guard isAuthorized else {
-            throw AlarmScheduleError.notAuthorized(authError ?? "Alarm permission not granted")
-        }
+        #if canImport(AlarmKit)
+        if #available(iOS 26, *) {
+            if !isAuthorized {
+                await requestAuthorization()
+            }
+            guard isAuthorized else {
+                throw AlarmScheduleError.notAuthorized(authError ?? "Alarm permission not granted")
+            }
 
-        let alarmID = UUID()
+            let alarmID = UUID()
 
-        let presentation = AlarmPresentation(
-            alert: AlarmPresentation.Alert(
-                title: LocalizedStringResource(stringLiteral: "\(prayer.localizedName) Prayer"),
-                stopButton: AlarmButton(
-                    text: LocalizedStringResource(stringLiteral: "Stop"),
-                    textColor: .white,
-                    systemImageName: "stop.fill"
-                ),
-                secondaryButton: AlarmButton(
-                    text: LocalizedStringResource(stringLiteral: "Snooze"),
-                    textColor: .white,
-                    systemImageName: "clock.fill"
-                ),
-                secondaryButtonBehavior: .countdown
+            let bundle = LanguageManager.shared.bundle
+            let prayerTitle = String(localized: "\(prayer.localizedName) Prayer", bundle: bundle)
+            let stopText = String(localized: "Stop", bundle: bundle)
+            let snoozeText = String(localized: "Snooze", bundle: bundle)
+
+            let presentation = AlarmPresentation(
+                alert: AlarmPresentation.Alert(
+                    title: LocalizedStringResource(stringLiteral: prayerTitle),
+                    stopButton: AlarmButton(
+                        text: LocalizedStringResource(stringLiteral: stopText),
+                        textColor: .white,
+                        systemImageName: "stop.fill"
+                    ),
+                    secondaryButton: AlarmButton(
+                        text: LocalizedStringResource(stringLiteral: snoozeText),
+                        textColor: .white,
+                        systemImageName: "clock.fill"
+                    ),
+                    secondaryButtonBehavior: .countdown
+                )
             )
-        )
 
-        let attributes = AlarmAttributes<AthanAlarmMetadata>(
-            presentation: presentation,
-            metadata: AthanAlarmMetadata(prayerName: prayer.rawValue, prayerTime: prayerTime),
-            tintColor: .green
-        )
+            let attributes = AlarmAttributes<AthanAlarmMetadata>(
+                presentation: presentation,
+                metadata: AthanAlarmMetadata(prayerName: prayer.rawValue, prayerTime: prayerTime),
+                tintColor: .green
+            )
 
-        let sound: AlertConfiguration.AlertSound
-        if let name = audioFileName, !name.isEmpty {
-            sound = .named(name)
-        } else {
-            sound = .default
+            let sound: AlertConfiguration.AlertSound
+            if let name = audioFileName, !name.isEmpty {
+                sound = .named(name)
+            } else {
+                sound = .default
+            }
+
+            let configuration = AlarmKit.AlarmManager.AlarmConfiguration.alarm(
+                schedule: .fixed(prayerTime),
+                attributes: attributes,
+                sound: sound
+            )
+
+            _ = try await _manager.schedule(id: alarmID, configuration: configuration)
+            scheduledAlarmIDs[prayer.rawValue, default: []].append(alarmID)
+            return
         }
-
-        let configuration = AlarmKit.AlarmManager.AlarmConfiguration.alarm(
-            schedule: .fixed(prayerTime),
-            attributes: attributes,
-            sound: sound
-        )
-
-        _ = try await manager.schedule(id: alarmID, configuration: configuration)
-        scheduledAlarmIDs[prayer.rawValue, default: []].append(alarmID)
+        #endif
+        throw AlarmScheduleError.notAuthorized("Alarm mode requires iOS 26 or later.")
     }
 
     /// Schedule an alarm for a custom alarm entry.
@@ -91,54 +130,64 @@ final class AthanAlarmManager {
         at alarmTime: Date,
         audioFileName: String? = nil
     ) async throws {
-        if !isAuthorized {
-            await requestAuthorization()
-        }
-        guard isAuthorized else {
-            throw AlarmScheduleError.notAuthorized(authError ?? "Alarm permission not granted")
-        }
+        #if canImport(AlarmKit)
+        if #available(iOS 26, *) {
+            if !isAuthorized {
+                await requestAuthorization()
+            }
+            guard isAuthorized else {
+                throw AlarmScheduleError.notAuthorized(authError ?? "Alarm permission not granted")
+            }
 
-        let alarmID = UUID()
+            let alarmID = UUID()
 
-        let presentation = AlarmPresentation(
-            alert: AlarmPresentation.Alert(
-                title: LocalizedStringResource(stringLiteral: title),
-                stopButton: AlarmButton(
-                    text: LocalizedStringResource(stringLiteral: "Stop"),
-                    textColor: .white,
-                    systemImageName: "stop.fill"
-                ),
-                secondaryButton: AlarmButton(
-                    text: LocalizedStringResource(stringLiteral: "Snooze"),
-                    textColor: .white,
-                    systemImageName: "clock.fill"
-                ),
-                secondaryButtonBehavior: .countdown
+            let bundle = LanguageManager.shared.bundle
+            let stopText = String(localized: "Stop", bundle: bundle)
+            let snoozeText = String(localized: "Snooze", bundle: bundle)
+
+            let presentation = AlarmPresentation(
+                alert: AlarmPresentation.Alert(
+                    title: LocalizedStringResource(stringLiteral: title),
+                    stopButton: AlarmButton(
+                        text: LocalizedStringResource(stringLiteral: stopText),
+                        textColor: .white,
+                        systemImageName: "stop.fill"
+                    ),
+                    secondaryButton: AlarmButton(
+                        text: LocalizedStringResource(stringLiteral: snoozeText),
+                        textColor: .white,
+                        systemImageName: "clock.fill"
+                    ),
+                    secondaryButtonBehavior: .countdown
+                )
             )
-        )
 
-        let attributes = AlarmAttributes<AthanAlarmMetadata>(
-            presentation: presentation,
-            metadata: AthanAlarmMetadata(prayerName: "custom_\(id.uuidString)", prayerTime: alarmTime),
-            tintColor: .green
-        )
+            let attributes = AlarmAttributes<AthanAlarmMetadata>(
+                presentation: presentation,
+                metadata: AthanAlarmMetadata(prayerName: "custom_\(id.uuidString)", prayerTime: alarmTime),
+                tintColor: .green
+            )
 
-        let sound: AlertConfiguration.AlertSound
-        if let name = audioFileName, !name.isEmpty {
-            sound = .named(name)
-        } else {
-            sound = .default
+            let sound: AlertConfiguration.AlertSound
+            if let name = audioFileName, !name.isEmpty {
+                sound = .named(name)
+            } else {
+                sound = .default
+            }
+
+            let configuration = AlarmKit.AlarmManager.AlarmConfiguration.alarm(
+                schedule: .fixed(alarmTime),
+                attributes: attributes,
+                sound: sound
+            )
+
+            _ = try await _manager.schedule(id: alarmID, configuration: configuration)
+            let trackingKey = "custom_\(id.uuidString)"
+            scheduledAlarmIDs[trackingKey, default: []].append(alarmID)
+            return
         }
-
-        let configuration = AlarmKit.AlarmManager.AlarmConfiguration.alarm(
-            schedule: .fixed(alarmTime),
-            attributes: attributes,
-            sound: sound
-        )
-
-        _ = try await manager.schedule(id: alarmID, configuration: configuration)
-        let trackingKey = "custom_\(id.uuidString)"
-        scheduledAlarmIDs[trackingKey, default: []].append(alarmID)
+        #endif
+        throw AlarmScheduleError.notAuthorized("Alarm mode requires iOS 26 or later.")
     }
 
     /// Schedule a pre-alarm that fires before a prayer.
@@ -148,80 +197,92 @@ final class AthanAlarmManager {
         minutesBefore: Int,
         audioFileName: String? = nil
     ) async throws {
-        if !isAuthorized {
-            await requestAuthorization()
-        }
-        guard isAuthorized else {
-            throw AlarmScheduleError.notAuthorized(authError ?? "Alarm permission not granted")
-        }
+        #if canImport(AlarmKit)
+        if #available(iOS 26, *) {
+            if !isAuthorized {
+                await requestAuthorization()
+            }
+            guard isAuthorized else {
+                throw AlarmScheduleError.notAuthorized(authError ?? "Alarm permission not granted")
+            }
 
-        let alarmID = UUID()
+            let alarmID = UUID()
 
-        let title = "\(prayer.localizedName) in \(minutesBefore) min"
-        let presentation = AlarmPresentation(
-            alert: AlarmPresentation.Alert(
-                title: LocalizedStringResource(stringLiteral: title),
-                stopButton: AlarmButton(
-                    text: LocalizedStringResource(stringLiteral: "Stop"),
-                    textColor: .white,
-                    systemImageName: "stop.fill"
-                ),
-                secondaryButton: AlarmButton(
-                    text: LocalizedStringResource(stringLiteral: "Snooze"),
-                    textColor: .white,
-                    systemImageName: "clock.fill"
-                ),
-                secondaryButtonBehavior: .countdown
+            let bundle = LanguageManager.shared.bundle
+            let title = String(localized: "\(prayer.localizedName) in \(minutesBefore) min", bundle: bundle)
+            let stopText = String(localized: "Stop", bundle: bundle)
+            let snoozeText = String(localized: "Snooze", bundle: bundle)
+            let presentation = AlarmPresentation(
+                alert: AlarmPresentation.Alert(
+                    title: LocalizedStringResource(stringLiteral: title),
+                    stopButton: AlarmButton(
+                        text: LocalizedStringResource(stringLiteral: stopText),
+                        textColor: .white,
+                        systemImageName: "stop.fill"
+                    ),
+                    secondaryButton: AlarmButton(
+                        text: LocalizedStringResource(stringLiteral: snoozeText),
+                        textColor: .white,
+                        systemImageName: "clock.fill"
+                    ),
+                    secondaryButtonBehavior: .countdown
+                )
             )
-        )
 
-        let attributes = AlarmAttributes<AthanAlarmMetadata>(
-            presentation: presentation,
-            metadata: AthanAlarmMetadata(prayerName: "\(prayer.rawValue)_prealarm", prayerTime: preAlarmTime),
-            tintColor: .orange
-        )
+            let attributes = AlarmAttributes<AthanAlarmMetadata>(
+                presentation: presentation,
+                metadata: AthanAlarmMetadata(prayerName: "\(prayer.rawValue)_prealarm", prayerTime: preAlarmTime),
+                tintColor: .orange
+            )
 
-        let sound: AlertConfiguration.AlertSound
-        if let name = audioFileName, !name.isEmpty {
-            sound = .named(name)
-        } else {
-            sound = .default
+            let sound: AlertConfiguration.AlertSound
+            if let name = audioFileName, !name.isEmpty {
+                sound = .named(name)
+            } else {
+                sound = .default
+            }
+
+            let configuration = AlarmKit.AlarmManager.AlarmConfiguration.alarm(
+                schedule: .fixed(preAlarmTime),
+                attributes: attributes,
+                sound: sound
+            )
+
+            _ = try await _manager.schedule(id: alarmID, configuration: configuration)
+            let trackingKey = "\(prayer.rawValue)_prealarm"
+            scheduledAlarmIDs[trackingKey, default: []].append(alarmID)
+            return
         }
-
-        let configuration = AlarmKit.AlarmManager.AlarmConfiguration.alarm(
-            schedule: .fixed(preAlarmTime),
-            attributes: attributes,
-            sound: sound
-        )
-
-        _ = try await manager.schedule(id: alarmID, configuration: configuration)
-        let trackingKey = "\(prayer.rawValue)_prealarm"
-        scheduledAlarmIDs[trackingKey, default: []].append(alarmID)
+        #endif
+        throw AlarmScheduleError.notAuthorized("Alarm mode requires iOS 26 or later.")
     }
 
     /// Cancel all alarms for a specific prayer.
     func cancelAlarm(for prayer: PrayerName) {
-        if let alarmIDs = scheduledAlarmIDs[prayer.rawValue] {
-            for alarmID in alarmIDs {
-                try? manager.cancel(id: alarmID)
+        #if canImport(AlarmKit)
+        if #available(iOS 26, *) {
+            if let alarmIDs = scheduledAlarmIDs[prayer.rawValue] {
+                for alarmID in alarmIDs {
+                    try? _manager.cancel(id: alarmID)
+                }
             }
         }
+        #endif
         scheduledAlarmIDs.removeValue(forKey: prayer.rawValue)
     }
 
     /// Cancel all scheduled athan alarms.
     func cancelAll() {
-        if let alarms = try? manager.alarms {
-            for alarm in alarms {
-                try? manager.cancel(id: alarm.id)
+        #if canImport(AlarmKit)
+        if #available(iOS 26, *) {
+            if let alarms = try? _manager.alarms {
+                for alarm in alarms {
+                    try? _manager.cancel(id: alarm.id)
+                }
             }
         }
+        #endif
         scheduledAlarmIDs.removeAll()
-    }
-
-    /// Get the current list of active alarms from AlarmKit.
-    func activeAlarms() -> [Alarm] {
-        (try? manager.alarms) ?? []
     }
 }
 

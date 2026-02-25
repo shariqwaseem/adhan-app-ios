@@ -82,6 +82,7 @@ struct AthanApp: App {
     @State private var prayerTimesViewModel = PrayerTimesViewModel()
     @State private var locationManager = LocationManager()
     @State private var notificationScheduler = NotificationScheduler()
+    @State private var selectedTab = "prayer"
 
     var sharedModelContainer: ModelContainer = {
         try! ModelContainer(for: UserPreferences.self, CustomAlarm.self)
@@ -89,10 +90,14 @@ struct AthanApp: App {
 
     var body: some Scene {
         WindowGroup {
-            MainTabView()
+            MainTabView(selectedTab: $selectedTab)
+                .id(LanguageManager.shared.currentLanguage)
                 .environment(prayerTimesViewModel)
                 .environment(locationManager)
                 .environment(notificationScheduler)
+                .environment(LanguageManager.shared)
+                .environment(\.locale, LanguageManager.shared.locale)
+                .environment(\.layoutDirection, LanguageManager.shared.isRTL ? .rightToLeft : .leftToRight)
                 .task {
                     locationManager.requestWhenInUsePermission()
                     await notificationScheduler.requestPermission()
@@ -144,11 +149,14 @@ struct AthanApp: App {
     private func onLocationChanged() {
         guard locationManager.latitude != 0 || locationManager.longitude != 0 else { return }
         guard locationManager.cityName != "Set Location" else { return }
+        let isManual = locationManager.isManualLocationRequest
+        locationManager.isManualLocationRequest = false
         prayerTimesViewModel.updateLocation(
             latitude: locationManager.latitude,
             longitude: locationManager.longitude,
             cityName: locationManager.cityName,
-            countryCode: locationManager.countryCode
+            countryCode: locationManager.countryCode,
+            autoSetCalculationMethod: isManual
         )
         Task { @MainActor in
             await notificationScheduler.rescheduleAll(

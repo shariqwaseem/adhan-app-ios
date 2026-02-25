@@ -166,14 +166,8 @@ struct PrayerCalculationService: PrayerCalculationServiceProtocol {
             return CalculationMethod.qatar.params
         case .Singapore:
             return CalculationMethod.singapore.params
-        case .Tehran:
-            return CalculationMethod.tehran.params
         case .Jafari:
-            var params = CalculationMethod.other.params
-            params.fajrAngle = 16
-            params.maghribAngle = 4
-            params.ishaAngle = 14
-            return params
+            return CalculationMethod.tehran.params
         case .Turkey:
             return CalculationMethod.turkey.params
         case .Other:

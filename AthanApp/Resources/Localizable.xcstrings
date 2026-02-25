@@ -1,6 +1,28 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@ in %lld min" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ بعد %lld دقيقة"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ dalam %lld menit"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ %lld dk içinde"
+          }
+        }
+      }
+    },
     "%@ in %lld minutes" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -21,11 +43,239 @@
             "state" : "translated",
             "value" : "%@ %lld dakika içinde"
           }
-        },
-        "ur" : {
+        }
+      }
+    },
+    "%@ Prayer" : {
+      "localizations" : {
+        "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ %lld منٹ میں"
+            "value" : "صلاة %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ Prayer"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sholat %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ Namazı"
+          }
+        }
+      }
+    },
+    "%lld hours" : {
+      "localizations" : {
+        "ar" : {
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld ساعات"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld ساعة"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "ساعة واحدة"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld ساعة"
+                }
+              },
+              "two" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "ساعتان"
+                }
+              },
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "٠ ساعة"
+                }
+              }
+            }
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld jam"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld saat"
+          }
+        }
+      }
+    },
+    "%lld minutes" : {
+      "localizations" : {
+        "ar" : {
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld دقائق"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld دقيقة"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "دقيقة واحدة"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld دقيقة"
+                }
+              },
+              "two" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "دقيقتان"
+                }
+              },
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "٠ دقيقة"
+                }
+              }
+            }
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld menit"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld dakika"
+          }
+        }
+      }
+    },
+    "%lldh %lldm" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld س %lld د"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld j %lld m"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld sa %lld dk"
+          }
+        }
+      }
+    },
+    "%lldh %lldm %llds" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld س %lld د %lld ث"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld j %lld m %lld d"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld sa %lld dk %lld sn"
+          }
+        }
+      }
+    },
+    "%lldm %llds" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld د %lld ث"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld m %lld d"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld dk %lld sn"
+          }
+        }
+      }
+    },
+    "1 hour" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ساعة واحدة"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 jam"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 saat"
           }
         }
       }
@@ -49,23 +299,102 @@
             "state" : "translated",
             "value" : "Hakkında"
           }
-        },
-        "ur" : {
+        }
+      }
+    },
+    "Adhan Sounds" : {
+
+    },
+    "Alarm" : {
+      "localizations" : {
+        "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "کے بارے میں"
+            "value" : "تنبيه"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm"
           }
         }
       }
     },
     "Alarm mode plays the full athan sound and bypasses Silent Mode. Requires Alarm permission." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "وضع التنبيه يشغل صوت الأذان الكامل ويتجاوز الوضع الصامت. يتطلب إذن التنبيه."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode alarm memutar suara adzan penuh dan mengabaikan Mode Senyap. Memerlukan izin Alarm."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm modu tam ezan sesini çalar ve Sessiz Modu devre dışı bırakır. Alarm izni gerektirir."
+          }
+        }
+      }
+    },
+    "Alarm mode requires iOS 26 or later. Please update your device to use this feature." : {
 
     },
     "Alarm name" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اسم التنبيه"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nama alarm"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm adı"
+          }
+        }
+      }
     },
     "Alarm Sound" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "صوت التنبيه"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suara Alarm"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm Sesi"
+          }
+        }
+      }
     },
     "Aligned with Qibla" : {
       "extractionState" : "stale",
@@ -86,12 +415,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kıbleye yönelik"
-          }
-        },
-        "ur" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "قبلہ کی طرف"
           }
         }
       }
@@ -116,32 +439,187 @@
             "state" : "translated",
             "value" : "İkindi"
           }
-        },
-        "ur" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "عصر"
-          }
         }
       }
     },
     "Asr Calculation" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حساب العصر"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Perhitungan Ashar"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İkindi Hesabı"
+          }
+        }
+      }
+    },
+    "Bahasa Indonesia" : {
 
     },
     "Cancel" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إلغاء"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Batal"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İptal"
+          }
+        }
+      }
     },
     "City" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المدينة"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kota"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şehir"
+          }
+        }
+      }
     },
     "Currently set to %@" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الموقع الحالي: %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saat ini diatur ke %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şu anda %@ olarak ayarlı"
+          }
+        }
+      }
+    },
+    "Custom alarm: %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تنبيه مخصص: %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm kustom: %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Özel alarm: %@"
+          }
+        }
+      }
+    },
+    "Default" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "افتراضي"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bawaan"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varsayılan"
+          }
+        }
+      }
     },
     "Delete Alarm" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حذف التنبيه"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hapus Alarm"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarmı Sil"
+          }
+        }
+      }
     },
     "Delivery Mode" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نمط التسليم"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode Pengiriman"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildirim Modu"
+          }
+        }
+      }
     },
     "Dhuhr" : {
       "extractionState" : "stale",
@@ -163,16 +641,104 @@
             "state" : "translated",
             "value" : "Öğle"
           }
-        },
-        "ur" : {
+        }
+      }
+    },
+    "Display" : {
+
+    },
+    "Diyanet İşleri Başkanlığı, Turkey" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ظہر"
+            "value" : "رئاسة الشؤون الدينية، تركيا"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diyanet İşleri Başkanlığı, Turki"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diyanet İşleri Başkanlığı"
+          }
+        }
+      }
+    },
+    "Dubai" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "دبي"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dubai"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dubai"
           }
         }
       }
     },
     "Edit Alarm" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تعديل التنبيه"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit Alarm"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarmı Düzenle"
+          }
+        }
+      }
+    },
+    "Egyptian General Authority" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الهيئة المصرية العامة للمساحة"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otoritas Umum Mesir"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mısır Genel Kurumu"
+          }
+        }
+      }
+    },
+    "English" : {
 
     },
     "Fajr" : {
@@ -195,20 +761,98 @@
             "state" : "translated",
             "value" : "İmsak"
           }
-        },
-        "ur" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "فجر"
-          }
         }
       }
     },
     "Fire in 5 seconds" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الإطلاق بعد ٥ ثوانٍ"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktifkan dalam 5 detik"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "5 saniye içinde tetikle"
+          }
+        }
+      }
+    },
+    "Full athan alarm, bypasses Silent Mode" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تنبيه الأذان الكامل، يتجاوز الوضع الصامت"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm adzan penuh, mengabaikan Mode Senyap"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tam ezan alarmı, Sessiz Modu devre dışı bırakır"
+          }
+        }
+      }
+    },
+    "Hanafi" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حنفي"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hanafi"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hanefi"
+          }
+        }
+      }
     },
     "High Latitude" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "خطوط العرض العالية"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lintang Tinggi"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yüksek Enlem"
+          }
+        }
+      }
     },
     "Home" : {
       "extractionState" : "stale",
@@ -229,12 +873,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ana Sayfa"
-          }
-        },
-        "ur" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ہوم"
           }
         }
       }
@@ -258,17 +896,30 @@
             "state" : "translated",
             "value" : "İftar"
           }
-        },
-        "ur" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "افطار"
-          }
         }
       }
     },
     "Iftar in %@" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الإفطار بعد %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buka puasa dalam %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İftara %@"
+          }
+        }
+      }
     },
     "Isha" : {
       "extractionState" : "stale",
@@ -290,11 +941,28 @@
             "state" : "translated",
             "value" : "Yatsı"
           }
-        },
-        "ur" : {
+        }
+      }
+    },
+    "ISNA (North America)" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "عشاء"
+            "value" : "ISNA (أمريكا الشمالية)"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISNA (Amerika Utara)"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISNA (Kuzey Amerika)"
           }
         }
       }
@@ -318,11 +986,50 @@
             "state" : "translated",
             "value" : "%@ namazı vakti girdi"
           }
-        },
-        "ur" : {
+        }
+      }
+    },
+    "Kuwait" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ نماز کا وقت ہو گیا ہے"
+            "value" : "الكويت"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kuwait"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kuveyt"
+          }
+        }
+      }
+    },
+    "Language" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اللغة"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bahasa"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dil"
           }
         }
       }
@@ -345,12 +1052,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Konum"
-          }
-        },
-        "ur" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "مقام"
           }
         }
       }
@@ -375,26 +1076,216 @@
             "state" : "translated",
             "value" : "Akşam"
           }
-        },
-        "ur" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "مغرب"
-          }
         }
       }
     },
     "Method" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الطريقة"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Metode"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yöntem"
+          }
+        }
+      }
+    },
+    "Middle of the Night" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "منتصف الليل"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tengah Malam"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gecenin Ortası"
+          }
+        }
+      }
+    },
+    "Moonsighting Committee" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لجنة رؤية الهلال"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Komite Pengamatan Bulan"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hilal Gözlem Komitesi"
+          }
+        }
+      }
+    },
+    "Muslim World League" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "رابطة العالم الإسلامي"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liga Muslim Dunia"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dünya İslam Birliği"
+          }
+        }
+      }
     },
     "Name" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الاسم"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nama"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ad"
+          }
+        }
+      }
     },
     "New Alarm" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تنبيه جديد"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm Baru"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni Alarm"
+          }
+        }
+      }
+    },
+    "Next alarm" : {
+
+    },
+    "Next notification" : {
 
     },
     "No custom adhan audio selected. Set a prayer to Alarm mode and choose an adhan sound to test it here." : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لم يتم تحديد صوت أذان مخصص. اضبط صلاة على وضع التنبيه واختر صوت أذان لاختباره هنا."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tidak ada audio adzan kustom yang dipilih. Atur sholat ke mode Alarm dan pilih suara adzan untuk mengujinya di sini."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Özel ezan sesi seçilmedi. Bir namazı Alarm moduna ayarlayın ve burada test etmek için bir ezan sesi seçin."
+          }
+        }
+      }
+    },
+    "No notification" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بدون إشعار"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tanpa notifikasi"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildirim yok"
+          }
+        }
+      }
+    },
+    "Notification" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إشعار"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifikasi"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildirim"
+          }
+        }
+      }
     },
     "Notification Mode" : {
       "extractionState" : "stale",
@@ -416,17 +1307,30 @@
             "state" : "translated",
             "value" : "Bildirim Modu"
           }
-        },
-        "ur" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "اطلاع کا طریقہ"
-          }
         }
       }
     },
     "now" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الآن"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sekarang"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "şimdi"
+          }
+        }
+      }
     },
     "Now" : {
       "extractionState" : "stale",
@@ -448,11 +1352,28 @@
             "state" : "translated",
             "value" : "Şimdi"
           }
-        },
-        "ur" : {
+        }
+      }
+    },
+    "Other" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ابھی"
+            "value" : "أخرى"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lainnya"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diğer"
           }
         }
       }
@@ -476,20 +1397,52 @@
             "state" : "translated",
             "value" : "Namaz"
           }
-        },
-        "ur" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "نماز"
-          }
         }
       }
     },
     "Prayer Calculation" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حساب الصلاة"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Perhitungan Sholat"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Namaz Hesaplama"
+          }
+        }
+      }
     },
     "Pre-Alarm" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تنبيه مسبق"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pra-Alarm"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ön Alarm"
+          }
+        }
+      }
     },
     "Prepare for %@ prayer" : {
       "localizations" : {
@@ -510,11 +1463,28 @@
             "state" : "translated",
             "value" : "%@ namazına hazırlanın"
           }
-        },
-        "ur" : {
+        }
+      }
+    },
+    "Qatar" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ نماز کی تیاری کریں"
+            "value" : "قطر"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qatar"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Katar"
           }
         }
       }
@@ -537,12 +1507,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kıble"
-          }
-        },
-        "ur" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "قبلہ"
           }
         }
       }
@@ -567,12 +1531,6 @@
             "state" : "translated",
             "value" : "Kıble Yönü"
           }
-        },
-        "ur" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "قبلہ کی سمت"
-          }
         }
       }
     },
@@ -596,29 +1554,118 @@
             "state" : "translated",
             "value" : "Ramazan"
           }
-        },
-        "ur" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "رمضان"
-          }
         }
       }
     },
     "Ramadan Day %lld" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "رمضان اليوم %lld"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ramadan Hari ke-%lld"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ramazan %lld. Gün"
+          }
+        }
+      }
     },
     "Result" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "النتيجة"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hasil"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sonuç"
+          }
+        }
+      }
     },
     "Rings before %@ using the same delivery mode and sound." : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يرن قبل %@ باستخدام نفس نمط التسليم والصوت."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Berbunyi sebelum %@ menggunakan mode pengiriman dan suara yang sama."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ öncesinde aynı bildirim modu ve sesle çalar."
+          }
+        }
+      }
     },
     "Save" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حفظ"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simpan"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaydet"
+          }
+        }
+      }
     },
     "Search City" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بحث عن مدينة"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cari Kota"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şehir Ara"
+          }
+        }
+      }
     },
     "Settings" : {
       "localizations" : {
@@ -639,20 +1686,79 @@
             "state" : "translated",
             "value" : "Ayarlar"
           }
-        },
-        "ur" : {
+        }
+      }
+    },
+    "Seventh of the Night" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ترتیبات"
+            "value" : "سُبع الليل"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sepertujuh Malam"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gecenin Yedide Biri"
           }
         }
       }
     },
     "Shia" : {
-
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "شيعة"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Syiah"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şii"
+          }
+        }
+      }
+    },
+    "Shia (Jafari)" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الشيعة (الجعفري)"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Syiah (Jafari)"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şii (Caferi)"
+          }
+        }
+      }
     },
     "Silent" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -671,17 +1777,53 @@
             "state" : "translated",
             "value" : "Sessiz"
           }
-        },
-        "ur" : {
+        }
+      }
+    },
+    "Singapore" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "خاموش"
+            "value" : "سنغافورة"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Singapura"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Singapur"
           }
         }
       }
     },
     "Snooze" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "غفوة"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tunda"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ertele"
+          }
+        }
+      }
     },
     "Sound" : {
       "localizations" : {
@@ -702,17 +1844,76 @@
             "state" : "translated",
             "value" : "Ses"
           }
-        },
-        "ur" : {
+        }
+      }
+    },
+    "Standard (Shafi'i, Maliki, Hanbali)" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "آواز"
+            "value" : "معياري (شافعي، مالكي، حنبلي)"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standar (Syafi'i, Maliki, Hanbali)"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standart (Şafii, Maliki, Hanbeli)"
+          }
+        }
+      }
+    },
+    "Standard notification with sound" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إشعار عادي مع صوت"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifikasi standar dengan suara"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sesli standart bildirim"
           }
         }
       }
     },
     "Stop" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إيقاف"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Berhenti"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durdur"
+          }
+        }
+      }
     },
     "Suhoor" : {
       "localizations" : {
@@ -733,20 +1934,53 @@
             "state" : "translated",
             "value" : "Sahur"
           }
-        },
-        "ur" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "سحری"
-          }
         }
       }
     },
     "Suhoor in %@" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "السحور بعد %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sahur dalam %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sahura %@"
+          }
+        }
+      }
     },
     "Sunni" : {
-
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سنّي"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sunni"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sünni"
+          }
+        }
+      }
     },
     "Sunrise" : {
       "extractionState" : "stale",
@@ -768,47 +2002,389 @@
             "state" : "translated",
             "value" : "Güneş"
           }
-        },
-        "ur" : {
+        }
+      }
+    },
+    "System Default" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "طلوع آفتاب"
+            "value" : "افتراضي النظام"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bawaan Sistem"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistem Varsayılanı"
           }
         }
       }
     },
     "Test" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اختبار"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tes"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Test"
+          }
+        }
+      }
     },
     "Test Alarm (Default Sound)" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اختبار التنبيه (الصوت الافتراضي)"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tes Alarm (Suara Bawaan)"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Test Alarmı (Varsayılan Ses)"
+          }
+        }
+      }
     },
     "Test Alarm with Adhan Audio" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اختبار التنبيه بصوت الأذان"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tes Alarm dengan Audio Adzan"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ezan Sesiyle Alarm Testi"
+          }
+        }
+      }
     },
     "Test Notification" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اختبار الإشعار"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tes Notifikasi"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildirim Testi"
+          }
+        }
+      }
+    },
+    "Test Prayer" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اختبار الصلاة"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tes Sholat"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Test Namazı"
+          }
+        }
+      }
+    },
+    "This is a test notification with sound" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "هذا إشعار تجريبي مع صوت"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ini adalah notifikasi uji dengan suara"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu sesli bir test bildirimidir"
+          }
+        }
+      }
     },
     "till %@" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حتى %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "menuju %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ kala"
+          }
+        }
+      }
     },
     "Time" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الوقت"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waktu"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaman"
+          }
+        }
+      }
     },
     "Time Before" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الوقت قبل"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waktu Sebelum"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öncesi Süre"
+          }
+        }
+      }
     },
     "Triggers a test notification or alarm that fires 5 seconds from now." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يطلق إشعار تجريبي أو تنبيه بعد ٥ ثوانٍ من الآن."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memicu notifikasi uji atau alarm yang aktif 5 detik dari sekarang."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "5 saniye sonra test bildirimi veya alarm gönderir."
+          }
+        }
+      }
+    },
+    "Türkçe" : {
 
+    },
+    "Twilight Angle" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "زاوية الشفق"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sudut Senja"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alacakaranlık Açısı"
+          }
+        }
+      }
     },
     "Type a city name..." : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اكتب اسم مدينة..."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ketik nama kota..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir şehir adı yazın..."
+          }
+        }
+      }
+    },
+    "Umm Al-Qura University, Makkah" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "جامعة أم القرى، مكة"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Universitas Umm Al-Qura, Mekkah"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ümmü'l-Kura Üniversitesi, Mekke"
+          }
+        }
+      }
+    },
+    "University of Islamic Sciences, Karachi" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "جامعة العلوم الإسلامية، كراتشي"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Universitas Ilmu Islam, Karachi"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İslami İlimler Üniversitesi, Karaçi"
+          }
+        }
+      }
     },
     "Use Current Location" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "استخدام الموقع الحالي"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gunakan Lokasi Saat Ini"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mevcut Konumu Kullan"
+          }
+        }
+      }
     },
     "Version" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الإصدار"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Versi"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sürüm"
+          }
+        }
+      }
     },
     "Vibrate" : {
       "extractionState" : "stale",
@@ -830,14 +2406,11 @@
             "state" : "translated",
             "value" : "Titreşim"
           }
-        },
-        "ur" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "وائبریشن"
-          }
         }
       }
+    },
+    "العربية" : {
+
     }
   },
   "version" : "1.0"

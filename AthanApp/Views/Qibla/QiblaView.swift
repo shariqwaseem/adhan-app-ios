@@ -11,12 +11,13 @@ struct QiblaView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color(.systemGroupedBackground)
+                (qiblaViewModel.isAligned ? Color.green : Color(.systemGroupedBackground))
                     .ignoresSafeArea()
+                    .animation(.easeOut(duration: 0.3), value: qiblaViewModel.isAligned)
 
                 Image(systemName: "location.north.fill")
-                    .font(.system(size: 200, weight: .ultraLight))
-                    .foregroundStyle(qiblaViewModel.isAligned ? .green : .accentColor)
+                    .font(.system(size: 300, weight: .ultraLight))
+                    .foregroundStyle(qiblaViewModel.isAligned ? .white : .accentColor)
                     .rotationEffect(.degrees(qiblaAngle))
                     .animation(.easeOut(duration: 0.15), value: qiblaAngle)
             }

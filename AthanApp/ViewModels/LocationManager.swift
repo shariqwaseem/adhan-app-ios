@@ -12,6 +12,8 @@ final class LocationManager: NSObject {
     var authorizationStatus: CLAuthorizationStatus = .notDetermined
     var isAuthorized: Bool = false
     var locationError: String? = nil
+    var lastLocationUpdate: Date? = nil
+    var isManualLocationRequest: Bool = false
 
     private let manager = CLLocationManager()
     private let geocoder = CLGeocoder()
@@ -37,6 +39,7 @@ final class LocationManager: NSObject {
             requestWhenInUsePermission()
             return
         }
+        isManualLocationRequest = true
         manager.requestLocation()
     }
 
@@ -80,6 +83,7 @@ final class LocationManager: NSObject {
             } catch {
                 self.cityName = "Lat: \(String(format: "%.2f", location.coordinate.latitude)), Lon: \(String(format: "%.2f", location.coordinate.longitude))"
             }
+            self.lastLocationUpdate = Date()
         }
     }
 

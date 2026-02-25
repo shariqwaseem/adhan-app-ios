@@ -1,0 +1,134 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "CFBundleDisplayName": {
+      "comment": "Bundle display name",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "أذان"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Athan"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Athan"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ezan"
+          }
+        }
+      }
+    },
+    "CFBundleName": {
+      "comment": "Bundle name",
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Athan"
+          }
+        }
+      }
+    },
+    "NSAlarmKitUsageDescription": {
+      "extractionState": "stale",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "يستخدم أذان التنبيهات لإعلامك بأوقات الصلاة، حتى عندما يكون هاتفك على الوضع الصامت."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Athan uses alarms to alert you for prayer times, even when your phone is on silent."
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Athan menggunakan alarm untuk mengingatkan Anda waktu sholat, bahkan saat ponsel dalam mode senyap."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Athan, telefonunuz sessiz moddayken bile namaz vakitlerinde sizi uyarmak için alarm kullanır."
+          }
+        }
+      }
+    },
+    "NSLocationAlwaysAndWhenInUseUsageDescription": {
+      "comment": "Privacy - Location Always and When In Use Usage Description",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "يستخدم أذان موقعك في الخلفية لتحديث أوقات الصلاة عند انتقالك إلى منطقة جديدة."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Athan uses your location in the background to update prayer times when you move to a new area."
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Athan menggunakan lokasi Anda di latar belakang untuk memperbarui waktu sholat saat Anda pindah ke daerah baru."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Athan, yeni bir bölgeye taşındığınızda namaz vakitlerini güncellemek için arka planda konumunuzu kullanır."
+          }
+        }
+      }
+    },
+    "NSLocationWhenInUseUsageDescription": {
+      "comment": "Privacy - Location When In Use Usage Description",
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "يحتاج أذان إلى موقعك لحساب أوقات الصلاة الدقيقة لمنطقتك."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Athan needs your location to calculate accurate prayer times for your area."
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Athan memerlukan lokasi Anda untuk menghitung waktu sholat yang akurat untuk daerah Anda."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Athan, bölgeniz için doğru namaz vakitlerini hesaplamak için konumunuza ihtiyaç duyar."
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

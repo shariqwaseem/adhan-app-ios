@@ -11,12 +11,15 @@ enum CalculationMethodInfo: String, CaseIterable, Identifiable, Sendable {
     case Kuwait = "Kuwait"
     case Qatar = "Qatar"
     case Singapore = "Singapore"
-    case Tehran = "Institute of Geophysics, Tehran"
     case Jafari = "Shia (Jafari)"
     case Turkey = "Diyanet İşleri Başkanlığı, Turkey"
     case Other = "Other"
 
     var id: String { rawValue }
+
+    var localizedName: String {
+        String(localized: String.LocalizationValue(rawValue), bundle: LanguageManager.shared.bundle)
+    }
 
     static func recommendedMethod(forCountryCode code: String?) -> CalculationMethodInfo {
         guard let code = code?.uppercased() else { return .MuslimWorldLeague }
@@ -38,7 +41,7 @@ enum CalculationMethodInfo: String, CaseIterable, Identifiable, Sendable {
         case "SG", "MY", "ID":
             return .Singapore
         case "IR":
-            return .Tehran
+            return .Jafari
         case "IQ", "BH", "LB":
             return .Jafari
         case "TR":
@@ -56,6 +59,10 @@ enum AsrJuristicMethod: String, CaseIterable, Identifiable, Sendable {
     case hanafi = "Hanafi"
 
     var id: String { rawValue }
+
+    var localizedName: String {
+        String(localized: String.LocalizationValue(rawValue), bundle: LanguageManager.shared.bundle)
+    }
 }
 
 enum HighLatitudeRuleOption: String, CaseIterable, Identifiable, Sendable {
@@ -64,6 +71,10 @@ enum HighLatitudeRuleOption: String, CaseIterable, Identifiable, Sendable {
     case twilightAngle = "Twilight Angle"
 
     var id: String { rawValue }
+
+    var localizedName: String {
+        String(localized: String.LocalizationValue(rawValue), bundle: LanguageManager.shared.bundle)
+    }
 }
 
 enum PrayerNotificationMode: String, CaseIterable, Identifiable, Sendable {
@@ -87,5 +98,18 @@ enum PrayerNotificationMode: String, CaseIterable, Identifiable, Sendable {
         case .notification: return "Standard notification with sound"
         case .alarm: return "Full athan alarm, bypasses Silent Mode"
         }
+    }
+
+    var localizedName: String {
+        let bundle = LanguageManager.shared.bundle
+        switch self {
+        case .silent: return String(localized: "Silent", bundle: bundle)
+        case .notification: return String(localized: "Notification", bundle: bundle)
+        case .alarm: return String(localized: "Alarm", bundle: bundle)
+        }
+    }
+
+    var localizedDescription: String {
+        String(localized: String.LocalizationValue(description), bundle: LanguageManager.shared.bundle)
     }
 }

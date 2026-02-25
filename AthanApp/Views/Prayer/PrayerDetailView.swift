@@ -44,7 +44,9 @@ struct PrayerDetailView: View {
         } header: {
             Text("Delivery Mode")
         } footer: {
-            if selectedMode == .alarm {
+            if !AthanAlarmManager.isAlarmSupported {
+                Text("Alarm mode requires iOS 26 or later. Please update your device to use this feature.")
+            } else if selectedMode == .alarm {
                 Text("Alarm mode plays the full athan sound and bypasses Silent Mode. Requires Alarm permission.")
             }
         }
@@ -103,14 +105,15 @@ struct PrayerDetailView: View {
     }
 
     private func formattedPreAlarmTime(_ minutes: Int) -> String {
+        let bundle = LanguageManager.shared.bundle
         if minutes < 60 {
-            return "\(minutes) minutes"
+            return String(localized: "\(minutes) minutes", bundle: bundle)
         } else if minutes == 60 {
-            return "1 hour"
+            return String(localized: "1 hour", bundle: bundle)
         } else if minutes % 60 == 0 {
-            return "\(minutes / 60) hours"
+            return String(localized: "\(minutes / 60) hours", bundle: bundle)
         } else {
-            return "\(minutes / 60)h \(minutes % 60)m"
+            return String(localized: "\(minutes / 60)h \(minutes % 60)m", bundle: bundle)
         }
     }
 
@@ -163,7 +166,11 @@ struct PrayerDetailView: View {
         case .maghrib: raw = prefs.maghribNotificationMode
         case .isha: raw = prefs.ishaNotificationMode
         }
-        return PrayerNotificationMode(rawValue: raw) ?? .notification
+        let mode = PrayerNotificationMode(rawValue: raw) ?? .notification
+        if mode == .alarm && !AthanAlarmManager.isAlarmSupported {
+            return .notification
+        }
+        return mode
     }
 
     private func setMode(_ newValue: PrayerNotificationMode) {

@@ -8,16 +8,24 @@ struct LocationSettings: View {
     @State private var searchResults: [(name: String, latitude: Double, longitude: Double, countryCode: String?)] = []
     @State private var isSearching = false
     @State private var searchTask: Task<Void, Never>?
+    @State private var isLocating = false
 
     var body: some View {
         List {
             Section {
                 Button {
+                    isLocating = true
                     locationManager.requestLocation()
-                    dismiss()
                 } label: {
-                    Label("Use Current Location", systemImage: "location.fill")
+                    HStack {
+                        Label("Use Current Location", systemImage: "location.fill")
+                        if isLocating {
+                            Spacer()
+                            ProgressView()
+                        }
+                    }
                 }
+                .disabled(isLocating)
             } footer: {
                 if viewModel.cityName.isEmpty == false {
                     Text("Currently set to \(viewModel.cityName)")
@@ -53,6 +61,11 @@ struct LocationSettings: View {
             }
         }
         .navigationTitle("Location")
+        .onChange(of: locationManager.lastLocationUpdate) { _, _ in
+            guard isLocating else { return }
+            isLocating = false
+            dismiss()
+        }
         .onChange(of: searchText) { _, newValue in
             searchTask?.cancel()
             let trimmed = newValue.trimmingCharacters(in: .whitespaces)
@@ -77,7 +90,8 @@ struct LocationSettings: View {
             latitude: result.latitude,
             longitude: result.longitude,
             cityName: result.name,
-            countryCode: result.countryCode
+            countryCode: result.countryCode,
+            autoSetCalculationMethod: true
         )
         dismiss()
     }

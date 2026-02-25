@@ -27,14 +27,8 @@ struct AdhanAudioSelectionView: View {
                 audioRow(id: "", displayName: "Default")
             }
 
-            Section("Sunni") {
-                ForEach(AdhanAudioCatalog.sunniFiles) { file in
-                    audioRow(id: file.id, displayName: file.displayName)
-                }
-            }
-
-            Section("Shia") {
-                ForEach(AdhanAudioCatalog.shiaFiles) { file in
+            Section("Adhan Sounds") {
+                ForEach(AdhanAudioCatalog.allFiles) { file in
                     audioRow(id: file.id, displayName: file.displayName)
                 }
             }

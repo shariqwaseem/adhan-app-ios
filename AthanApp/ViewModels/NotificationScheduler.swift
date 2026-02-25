@@ -7,6 +7,9 @@ import Observation
 final class NotificationScheduler {
     var isPermissionGranted: Bool = false
     private var isScheduling: Bool = false
+    var nextScheduledAlarmTime: Date? = nil
+    var nextScheduledIsAlarm: Bool = false
+    private var scheduledAlarmTimes: [String: [Date]] = [:]  // tracking AlarmKit-scheduled fire dates
 
     var alarmManager = AthanAlarmManager()
 
@@ -17,7 +20,9 @@ final class NotificationScheduler {
         } catch {
             isPermissionGranted = false
         }
-        await alarmManager.requestAuthorization()
+        if AthanAlarmManager.isAlarmSupported {
+            await alarmManager.requestAuthorization()
+        }
     }
 
     func rescheduleAll(
@@ -33,6 +38,7 @@ final class NotificationScheduler {
         let center = UNUserNotificationCenter.current()
         center.removeAllPendingNotificationRequests()
         alarmManager.cancelAll()
+        scheduledAlarmTimes.removeAll()
 
         var scheduledCount = 0
         let maxNotifications = Constants.NotificationBudget.maxPendingNotifications
@@ -63,6 +69,7 @@ final class NotificationScheduler {
                             at: entry.adjustedTime,
                             audioFileName: audio
                         )
+                        scheduledAlarmTimes[entry.prayer.rawValue, default: []].append(entry.adjustedTime)
                         scheduledCount += 1
                     } catch { continue }
                 }
@@ -96,6 +103,7 @@ final class NotificationScheduler {
                                 minutesBefore: preMinutes,
                                 audioFileName: audio
                             )
+                            scheduledAlarmTimes["\(entry.prayer.rawValue)_pre", default: []].append(preAlarmTime)
                         } catch { /* skip */ }
                     }
                 }
@@ -105,6 +113,41 @@ final class NotificationScheduler {
 
         // Schedule custom alarms
         await scheduleCustomAlarms(customAlarms: customAlarms)
+
+        // Update next scheduled alarm time from the system
+        await refreshNextAlarmTime()
+    }
+
+    /// Query all pending notifications to find the soonest fire date.
+    func refreshNextAlarmTime() async {
+        let pending = await UNUserNotificationCenter.current().pendingNotificationRequests()
+        let now = Date()
+        var earliest: Date? = nil
+        var earliestIsAlarm = false
+
+        for request in pending {
+            if let trigger = request.trigger as? UNCalendarNotificationTrigger,
+               let fireDate = trigger.nextTriggerDate(),
+               fireDate > now {
+                if earliest == nil || fireDate < earliest! {
+                    earliest = fireDate
+                    earliestIsAlarm = false
+                }
+            }
+        }
+
+        // Also include AlarmKit-scheduled times we tracked ourselves
+        for (_, times) in scheduledAlarmTimes {
+            for time in times where time > now {
+                if earliest == nil || time < earliest! {
+                    earliest = time
+                    earliestIsAlarm = true
+                }
+            }
+        }
+
+        nextScheduledAlarmTime = earliest
+        nextScheduledIsAlarm = earliestIsAlarm
     }
 
     // MARK: - Custom Alarm Scheduling
@@ -151,6 +194,7 @@ final class NotificationScheduler {
                             at: alarmTime,
                             audioFileName: audioPath
                         )
+                        scheduledAlarmTimes["custom_\(alarm.id.uuidString)", default: []].append(alarmTime)
                     } catch { continue }
                 }
             }
@@ -164,7 +208,7 @@ final class NotificationScheduler {
     ) -> UNNotificationRequest {
         let content = UNMutableNotificationContent()
         content.title = alarm.title
-        content.body = "Custom alarm: \(alarm.title)"
+        content.body = String(localized: "Custom alarm: \(alarm.title)", bundle: LanguageManager.shared.bundle)
         content.categoryIdentifier = "CUSTOM_ALARM"
         content.sound = .default
 
@@ -190,8 +234,8 @@ final class NotificationScheduler {
 
         case .notification:
             let content = UNMutableNotificationContent()
-            content.title = "Test Prayer"
-            content.body = "This is a test notification with sound"
+            content.title = String(localized: "Test Prayer", bundle: LanguageManager.shared.bundle)
+            content.body = String(localized: "This is a test notification with sound", bundle: LanguageManager.shared.bundle)
             content.sound = .default
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
             let request = UNNotificationRequest(identifier: "test_notif_\(Date().timeIntervalSince1970)", content: content, trigger: trigger)
@@ -229,7 +273,8 @@ final class NotificationScheduler {
         let content = UNMutableNotificationContent()
         content.title = entry.prayer.localizedName
         content.body = String(
-            localized: "It's time for \(entry.prayer.localizedName) prayer"
+            localized: "It's time for \(entry.prayer.localizedName) prayer",
+            bundle: LanguageManager.shared.bundle
         )
         content.categoryIdentifier = "PRAYER_TIME"
 
@@ -266,7 +311,12 @@ final class NotificationScheduler {
         case .maghrib: raw = prefs.maghribNotificationMode
         case .isha: raw = prefs.ishaNotificationMode
         }
-        return PrayerNotificationMode(rawValue: raw) ?? .notification
+        let mode = PrayerNotificationMode(rawValue: raw) ?? .notification
+        // On iOS < 26 alarm mode is unavailable, fall back to notification
+        if mode == .alarm && !AthanAlarmManager.isAlarmSupported {
+            return .notification
+        }
+        return mode
     }
 
     private func alarmAudio(for prayer: PrayerName, preferences: UserPreferences?) -> String? {
@@ -298,9 +348,10 @@ final class NotificationScheduler {
         minutesBefore: Int
     ) -> UNNotificationRequest {
         let content = UNMutableNotificationContent()
-        content.title = "\(entry.prayer.localizedName) in \(minutesBefore) min"
+        content.title = String(localized: "\(entry.prayer.localizedName) in \(minutesBefore) min", bundle: LanguageManager.shared.bundle)
         content.body = String(
-            localized: "Prepare for \(entry.prayer.localizedName) prayer"
+            localized: "Prepare for \(entry.prayer.localizedName) prayer",
+            bundle: LanguageManager.shared.bundle
         )
         content.categoryIdentifier = "PRAYER_PRE_ALARM"
         content.sound = .default

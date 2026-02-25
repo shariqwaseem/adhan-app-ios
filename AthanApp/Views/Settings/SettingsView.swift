@@ -22,24 +22,36 @@ struct SettingsView: View {
                     @Bindable var vm = viewModel
                     Picker("Method", selection: $vm.calculationMethod) {
                         ForEach(CalculationMethodInfo.allCases) { method in
-                            Text(method.rawValue).tag(method)
+                            Text(method.localizedName).tag(method)
                         }
                     }
                     .pickerStyle(.navigationLink)
 
                     Picker("Asr Calculation", selection: $vm.asrMethod) {
                         ForEach(AsrJuristicMethod.allCases) { method in
-                            Text(method.rawValue).tag(method)
+                            Text(method.localizedName).tag(method)
                         }
                     }
                     .pickerStyle(.navigationLink)
 
                     Picker("High Latitude", selection: $vm.highLatitudeRule) {
                         ForEach(HighLatitudeRuleOption.allCases) { rule in
-                            Text(rule.rawValue).tag(rule)
+                            Text(rule.localizedName).tag(rule)
                         }
                     }
                     .pickerStyle(.navigationLink)
+                }
+
+                Section("Display") {
+                    Picker("Language", selection: Binding(
+                        get: { LanguageManager.shared.currentLanguage },
+                        set: { newValue in LanguageManager.shared.currentLanguage = newValue }
+                    )) {
+                        Text("English").tag("en")
+                        Text("العربية").tag("ar")
+                        Text("Bahasa Indonesia").tag("id")
+                        Text("Türkçe").tag("tr")
+                    }
                 }
 
                 Section("About") {

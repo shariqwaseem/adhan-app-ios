@@ -11,7 +11,7 @@ enum PrayerName: String, CaseIterable, Identifiable, Sendable, Codable {
     var id: String { rawValue }
 
     var localizedName: String {
-        String(localized: String.LocalizationValue(rawValue))
+        String(localized: String.LocalizationValue(rawValue), bundle: LanguageManager.shared.bundle)
     }
 
     var systemImage: String {

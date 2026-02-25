@@ -4,7 +4,7 @@ struct TimeOfDayBackground: View {
     let prayerEntries: [PrayerTimeEntry]
 
     var body: some View {
-        let phase = currentPhase(at: Date())
+        let phase = TimePhase.current(for: prayerEntries, at: Date())
         LinearGradient(
             colors: phase.colors,
             startPoint: .top,
@@ -12,8 +12,48 @@ struct TimeOfDayBackground: View {
         )
         .ignoresSafeArea()
     }
+}
 
-    private func currentPhase(at date: Date) -> TimePhase {
+enum TimePhase: String {
+    case preFajr
+    case dawn
+    case morning
+    case midday
+    case goldenHour
+    case sunset
+    case night
+
+    var name: String { rawValue }
+
+    var colors: [Color] {
+        switch self {
+        case .preFajr:
+            return [Color(red: 0.05, green: 0.11, blue: 0.29), Color(red: 0.10, green: 0.16, blue: 0.50)]
+        case .dawn:
+            return [Color(red: 0.42, green: 0.25, blue: 0.63), Color(red: 0.91, green: 0.39, blue: 0.48)]
+        case .morning:
+            return [Color(red: 0.34, green: 0.80, blue: 0.95), Color(red: 0.66, green: 0.90, blue: 0.81)]
+        case .midday:
+            return [Color(red: 0.13, green: 0.59, blue: 0.95), Color(red: 0.39, green: 0.71, blue: 0.96)]
+        case .goldenHour:
+            return [Color(red: 0.97, green: 0.59, blue: 0.12), Color(red: 1.00, green: 0.82, blue: 0.00)]
+        case .sunset:
+            return [Color(red: 0.89, green: 0.30, blue: 0.15), Color(red: 0.36, green: 0.15, blue: 0.55)]
+        case .night:
+            return [Color(red: 0.06, green: 0.05, blue: 0.16), Color(red: 0.04, green: 0.04, blue: 0.10)]
+        }
+    }
+
+    var textColor: Color {
+        switch self {
+        case .preFajr, .night, .sunset, .dawn:
+            return .white
+        case .morning, .midday, .goldenHour:
+            return .primary
+        }
+    }
+
+    static func current(for prayerEntries: [PrayerTimeEntry], at date: Date) -> TimePhase {
         guard !prayerEntries.isEmpty else { return .night }
 
         let fajr = prayerEntries.first(where: { $0.prayer == .fajr })?.adjustedTime
@@ -42,37 +82,6 @@ struct TimeOfDayBackground: View {
             return .sunset
         } else {
             return .night
-        }
-    }
-}
-
-enum TimePhase: String {
-    case preFajr
-    case dawn
-    case morning
-    case midday
-    case goldenHour
-    case sunset
-    case night
-
-    var name: String { rawValue }
-
-    var colors: [Color] {
-        switch self {
-        case .preFajr:
-            return [Color(red: 0.05, green: 0.05, blue: 0.2), Color(red: 0.1, green: 0.1, blue: 0.3)]
-        case .dawn:
-            return [Color(red: 0.3, green: 0.2, blue: 0.35), Color(red: 0.85, green: 0.55, blue: 0.55)]
-        case .morning:
-            return [Color(red: 0.45, green: 0.65, blue: 0.85), Color(red: 0.7, green: 0.85, blue: 0.95)]
-        case .midday:
-            return [Color(red: 0.35, green: 0.6, blue: 0.9), Color(red: 0.55, green: 0.75, blue: 0.95)]
-        case .goldenHour:
-            return [Color(red: 0.95, green: 0.75, blue: 0.4), Color(red: 0.9, green: 0.6, blue: 0.3)]
-        case .sunset:
-            return [Color(red: 0.85, green: 0.35, blue: 0.3), Color(red: 0.3, green: 0.15, blue: 0.3)]
-        case .night:
-            return [Color(red: 0.08, green: 0.08, blue: 0.15), Color(red: 0.05, green: 0.05, blue: 0.1)]
         }
     }
 }

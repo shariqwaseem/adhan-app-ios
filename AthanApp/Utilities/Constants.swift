@@ -1,11 +1,11 @@
 import Foundation
 
 enum Constants {
-    static let appGroupIdentifier = "group.com.athanapp.shared"
+    static let appGroupIdentifier = "group.com.shariqwaseem.athanapp"
     static let backgroundRefreshIdentifier = "com.athanapp.refresh"
     static let iCloudKeyValueStoreIdentifier = "com.athanapp.app"
 
-    nonisolated(unsafe) static let sharedDefaults: UserDefaults? = UserDefaults.standard
+    nonisolated(unsafe) static let sharedDefaults: UserDefaults? = UserDefaults(suiteName: appGroupIdentifier)
 
     static let processingTaskIdentifier = "com.athanapp.processing"
 

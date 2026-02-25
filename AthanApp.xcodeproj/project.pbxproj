@@ -37,8 +37,10 @@
 		A686138B34F0CF47F1DB3D59 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 9AFE04F9724EEF96D63C1386 /* Localizable.xcstrings */; };
 		A8493A5A6D73263E08DAE619 /* BackgroundTaskService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A1A0F649E7517C03735632 /* BackgroundTaskService.swift */; };
 		A9177CAF9F01969A0C4A38F9 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9378C5C31A5426E5F590D9 /* TestView.swift */; };
+		AA3333333333333333333333 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = AA4444444444444444444444 /* InfoPlist.xcstrings */; };
 		B05D5C3F2634CC6FE8812A19 /* CalculationMethodInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19D45AB2382BD4832AD25E90 /* CalculationMethodInfo.swift */; };
 		BB123E4E076FD62B30FB031A /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7455E9CD1D4B2FF469410E /* LocationManager.swift */; };
+		BB5555555555555555555555 /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB6666666666666666666666 /* LanguageManager.swift */; };
 		BD90899B17A152741FABECA7 /* Adhan in Frameworks */ = {isa = PBXBuildFile; productRef = 2C7CA2BDF190369127133101 /* Adhan */; };
 		CCA433459760F68763448D9A /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30394D5CA6CCCBB252C838E0 /* MainTabView.swift */; };
 		D1C0A22E9718763CFDBD7BAF /* AthanAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1E1C45B58CFA861A866551 /* AthanAppUITests.swift */; };
@@ -105,9 +107,9 @@
 		478EAB48B84FB739A4D0B6C8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4FD968AC6BC9281FE0845FC4 /* NotificationScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationScheduler.swift; sourceTree = "<group>"; };
 		530DF3FAE5FD8707B63DB4B3 /* PrayerTimeEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTimeEntry.swift; sourceTree = "<group>"; };
-		57EF298D138CC60AA0290D44 /* AthanAppTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = AthanAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		57EF298D138CC60AA0290D44 /* AthanAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AthanAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D6243513408EAB56BDA2F51 /* AdhanAudio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = AdhanAudio; sourceTree = SOURCE_ROOT; };
-		5FDA4C092003AAEE20EB004B /* AthanAppUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = AthanAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5FDA4C092003AAEE20EB004B /* AthanAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AthanAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6000910DDC9900517623C329 /* HijriDateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HijriDateService.swift; sourceTree = "<group>"; };
 		612C8024589E883952324807 /* SyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
 		6133B4615100D23F44B46023 /* LocationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSettings.swift; sourceTree = "<group>"; };
@@ -124,9 +126,11 @@
 		9AFE04F9724EEF96D63C1386 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		9C53B7CDE7F84F19E0B5A240 /* SharedDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedDataManager.swift; sourceTree = "<group>"; };
 		A29C07C7EDF86A6EF11BF36D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		AA4444444444444444444444 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		AD0C68EC202C0527AA8E5CC4 /* CustomAlarmSoundSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlarmSoundSelectionView.swift; sourceTree = "<group>"; };
 		AE8A9767151C609EEB186277 /* AlarmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmManager.swift; sourceTree = "<group>"; };
 		B103343411EFB1E337AF6153 /* PrayerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerDetailView.swift; sourceTree = "<group>"; };
+		BB6666666666666666666666 /* LanguageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
 		BBEB408C548B53395DCB6F47 /* AthanWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthanWidgetsBundle.swift; sourceTree = "<group>"; };
 		BD9A7A1BA871548A4F3DC545 /* AthanWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AthanWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		BDA589EB266BB3A48172D644 /* RamadanDetectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RamadanDetectionService.swift; sourceTree = "<group>"; };
@@ -167,6 +171,7 @@
 			isa = PBXGroup;
 			children = (
 				365643D33D2196A6E8225AE3 /* Constants.swift */,
+				BB6666666666666666666666 /* LanguageManager.swift */,
 				9C53B7CDE7F84F19E0B5A240 /* SharedDataManager.swift */,
 			);
 			path = Utilities;
@@ -201,6 +206,7 @@
 			isa = PBXGroup;
 			children = (
 				478EAB48B84FB739A4D0B6C8 /* Assets.xcassets */,
+				AA4444444444444444444444 /* InfoPlist.xcstrings */,
 				F411C3FD58DF44F9B5DECA7B /* Localizable.xcstrings */,
 			);
 			path = Resources;
@@ -518,6 +524,7 @@
 			files = (
 				A3EEF2DE936B738C332B98E6 /* AdhanAudio in Resources */,
 				DC65AC1784BB298C20D09F1B /* Assets.xcassets in Resources */,
+				AA3333333333333333333333 /* InfoPlist.xcstrings in Resources */,
 				ECF2FB6ED2283D7F1C9B4839 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -579,6 +586,7 @@
 				A9177CAF9F01969A0C4A38F9 /* TestView.swift in Sources */,
 				6B3908F5FF2A91F51A499373 /* TimeOfDayBackground.swift in Sources */,
 				7611E90FE28FD44EFEF667FB /* UserPreferences.swift in Sources */,
+				BB5555555555555555555555 /* LanguageManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -672,7 +680,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -689,8 +697,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = MZT7CL443V;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -713,7 +722,7 @@
 				DEVELOPMENT_TEAM = MZT7CL443V;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = AthanWidgets/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -737,7 +746,7 @@
 				DEVELOPMENT_TEAM = MZT7CL443V;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = AthanWidgets/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -761,7 +770,7 @@
 				DEVELOPMENT_TEAM = MZT7CL443V;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = AthanApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -779,8 +788,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = MZT7CL443V;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -797,8 +807,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = MZT7CL443V;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -815,8 +826,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = MZT7CL443V;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -876,7 +888,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -898,7 +910,7 @@
 				DEVELOPMENT_TEAM = MZT7CL443V;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = AthanApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

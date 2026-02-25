@@ -45,7 +45,7 @@ struct PrayerWidgetEntry: TimelineEntry {
 // MARK: - Timeline Provider
 
 struct PrayerTimelineProvider: TimelineProvider {
-    private let appGroupId = "group.com.athanapp.shared"
+    private let appGroupId = "group.com.shariqwaseem.athanapp"
 
     func placeholder(in context: Context) -> PrayerWidgetEntry {
         sampleEntry()
@@ -100,7 +100,24 @@ struct PrayerTimelineProvider: TimelineProvider {
         let components = cal.dateComponents([.year, .month, .day], from: now)
         let dateComponents = DateComponents(calendar: cal, year: components.year, month: components.month, day: components.day)
         let coordinates = Coordinates(latitude: lat, longitude: lon)
-        let params = CalculationMethod.muslimWorldLeague.params
+        let savedMethod = defaults.string(forKey: "calculationMethod")
+        let calcMethod: CalculationMethod = {
+            switch savedMethod {
+            case "Muslim World League": return .muslimWorldLeague
+            case "Egyptian General Authority": return .egyptian
+            case "University of Islamic Sciences, Karachi": return .karachi
+            case "Umm Al-Qura University, Makkah": return .ummAlQura
+            case "Dubai": return .dubai
+            case "Moonsighting Committee": return .moonsightingCommittee
+            case "ISNA (North America)": return .northAmerica
+            case "Kuwait": return .kuwait
+            case "Qatar": return .qatar
+            case "Singapore": return .singapore
+            case "Diyanet İşleri Başkanlığı, Turkey": return .turkey
+            default: return .muslimWorldLeague
+            }
+        }()
+        let params = calcMethod.params
 
         guard let prayerTimes = PrayerTimes(coordinates: coordinates, date: dateComponents, calculationParameters: params) else {
             return nil

@@ -16,10 +16,20 @@ final class PrayerTimesViewModel {
     private let calculationService: PrayerCalculationServiceProtocol
     private let hijriDateService: HijriDateService
 
-    // Current calculation parameters
-    var calculationMethod: CalculationMethodInfo = .MuslimWorldLeague
-    var asrMethod: AsrJuristicMethod = .standard
-    var highLatitudeRule: HighLatitudeRuleOption = .middleOfTheNight
+    // Current calculation parameters — persisted via UserDefaults
+    var calculationMethod: CalculationMethodInfo = .MuslimWorldLeague {
+        didSet {
+            UserDefaults.standard.set(calculationMethod.rawValue, forKey: "calculationMethod")
+            SharedDataManager.saveCalculationMethod(calculationMethod.rawValue)
+        }
+    }
+    var asrMethod: AsrJuristicMethod = .standard {
+        didSet { UserDefaults.standard.set(asrMethod.rawValue, forKey: "asrMethod") }
+    }
+    var highLatitudeRule: HighLatitudeRuleOption = .middleOfTheNight {
+        didSet { UserDefaults.standard.set(highLatitudeRule.rawValue, forKey: "highLatitudeRule") }
+    }
+
     var manualAdjustments: [PrayerName: Int] = [:]
 
     // Location
@@ -33,15 +43,29 @@ final class PrayerTimesViewModel {
         self.calculationService = calculationService
         self.hijriDateService = hijriDateService
 
+        // Restore saved calculation settings
+        let defaults = UserDefaults.standard
+        if let raw = defaults.string(forKey: "calculationMethod"),
+           let method = CalculationMethodInfo(rawValue: raw) {
+            self.calculationMethod = method
+        }
+        // Sync to shared defaults for the widget
+        SharedDataManager.saveCalculationMethod(calculationMethod.rawValue)
+        if let raw = defaults.string(forKey: "asrMethod"),
+           let method = AsrJuristicMethod(rawValue: raw) {
+            self.asrMethod = method
+        }
+        if let raw = defaults.string(forKey: "highLatitudeRule"),
+           let rule = HighLatitudeRuleOption(rawValue: raw) {
+            self.highLatitudeRule = rule
+        }
+
         // Restore last saved location
         if let saved = SharedDataManager.loadLocation() {
             self.latitude = saved.latitude
             self.longitude = saved.longitude
             self.cityName = saved.cityName
             self.countryCode = saved.countryCode
-            if let code = saved.countryCode {
-                self.calculationMethod = CalculationMethodInfo.recommendedMethod(forCountryCode: code)
-            }
         }
     }
 
@@ -96,12 +120,13 @@ final class PrayerTimesViewModel {
         }
     }
 
-    func updateLocation(latitude: Double, longitude: Double, cityName: String, countryCode: String?) {
+    func updateLocation(latitude: Double, longitude: Double, cityName: String, countryCode: String?, autoSetCalculationMethod: Bool = false) {
         self.latitude = latitude
         self.longitude = longitude
         self.cityName = cityName
         self.countryCode = countryCode
-        if let code = countryCode {
+
+        if autoSetCalculationMethod, let code = countryCode {
             self.calculationMethod = CalculationMethodInfo.recommendedMethod(forCountryCode: code)
         }
         calculateToday()

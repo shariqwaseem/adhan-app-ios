@@ -3,12 +3,18 @@ import SwiftData
 
 struct HomeView: View {
     @Environment(PrayerTimesViewModel.self) private var viewModel
+    @Environment(NotificationScheduler.self) private var scheduler
     @Query private var preferences: [UserPreferences]
     @Query(sort: \CustomAlarm.createdAt) private var customAlarms: [CustomAlarm]
 
     @State private var showingNewAlarm = false
 
     private var prefs: UserPreferences? { preferences.first }
+    private var langBundle: Bundle { LanguageManager.shared.bundle }
+
+    private var currentPhase: TimePhase {
+        TimePhase.current(for: viewModel.prayerEntries, at: Date())
+    }
 
     var body: some View {
         NavigationStack {
@@ -18,6 +24,7 @@ struct HomeView: View {
                 ScrollView {
                     VStack(spacing: 12) {
                         countdownSection
+                        nextAlarmBadge
                         prayerListSection
                         customAlarmsSection
                     }
@@ -56,20 +63,41 @@ struct HomeView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         if remaining > 0 {
                             Text(formattedCountdown(remaining))
-                                .font(.system(size: 52, weight: .bold, design: .rounded))
+                                .font(.system(size: 52, weight: .bold, design: LanguageManager.shared.isRTL ? .default : .rounded))
                                 .monospacedDigit()
                                 .contentTransition(.numericText())
+                                .foregroundStyle(currentPhase.textColor)
                             Text("till \(next.prayer.localizedName)")
                                 .font(.subheadline)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(currentPhase.textColor.opacity(0.7))
                         } else {
                             Text(next.prayer.localizedName)
-                                .font(.system(size: 52, weight: .bold, design: .rounded))
+                                .font(.system(size: 52, weight: .bold, design: LanguageManager.shared.isRTL ? .default : .rounded))
+                                .foregroundStyle(currentPhase.textColor)
                             Text("now")
                                 .font(.subheadline)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(currentPhase.textColor.opacity(0.7))
                         }
                     }
+                }
+                Spacer()
+            }
+            .glassCard()
+        }
+    }
+
+    @ViewBuilder
+    private var nextAlarmBadge: some View {
+        if let alarmTime = scheduler.nextScheduledAlarmTime {
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(scheduler.nextScheduledIsAlarm ? "Next alarm" : "Next notification")
+                        .font(.subheadline)
+                        .foregroundStyle(currentPhase.textColor.opacity(0.7))
+                    Text(alarmTime, style: .time)
+                        .font(.system(size: 28, weight: .semibold, design: LanguageManager.shared.isRTL ? .default : .rounded))
+                        .monospacedDigit()
+                        .foregroundStyle(currentPhase.textColor)
                 }
                 Spacer()
             }
@@ -94,7 +122,7 @@ struct HomeView: View {
                 }
             }
         }
-        .glassEffect(.regular, in: .rect(cornerRadius: 20))
+        .compatibleGlassEffect()
     }
 
     // MARK: - Custom Alarms
@@ -116,7 +144,7 @@ struct HomeView: View {
                     }
                 }
             }
-            .glassEffect(.regular, in: .rect(cornerRadius: 20))
+            .compatibleGlassEffect()
         }
     }
 
@@ -133,7 +161,11 @@ struct HomeView: View {
         case .maghrib: raw = prefs.maghribNotificationMode
         case .isha: raw = prefs.ishaNotificationMode
         }
-        return PrayerNotificationMode(rawValue: raw) ?? .notification
+        let mode = PrayerNotificationMode(rawValue: raw) ?? .notification
+        if mode == .alarm && !AthanAlarmManager.isAlarmSupported {
+            return .notification
+        }
+        return mode
     }
 
     private func formattedCountdown(_ interval: TimeInterval) -> String {
@@ -141,6 +173,14 @@ struct HomeView: View {
         let hours = total / 3600
         let minutes = (total % 3600) / 60
         let seconds = total % 60
+
+        if LanguageManager.shared.currentLanguage != "en" {
+            if hours > 0 {
+                return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+            }
+            return String(format: "%02d:%02d", minutes, seconds)
+        }
+
         if hours > 0 {
             return "\(hours)h \(minutes)m \(seconds)s"
         }
@@ -158,7 +198,8 @@ struct CustomAlarmRow: View {
         components.hour = alarm.hour
         components.minute = alarm.minute
         let formatter = DateFormatter()
-        formatter.dateFormat = "h:mm a"
+        formatter.timeStyle = .short
+        formatter.locale = Locale.autoupdatingCurrent
         if let date = Calendar.current.date(from: components) {
             return formatter.string(from: date)
         }
@@ -186,7 +227,7 @@ struct CustomAlarmRow: View {
                 .monospacedDigit()
 
             Image(systemName: "chevron.right")
-                .font(.caption2.weight(.semibold))
+                .font(.system(size: 14, weight: .semibold))
                 .foregroundStyle(.tertiary)
         }
         .padding(.horizontal, 16)
@@ -222,7 +263,7 @@ struct PrayerRow: View {
                 .monospacedDigit()
 
             Image(systemName: "chevron.right")
-                .font(.caption2.weight(.semibold))
+                .font(.system(size: 14, weight: .semibold))
                 .foregroundStyle(.tertiary)
         }
         .padding(.horizontal, 16)
