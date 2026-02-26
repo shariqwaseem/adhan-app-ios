@@ -81,6 +81,8 @@ struct AdhanAudioSelectionView: View {
         }
 
         do {
+            try AVAudioSession.sharedInstance().setCategory(.playback)
+            try AVAudioSession.sharedInstance().setActive(true)
             player = try AVAudioPlayer(contentsOf: url)
             player?.play()
             playingID = id
@@ -93,6 +95,7 @@ struct AdhanAudioSelectionView: View {
         player?.stop()
         player = nil
         playingID = nil
+        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
     }
 
     // MARK: - Preference Get/Set
