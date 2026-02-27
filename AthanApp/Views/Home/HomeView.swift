@@ -151,7 +151,9 @@ struct HomeView: View {
     // MARK: - Helpers
 
     private func currentMode(for prayer: PrayerName) -> PrayerNotificationMode {
-        guard let prefs = prefs else { return .notification }
+        guard let prefs = prefs else {
+            return prayer == .tahajjud ? .silent : .notification
+        }
         let raw: String
         switch prayer {
         case .tahajjud: raw = prefs.tahajjudNotificationMode

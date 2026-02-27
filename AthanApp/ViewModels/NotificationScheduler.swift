@@ -95,13 +95,11 @@ final class NotificationScheduler {
                         } catch { /* skip */ }
 
                     case .alarm:
-                        let audio = alarmAudio(for: entry.prayer, preferences: preferences)
                         do {
                             try await alarmManager.schedulePreAlarm(
                                 for: entry.prayer,
                                 at: preAlarmTime,
-                                minutesBefore: preMinutes,
-                                audioFileName: audio
+                                minutesBefore: preMinutes
                             )
                             scheduledAlarmTimes["\(entry.prayer.rawValue)_pre", default: []].append(preAlarmTime)
                         } catch { /* skip */ }
@@ -301,7 +299,9 @@ final class NotificationScheduler {
     // MARK: - Preference Helpers
 
     private func notificationMode(for prayer: PrayerName, preferences: UserPreferences?) -> PrayerNotificationMode {
-        guard let prefs = preferences else { return .notification }
+        guard let prefs = preferences else {
+            return prayer == .tahajjud ? .silent : .notification
+        }
         let raw: String
         switch prayer {
         case .tahajjud: raw = prefs.tahajjudNotificationMode
