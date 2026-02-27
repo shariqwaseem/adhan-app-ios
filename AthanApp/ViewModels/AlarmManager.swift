@@ -77,7 +77,6 @@ final class AthanAlarmManager {
             let bundle = LanguageManager.shared.bundle
             let prayerTitle = String(localized: "\(prayer.localizedName) Prayer", bundle: bundle)
             let stopText = String(localized: "Stop", bundle: bundle)
-            let snoozeText = String(localized: "Snooze", bundle: bundle)
 
             let presentation = AlarmPresentation(
                 alert: AlarmPresentation.Alert(
@@ -86,13 +85,7 @@ final class AthanAlarmManager {
                         text: LocalizedStringResource(stringLiteral: stopText),
                         textColor: .white,
                         systemImageName: "stop.fill"
-                    ),
-                    secondaryButton: AlarmButton(
-                        text: LocalizedStringResource(stringLiteral: snoozeText),
-                        textColor: .white,
-                        systemImageName: "clock.fill"
-                    ),
-                    secondaryButtonBehavior: .normal
+                    )
                 )
             )
 
@@ -143,7 +136,6 @@ final class AthanAlarmManager {
 
             let bundle = LanguageManager.shared.bundle
             let stopText = String(localized: "Stop", bundle: bundle)
-            let snoozeText = String(localized: "Snooze", bundle: bundle)
 
             let presentation = AlarmPresentation(
                 alert: AlarmPresentation.Alert(
@@ -152,13 +144,7 @@ final class AthanAlarmManager {
                         text: LocalizedStringResource(stringLiteral: stopText),
                         textColor: .white,
                         systemImageName: "stop.fill"
-                    ),
-                    secondaryButton: AlarmButton(
-                        text: LocalizedStringResource(stringLiteral: snoozeText),
-                        textColor: .white,
-                        systemImageName: "clock.fill"
-                    ),
-                    secondaryButtonBehavior: .normal
+                    )
                 )
             )
 
@@ -211,7 +197,6 @@ final class AthanAlarmManager {
             let bundle = LanguageManager.shared.bundle
             let title = String(localized: "\(prayer.localizedName) in \(minutesBefore) min", bundle: bundle)
             let stopText = String(localized: "Stop", bundle: bundle)
-            let snoozeText = String(localized: "Snooze", bundle: bundle)
             let presentation = AlarmPresentation(
                 alert: AlarmPresentation.Alert(
                     title: LocalizedStringResource(stringLiteral: title),
@@ -219,13 +204,7 @@ final class AthanAlarmManager {
                         text: LocalizedStringResource(stringLiteral: stopText),
                         textColor: .white,
                         systemImageName: "stop.fill"
-                    ),
-                    secondaryButton: AlarmButton(
-                        text: LocalizedStringResource(stringLiteral: snoozeText),
-                        textColor: .white,
-                        systemImageName: "clock.fill"
-                    ),
-                    secondaryButtonBehavior: .normal
+                    )
                 )
             )
 
