@@ -92,7 +92,7 @@ final class AthanAlarmManager {
                         textColor: .white,
                         systemImageName: "clock.fill"
                     ),
-                    secondaryButtonBehavior: .countdown
+                    secondaryButtonBehavior: .normal
                 )
             )
 
@@ -158,7 +158,7 @@ final class AthanAlarmManager {
                         textColor: .white,
                         systemImageName: "clock.fill"
                     ),
-                    secondaryButtonBehavior: .countdown
+                    secondaryButtonBehavior: .normal
                 )
             )
 
@@ -225,7 +225,7 @@ final class AthanAlarmManager {
                         textColor: .white,
                         systemImageName: "clock.fill"
                     ),
-                    secondaryButtonBehavior: .countdown
+                    secondaryButtonBehavior: .normal
                 )
             )
 
