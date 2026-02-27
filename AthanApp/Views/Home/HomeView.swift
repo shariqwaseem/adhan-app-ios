@@ -30,6 +30,7 @@ struct HomeView: View {
                     }
                     .padding(.horizontal)
                     .padding(.top, 4)
+                    .padding(.bottom, 24)
                 }
             }
             .navigationTitle(viewModel.cityName.isEmpty ? "Adhan" : viewModel.cityName)
@@ -217,6 +218,7 @@ struct CustomAlarmRow: View {
 
             Text(alarm.title)
                 .font(.body.weight(.regular))
+                .lineLimit(1)
 
             Spacer()
 
@@ -253,6 +255,7 @@ struct PrayerRow: View {
 
             Text(entry.prayer.localizedName)
                 .font(.body.weight(entry.isNext ? .semibold : .regular))
+                .lineLimit(1)
 
             Spacer()
 
