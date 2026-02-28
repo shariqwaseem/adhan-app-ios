@@ -59,7 +59,7 @@ final class NotificationScheduler {
                     do {
                         try await center.add(request)
                         scheduledCount += 1
-                    } catch { continue }
+                    } catch { /* main notification failed; still attempt pre-alarm below */ }
 
                 case .alarm:
                     let audio = alarmAudio(for: entry.prayer, preferences: preferences)
@@ -71,7 +71,7 @@ final class NotificationScheduler {
                         )
                         scheduledAlarmTimes[entry.prayer.rawValue, default: []].append(entry.adjustedTime)
                         scheduledCount += 1
-                    } catch { continue }
+                    } catch { /* main alarm failed; still attempt pre-alarm below */ }
                 }
 
                 // Pre-alarm scheduling (Fajr & Tahajjud only)
