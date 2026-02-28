@@ -176,7 +176,7 @@ final class AthanAlarmManager {
         throw AlarmScheduleError.notAuthorized("Alarm mode requires iOS 26 or later.")
     }
 
-    /// Schedule a pre-alarm that fires before a prayer.
+    /// Schedule a pre-alarm that fires before a prayer, with 5-minute snooze support.
     func schedulePreAlarm(
         for prayer: PrayerName,
         at preAlarmTime: Date,
@@ -197,15 +197,34 @@ final class AthanAlarmManager {
             let bundle = LanguageManager.shared.bundle
             let title = String(localized: "\(prayer.localizedName) in \(minutesBefore) min", bundle: bundle)
             let stopText = String(localized: "Stop", bundle: bundle)
+            let snoozeText = String(localized: "Snooze", bundle: bundle)
+            let snoozeCountdownTitle = String(localized: "Snoozing — \(prayer.localizedName) pre-alarm", bundle: bundle)
+
+            let stopButton = AlarmButton(
+                text: LocalizedStringResource(stringLiteral: stopText),
+                textColor: .white,
+                systemImageName: "stop.fill"
+            )
+
+            let alert = AlarmPresentation.Alert(
+                title: LocalizedStringResource(stringLiteral: title),
+                stopButton: stopButton,
+                secondaryButton: AlarmButton(
+                    text: LocalizedStringResource(stringLiteral: snoozeText),
+                    textColor: .white,
+                    systemImageName: "moon.zzz"
+                ),
+                secondaryButtonBehavior: .countdown
+            )
+
+            let countdown = AlarmPresentation.Countdown(
+                title: LocalizedStringResource(stringLiteral: snoozeCountdownTitle),
+                stopButton: stopButton
+            )
+
             let presentation = AlarmPresentation(
-                alert: AlarmPresentation.Alert(
-                    title: LocalizedStringResource(stringLiteral: title),
-                    stopButton: AlarmButton(
-                        text: LocalizedStringResource(stringLiteral: stopText),
-                        textColor: .white,
-                        systemImageName: "stop.fill"
-                    )
-                )
+                alert: alert,
+                countdown: countdown
             )
 
             let attributes = AlarmAttributes<AthanAlarmMetadata>(
@@ -221,8 +240,10 @@ final class AthanAlarmManager {
                 sound = .default
             }
 
-            let configuration = AlarmKit.AlarmManager.AlarmConfiguration.alarm(
+            let snoozeDuration: TimeInterval = 5 * 60  // 5 minutes
+            let configuration = AlarmKit.AlarmManager.AlarmConfiguration(
                 schedule: .fixed(preAlarmTime),
+                countdownDuration: Alarm.CountdownDuration(preAlert: nil, postAlert: snoozeDuration),
                 attributes: attributes,
                 sound: sound
             )
