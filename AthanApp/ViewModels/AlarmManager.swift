@@ -176,12 +176,11 @@ final class AthanAlarmManager {
         throw AlarmScheduleError.notAuthorized("Alarm mode requires iOS 26 or later.")
     }
 
-    /// Schedule a pre-alarm that fires before a prayer.
+    /// Schedule a pre-alarm that fires before a prayer, with 5-minute snooze support.
     func schedulePreAlarm(
         for prayer: PrayerName,
         at preAlarmTime: Date,
-        minutesBefore: Int,
-        audioFileName: String? = nil
+        minutesBefore: Int
     ) async throws {
         #if canImport(AlarmKit)
         if #available(iOS 26, *) {
@@ -197,15 +196,34 @@ final class AthanAlarmManager {
             let bundle = LanguageManager.shared.bundle
             let title = String(localized: "\(prayer.localizedName) in \(minutesBefore) min", bundle: bundle)
             let stopText = String(localized: "Stop", bundle: bundle)
+            let snoozeText = String(localized: "Snooze", bundle: bundle)
+            let snoozeCountdownTitle = String(localized: "Snoozing — \(prayer.localizedName) pre-alarm", bundle: bundle)
+
+            let stopButton = AlarmButton(
+                text: LocalizedStringResource(stringLiteral: stopText),
+                textColor: .white,
+                systemImageName: "stop.fill"
+            )
+
+            let alert = AlarmPresentation.Alert(
+                title: LocalizedStringResource(stringLiteral: title),
+                stopButton: stopButton,
+                secondaryButton: AlarmButton(
+                    text: LocalizedStringResource(stringLiteral: snoozeText),
+                    textColor: .white,
+                    systemImageName: "moon.zzz"
+                ),
+                secondaryButtonBehavior: .countdown
+            )
+
+            let countdown = AlarmPresentation.Countdown(
+                title: LocalizedStringResource(stringLiteral: snoozeCountdownTitle),
+                stopButton: stopButton
+            )
+
             let presentation = AlarmPresentation(
-                alert: AlarmPresentation.Alert(
-                    title: LocalizedStringResource(stringLiteral: title),
-                    stopButton: AlarmButton(
-                        text: LocalizedStringResource(stringLiteral: stopText),
-                        textColor: .white,
-                        systemImageName: "stop.fill"
-                    )
-                )
+                alert: alert,
+                countdown: countdown
             )
 
             let attributes = AlarmAttributes<AthanAlarmMetadata>(
@@ -214,21 +232,90 @@ final class AthanAlarmManager {
                 tintColor: .orange
             )
 
-            let sound: AlertConfiguration.AlertSound
-            if let name = audioFileName, !name.isEmpty {
-                sound = .named(name)
-            } else {
-                sound = .default
-            }
-
-            let configuration = AlarmKit.AlarmManager.AlarmConfiguration.alarm(
+            let snoozeDuration: TimeInterval = 5 * 60  // 5 minutes
+            let configuration = AlarmKit.AlarmManager.AlarmConfiguration(
                 schedule: .fixed(preAlarmTime),
+                countdownDuration: Alarm.CountdownDuration(preAlert: nil, postAlert: snoozeDuration),
                 attributes: attributes,
-                sound: sound
+                sound: .default
             )
 
             _ = try await _manager.schedule(id: alarmID, configuration: configuration)
             let trackingKey = "\(prayer.rawValue)_prealarm"
+            scheduledAlarmIDs[trackingKey, default: []].append(alarmID)
+            return
+        }
+        #endif
+        throw AlarmScheduleError.notAuthorized("Alarm mode requires iOS 26 or later.")
+    }
+
+    /// Schedule a pre-alarm for a custom alarm, with 5-minute snooze support.
+    func scheduleCustomPreAlarm(
+        id: UUID,
+        title: String,
+        at preAlarmTime: Date,
+        minutesBefore: Int
+    ) async throws {
+        #if canImport(AlarmKit)
+        if #available(iOS 26, *) {
+            if !isAuthorized {
+                await requestAuthorization()
+            }
+            guard isAuthorized else {
+                throw AlarmScheduleError.notAuthorized(authError ?? "Alarm permission not granted")
+            }
+
+            let alarmID = UUID()
+
+            let bundle = LanguageManager.shared.bundle
+            let alertTitle = String(localized: "\(title) in \(minutesBefore) min", bundle: bundle)
+            let stopText = String(localized: "Stop", bundle: bundle)
+            let snoozeText = String(localized: "Snooze", bundle: bundle)
+            let snoozeCountdownTitle = String(localized: "Snoozing — \(title) pre-alarm", bundle: bundle)
+
+            let stopButton = AlarmButton(
+                text: LocalizedStringResource(stringLiteral: stopText),
+                textColor: .white,
+                systemImageName: "stop.fill"
+            )
+
+            let alert = AlarmPresentation.Alert(
+                title: LocalizedStringResource(stringLiteral: alertTitle),
+                stopButton: stopButton,
+                secondaryButton: AlarmButton(
+                    text: LocalizedStringResource(stringLiteral: snoozeText),
+                    textColor: .white,
+                    systemImageName: "moon.zzz"
+                ),
+                secondaryButtonBehavior: .countdown
+            )
+
+            let countdown = AlarmPresentation.Countdown(
+                title: LocalizedStringResource(stringLiteral: snoozeCountdownTitle),
+                stopButton: stopButton
+            )
+
+            let presentation = AlarmPresentation(
+                alert: alert,
+                countdown: countdown
+            )
+
+            let attributes = AlarmAttributes<AthanAlarmMetadata>(
+                presentation: presentation,
+                metadata: AthanAlarmMetadata(prayerName: "custom_\(id.uuidString)_prealarm", prayerTime: preAlarmTime),
+                tintColor: .orange
+            )
+
+            let snoozeDuration: TimeInterval = 5 * 60  // 5 minutes
+            let configuration = AlarmKit.AlarmManager.AlarmConfiguration(
+                schedule: .fixed(preAlarmTime),
+                countdownDuration: Alarm.CountdownDuration(preAlert: nil, postAlert: snoozeDuration),
+                attributes: attributes,
+                sound: .default
+            )
+
+            _ = try await _manager.schedule(id: alarmID, configuration: configuration)
+            let trackingKey = "custom_\(id.uuidString)_prealarm"
             scheduledAlarmIDs[trackingKey, default: []].append(alarmID)
             return
         }

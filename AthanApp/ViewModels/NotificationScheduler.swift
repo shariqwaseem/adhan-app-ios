@@ -59,7 +59,7 @@ final class NotificationScheduler {
                     do {
                         try await center.add(request)
                         scheduledCount += 1
-                    } catch { continue }
+                    } catch { /* main notification failed; still attempt pre-alarm below */ }
 
                 case .alarm:
                     let audio = alarmAudio(for: entry.prayer, preferences: preferences)
@@ -71,10 +71,10 @@ final class NotificationScheduler {
                         )
                         scheduledAlarmTimes[entry.prayer.rawValue, default: []].append(entry.adjustedTime)
                         scheduledCount += 1
-                    } catch { continue }
+                    } catch { /* main alarm failed; still attempt pre-alarm below */ }
                 }
 
-                // Pre-alarm scheduling (Fajr & Tahajjud only)
+                // Pre-alarm scheduling
                 let preMinutes = preAlarmMinutes(for: entry.prayer, preferences: preferences)
                 if preMinutes > 0 {
                     let preAlarmTime = entry.adjustedTime.addingTimeInterval(-Double(preMinutes) * 60)
@@ -179,7 +179,7 @@ final class NotificationScheduler {
                     let request = createCustomNotificationRequest(alarm: alarm, at: alarmTime, dayOffset: dayOffset)
                     do {
                         try await UNUserNotificationCenter.current().add(request)
-                    } catch { continue }
+                    } catch { /* main notification failed; still attempt pre-alarm below */ }
 
                 case .alarm:
                     let audioPath: String? = alarm.alarmAudio.isEmpty
@@ -193,10 +193,67 @@ final class NotificationScheduler {
                             audioFileName: audioPath
                         )
                         scheduledAlarmTimes["custom_\(alarm.id.uuidString)", default: []].append(alarmTime)
-                    } catch { continue }
+                    } catch { /* main alarm failed; still attempt pre-alarm below */ }
+                }
+
+                // Pre-alarm scheduling for custom alarms
+                let preMinutes = alarm.preAlarmMinutes
+                if preMinutes > 0 {
+                    let preAlarmTime = alarmTime.addingTimeInterval(-Double(preMinutes) * 60)
+                    guard preAlarmTime > now else { continue }
+
+                    switch mode {
+                    case .silent:
+                        break
+                    case .notification:
+                        let request = createCustomPreAlarmNotificationRequest(
+                            alarm: alarm,
+                            at: preAlarmTime,
+                            minutesBefore: preMinutes,
+                            dayOffset: dayOffset
+                        )
+                        do {
+                            try await UNUserNotificationCenter.current().add(request)
+                        } catch { /* skip */ }
+
+                    case .alarm:
+                        do {
+                            try await alarmManager.scheduleCustomPreAlarm(
+                                id: alarm.id,
+                                title: alarm.title,
+                                at: preAlarmTime,
+                                minutesBefore: preMinutes
+                            )
+                            scheduledAlarmTimes["custom_\(alarm.id.uuidString)_pre", default: []].append(preAlarmTime)
+                        } catch { /* skip */ }
+                    }
                 }
             }
         }
+    }
+
+    private func createCustomPreAlarmNotificationRequest(
+        alarm: CustomAlarm,
+        at time: Date,
+        minutesBefore: Int,
+        dayOffset: Int
+    ) -> UNNotificationRequest {
+        let content = UNMutableNotificationContent()
+        content.title = String(localized: "\(alarm.title) in \(minutesBefore) min", bundle: LanguageManager.shared.bundle)
+        content.body = String(localized: "Prepare for \(alarm.title)", bundle: LanguageManager.shared.bundle)
+        content.categoryIdentifier = "CUSTOM_PRE_ALARM"
+        content.sound = .default
+
+        let dateComponents = Calendar.current.dateComponents(
+            [.year, .month, .day, .hour, .minute, .second],
+            from: time
+        )
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+
+        let dateString = formatDateForId(time)
+        let identifier = "custom_\(alarm.id.uuidString)_\(dateString)_d\(dayOffset)_prealarm"
+
+        return UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
     }
 
     private func createCustomNotificationRequest(
@@ -337,9 +394,12 @@ final class NotificationScheduler {
     private func preAlarmMinutes(for prayer: PrayerName, preferences: UserPreferences?) -> Int {
         guard let prefs = preferences else { return 0 }
         switch prayer {
-        case .fajr: return prefs.fajrPreAlarmMinutes
         case .tahajjud: return prefs.tahajjudPreAlarmMinutes
-        default: return 0
+        case .fajr: return prefs.fajrPreAlarmMinutes
+        case .dhuhr: return prefs.dhuhrPreAlarmMinutes
+        case .asr: return prefs.asrPreAlarmMinutes
+        case .maghrib: return prefs.maghribPreAlarmMinutes
+        case .isha: return prefs.ishaPreAlarmMinutes
         }
     }
 

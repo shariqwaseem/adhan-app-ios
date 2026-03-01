@@ -10,6 +10,7 @@ final class CustomAlarm {
     var notificationMode: String = PrayerNotificationMode.alarm.rawValue
     var alarmAudio: String = ""
     var isEnabled: Bool = true
+    var preAlarmMinutes: Int = 0
     var createdAt: Date = Date()
 
     init(
@@ -18,7 +19,8 @@ final class CustomAlarm {
         minute: Int = 0,
         notificationMode: PrayerNotificationMode = .alarm,
         alarmAudio: String = "",
-        isEnabled: Bool = true
+        isEnabled: Bool = true,
+        preAlarmMinutes: Int = 0
     ) {
         self.id = UUID()
         self.title = title
@@ -27,6 +29,7 @@ final class CustomAlarm {
         self.notificationMode = notificationMode.rawValue
         self.alarmAudio = alarmAudio
         self.isEnabled = isEnabled
+        self.preAlarmMinutes = preAlarmMinutes
         self.createdAt = Date()
     }
 
