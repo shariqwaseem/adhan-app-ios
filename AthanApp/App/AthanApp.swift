@@ -136,13 +136,33 @@ struct AthanApp: App {
 
     /// Called every time the app comes to foreground — recalculates and reschedules everything.
     private func onBecameActive() {
-        prayerTimesViewModel.calculateToday()
+        // If the background location manager persisted a new location while we were
+        // suspended, sync it into the view model so prayer times are immediately correct.
+        if let saved = SharedDataManager.loadLocation(),
+           (saved.latitude != prayerTimesViewModel.latitude ||
+            saved.longitude != prayerTimesViewModel.longitude) {
+            prayerTimesViewModel.updateLocation(
+                latitude: saved.latitude,
+                longitude: saved.longitude,
+                cityName: saved.cityName,
+                countryCode: saved.countryCode
+            )
+        } else {
+            prayerTimesViewModel.calculateToday()
+        }
+
         Task { @MainActor in
             await notificationScheduler.rescheduleAll(
                 prayerEntries: prayerTimesViewModel.multiDayTimes(),
                 preferences: fetchPreferences(),
                 customAlarms: fetchCustomAlarms()
             )
+        }
+
+        // Request a fresh location — if the user moved, this fires
+        // didUpdateLocations → onChange(of: latitude) → onLocationChanged()
+        if locationManager.isAuthorized {
+            locationManager.requestLocation()
         }
     }
 

@@ -44,6 +44,15 @@ enum TimePhase: String {
         }
     }
 
+    var prefersDarkAppearance: Bool {
+        switch self {
+        case .preFajr, .dawn, .night, .sunset:
+            return true
+        case .morning, .midday, .goldenHour:
+            return false
+        }
+    }
+
     var textColor: Color {
         switch self {
         case .preFajr, .night, .sunset, .dawn:

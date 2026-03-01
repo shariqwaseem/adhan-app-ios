@@ -94,6 +94,13 @@ struct BackgroundTaskService {
         newLatitude: Double? = nil,
         newLongitude: Double? = nil
     ) async {
+        // Don't reschedule if an alarm was due within the last 10 minutes —
+        // cancelAll() inside rescheduleAll would silence a currently-ringing alarm.
+        if let fireTime = Constants.sharedDefaults?.object(forKey: Constants.Keys.nextAlarmFireTime) as? Date {
+            let elapsed = Date().timeIntervalSince(fireTime)
+            if elapsed >= 0 && elapsed < 600 { return }
+        }
+
         // 1. Determine location
         var latitude: Double
         var longitude: Double

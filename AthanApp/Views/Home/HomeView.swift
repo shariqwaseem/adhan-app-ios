@@ -33,8 +33,9 @@ struct HomeView: View {
                     .padding(.bottom, 24)
                 }
             }
+            .environment(\.colorScheme, currentPhase.prefersDarkAppearance ? .dark : .light)
             .navigationTitle(viewModel.cityName.isEmpty ? "Adhan" : viewModel.cityName)
-            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbarColorScheme(currentPhase.prefersDarkAppearance ? .dark : .light, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button {
@@ -51,6 +52,7 @@ struct HomeView: View {
                 viewModel.calculateToday()
             }
         }
+        .environment(\.colorScheme, currentPhase.prefersDarkAppearance ? .dark : .light)
     }
 
     // MARK: - Countdown
