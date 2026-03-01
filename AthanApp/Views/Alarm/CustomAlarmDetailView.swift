@@ -133,11 +133,12 @@ struct CustomAlarmDetailView: View {
                             Text(formattedPreAlarmTime(minutes)).tag(minutes)
                         }
                     }
+                    LabeledContent("Sound", value: "Default")
                 }
             } header: {
                 Text("Pre-Alarm")
             } footer: {
-                Text("Rings before this alarm using the same delivery mode and sound.")
+                Text("Rings before this alarm using the same delivery mode with the default sound.")
             }
         }
     }

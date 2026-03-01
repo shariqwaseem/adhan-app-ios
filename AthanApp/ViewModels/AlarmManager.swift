@@ -180,8 +180,7 @@ final class AthanAlarmManager {
     func schedulePreAlarm(
         for prayer: PrayerName,
         at preAlarmTime: Date,
-        minutesBefore: Int,
-        audioFileName: String? = nil
+        minutesBefore: Int
     ) async throws {
         #if canImport(AlarmKit)
         if #available(iOS 26, *) {
@@ -233,19 +232,12 @@ final class AthanAlarmManager {
                 tintColor: .orange
             )
 
-            let sound: AlertConfiguration.AlertSound
-            if let name = audioFileName, !name.isEmpty {
-                sound = .named(name)
-            } else {
-                sound = .default
-            }
-
             let snoozeDuration: TimeInterval = 5 * 60  // 5 minutes
             let configuration = AlarmKit.AlarmManager.AlarmConfiguration(
                 schedule: .fixed(preAlarmTime),
                 countdownDuration: Alarm.CountdownDuration(preAlert: nil, postAlert: snoozeDuration),
                 attributes: attributes,
-                sound: sound
+                sound: .default
             )
 
             _ = try await _manager.schedule(id: alarmID, configuration: configuration)
@@ -262,8 +254,7 @@ final class AthanAlarmManager {
         id: UUID,
         title: String,
         at preAlarmTime: Date,
-        minutesBefore: Int,
-        audioFileName: String? = nil
+        minutesBefore: Int
     ) async throws {
         #if canImport(AlarmKit)
         if #available(iOS 26, *) {
@@ -315,19 +306,12 @@ final class AthanAlarmManager {
                 tintColor: .orange
             )
 
-            let sound: AlertConfiguration.AlertSound
-            if let name = audioFileName, !name.isEmpty {
-                sound = .named(name)
-            } else {
-                sound = .default
-            }
-
             let snoozeDuration: TimeInterval = 5 * 60  // 5 minutes
             let configuration = AlarmKit.AlarmManager.AlarmConfiguration(
                 schedule: .fixed(preAlarmTime),
                 countdownDuration: Alarm.CountdownDuration(preAlert: nil, postAlert: snoozeDuration),
                 attributes: attributes,
-                sound: sound
+                sound: .default
             )
 
             _ = try await _manager.schedule(id: alarmID, configuration: configuration)

@@ -95,11 +95,12 @@ struct PrayerDetailView: View {
                             Text(formattedPreAlarmTime(minutes)).tag(minutes)
                         }
                     }
+                    LabeledContent("Sound", value: "Default")
                 }
             } header: {
                 Text("Pre-Alarm")
             } footer: {
-                Text("Rings before \(prayer.localizedName) using the same delivery mode and sound.")
+                Text("Rings before \(prayer.localizedName) using the same delivery mode with the default sound.")
             }
         }
     }
