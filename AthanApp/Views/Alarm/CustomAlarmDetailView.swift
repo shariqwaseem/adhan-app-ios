@@ -18,6 +18,7 @@ struct CustomAlarmDetailView: View {
     @State private var selectedMode: PrayerNotificationMode = .alarm
     @State private var selectedAudio: String = ""
     @State private var isEnabled: Bool = true
+    @State private var preAlarmMinutes: Int = 0
 
     private var isNew: Bool { existingAlarm == nil }
 
@@ -27,6 +28,7 @@ struct CustomAlarmDetailView: View {
             timeSection
             deliveryModeSection
             alarmSoundSection
+            preAlarmSection
             if !isNew {
                 deleteSection
             }
@@ -56,6 +58,7 @@ struct CustomAlarmDetailView: View {
                 .onChange(of: selectedMode) { _, _ in syncToExisting() }
                 .onChange(of: selectedAudio) { _, _ in syncToExisting() }
                 .onChange(of: isEnabled) { _, _ in syncToExisting() }
+                .onChange(of: preAlarmMinutes) { _, _ in syncToExisting() }
         }
     }
 
@@ -111,6 +114,47 @@ struct CustomAlarmDetailView: View {
         }
     }
 
+    private static let preAlarmOptions: [Int] = stride(from: 10, through: 120, by: 5).map { $0 }
+
+    @ViewBuilder
+    private var preAlarmSection: some View {
+        if selectedMode != .silent {
+            Section {
+                Toggle("Pre-Alarm", isOn: Binding(
+                    get: { preAlarmMinutes > 0 },
+                    set: { enabled in
+                        preAlarmMinutes = enabled ? 30 : 0
+                    }
+                ))
+
+                if preAlarmMinutes > 0 {
+                    Picker("Time Before", selection: $preAlarmMinutes) {
+                        ForEach(Self.preAlarmOptions, id: \.self) { minutes in
+                            Text(formattedPreAlarmTime(minutes)).tag(minutes)
+                        }
+                    }
+                }
+            } header: {
+                Text("Pre-Alarm")
+            } footer: {
+                Text("Rings before this alarm using the same delivery mode and sound.")
+            }
+        }
+    }
+
+    private func formattedPreAlarmTime(_ minutes: Int) -> String {
+        let bundle = LanguageManager.shared.bundle
+        if minutes < 60 {
+            return String(localized: "\(minutes) minutes", bundle: bundle)
+        } else if minutes == 60 {
+            return String(localized: "1 hour", bundle: bundle)
+        } else if minutes % 60 == 0 {
+            return String(localized: "\(minutes / 60) hours", bundle: bundle)
+        } else {
+            return String(localized: "\(minutes / 60)h \(minutes % 60)m", bundle: bundle)
+        }
+    }
+
     private var deleteSection: some View {
         Section {
             Button("Delete Alarm", role: .destructive) {
@@ -131,6 +175,7 @@ struct CustomAlarmDetailView: View {
         selectedMode = alarm.mode
         selectedAudio = alarm.alarmAudio
         isEnabled = alarm.isEnabled
+        preAlarmMinutes = alarm.preAlarmMinutes
 
         var components = Calendar.current.dateComponents([.year, .month, .day], from: Date())
         components.hour = alarm.hour
@@ -147,6 +192,7 @@ struct CustomAlarmDetailView: View {
         alarm.mode = selectedMode
         alarm.alarmAudio = selectedAudio
         alarm.isEnabled = isEnabled
+        alarm.preAlarmMinutes = preAlarmMinutes
         reschedule()
     }
 
@@ -158,7 +204,8 @@ struct CustomAlarmDetailView: View {
             minute: comps.minute ?? 0,
             notificationMode: selectedMode,
             alarmAudio: selectedAudio,
-            isEnabled: true
+            isEnabled: true,
+            preAlarmMinutes: preAlarmMinutes
         )
         modelContext.insert(alarm)
         reschedule()

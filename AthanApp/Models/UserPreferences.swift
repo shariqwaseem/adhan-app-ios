@@ -24,8 +24,12 @@ final class UserPreferences {
     var ishaAlarmAudio: String = "Adhan-Makkah-New"
 
     // Pre-alarm: minutes before prayer (0 = disabled, 10–120)
-    var fajrPreAlarmMinutes: Int = 0
     var tahajjudPreAlarmMinutes: Int = 0
+    var fajrPreAlarmMinutes: Int = 0
+    var dhuhrPreAlarmMinutes: Int = 0
+    var asrPreAlarmMinutes: Int = 0
+    var maghribPreAlarmMinutes: Int = 0
+    var ishaPreAlarmMinutes: Int = 0
 
     // Ramadan
     var ramadanAutoDetect: Bool = true

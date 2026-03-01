@@ -77,7 +77,7 @@ struct PrayerDetailView: View {
 
     @ViewBuilder
     private var preAlarmSection: some View {
-        if (prayer == .fajr || prayer == .tahajjud) && selectedMode != .silent {
+        if selectedMode != .silent {
             Section {
                 Toggle("Pre-Alarm", isOn: Binding(
                     get: { getPreAlarmMinutes() > 0 },
@@ -119,17 +119,23 @@ struct PrayerDetailView: View {
 
     private func getPreAlarmMinutes() -> Int {
         switch prayer {
-        case .fajr: return prefs.fajrPreAlarmMinutes
         case .tahajjud: return prefs.tahajjudPreAlarmMinutes
-        default: return 0
+        case .fajr: return prefs.fajrPreAlarmMinutes
+        case .dhuhr: return prefs.dhuhrPreAlarmMinutes
+        case .asr: return prefs.asrPreAlarmMinutes
+        case .maghrib: return prefs.maghribPreAlarmMinutes
+        case .isha: return prefs.ishaPreAlarmMinutes
         }
     }
 
     private func setPreAlarmMinutes(_ value: Int) {
         switch prayer {
-        case .fajr: prefs.fajrPreAlarmMinutes = value
         case .tahajjud: prefs.tahajjudPreAlarmMinutes = value
-        default: break
+        case .fajr: prefs.fajrPreAlarmMinutes = value
+        case .dhuhr: prefs.dhuhrPreAlarmMinutes = value
+        case .asr: prefs.asrPreAlarmMinutes = value
+        case .maghrib: prefs.maghribPreAlarmMinutes = value
+        case .isha: prefs.ishaPreAlarmMinutes = value
         }
 
         Task {
