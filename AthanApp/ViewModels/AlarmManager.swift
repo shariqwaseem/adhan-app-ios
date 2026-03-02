@@ -337,15 +337,40 @@ final class AthanAlarmManager {
         scheduledAlarmIDs.removeValue(forKey: prayer.rawValue)
     }
 
-    /// Cancel all scheduled athan alarms.
+    /// Cancel all scheduled athan alarms, preserving any that are actively
+    /// alerting or snoozed (in countdown state) so the snooze cycle completes.
     func cancelAll() {
         #if canImport(AlarmKit)
         if #available(iOS 26, *) {
+            var preservedIDs: Set<UUID> = []
             if let alarms = try? _manager.alarms {
                 for alarm in alarms {
-                    try? _manager.cancel(id: alarm.id)
+                    switch alarm.state {
+                    case .scheduled:
+                        // Safe to cancel — alarm hasn't fired yet
+                        try? _manager.cancel(id: alarm.id)
+                    default:
+                        // Alarm is active (alerting, countdown/snoozed, or paused)
+                        // — let it complete naturally
+                        preservedIDs.insert(alarm.id)
+                    }
                 }
             }
+
+            if preservedIDs.isEmpty {
+                scheduledAlarmIDs.removeAll()
+            } else {
+                // Only keep tracking entries for preserved (active) alarms
+                for (key, ids) in scheduledAlarmIDs {
+                    let kept = ids.filter { preservedIDs.contains($0) }
+                    if kept.isEmpty {
+                        scheduledAlarmIDs.removeValue(forKey: key)
+                    } else {
+                        scheduledAlarmIDs[key] = kept
+                    }
+                }
+            }
+            return
         }
         #endif
         scheduledAlarmIDs.removeAll()
