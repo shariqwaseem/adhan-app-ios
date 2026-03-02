@@ -1444,6 +1444,9 @@
         }
       }
     },
+    "Prepare for %@" : {
+
+    },
     "Prepare for %@ prayer" : {
       "localizations" : {
         "ar" : {
@@ -1602,6 +1605,7 @@
       }
     },
     "Rings before %@ using the same delivery mode and sound." : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -1622,6 +1626,12 @@
           }
         }
       }
+    },
+    "Rings before %@ using the same delivery mode with the default sound." : {
+
+    },
+    "Rings before this alarm using the same delivery mode with the default sound." : {
+
     },
     "Save" : {
       "localizations" : {
@@ -1804,7 +1814,6 @@
       }
     },
     "Snooze" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -1825,6 +1834,9 @@
           }
         }
       }
+    },
+    "Snoozing — %@ pre-alarm" : {
+
     },
     "Sound" : {
       "localizations" : {

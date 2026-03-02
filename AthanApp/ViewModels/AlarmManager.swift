@@ -218,7 +218,7 @@ final class AthanAlarmManager {
 
             let countdown = AlarmPresentation.Countdown(
                 title: LocalizedStringResource(stringLiteral: snoozeCountdownTitle),
-                stopButton: stopButton
+                pauseButton: stopButton
             )
 
             let presentation = AlarmPresentation(
@@ -234,8 +234,8 @@ final class AthanAlarmManager {
 
             let snoozeDuration: TimeInterval = 5 * 60  // 5 minutes
             let configuration = AlarmKit.AlarmManager.AlarmConfiguration(
-                schedule: .fixed(preAlarmTime),
                 countdownDuration: Alarm.CountdownDuration(preAlert: nil, postAlert: snoozeDuration),
+                schedule: .fixed(preAlarmTime),
                 attributes: attributes,
                 sound: .default
             )
@@ -292,7 +292,7 @@ final class AthanAlarmManager {
 
             let countdown = AlarmPresentation.Countdown(
                 title: LocalizedStringResource(stringLiteral: snoozeCountdownTitle),
-                stopButton: stopButton
+                pauseButton: stopButton
             )
 
             let presentation = AlarmPresentation(
@@ -308,8 +308,8 @@ final class AthanAlarmManager {
 
             let snoozeDuration: TimeInterval = 5 * 60  // 5 minutes
             let configuration = AlarmKit.AlarmManager.AlarmConfiguration(
-                schedule: .fixed(preAlarmTime),
                 countdownDuration: Alarm.CountdownDuration(preAlert: nil, postAlert: snoozeDuration),
+                schedule: .fixed(preAlarmTime),
                 attributes: attributes,
                 sound: .default
             )
