@@ -327,7 +327,7 @@
         }
       }
     },
-    "Alarm mode plays the full adhan sound and bypasses Silent Mode. Requires Alarm permission." : {
+    "Alarm mode plays the full adhan sound and bypasses Silent Mode." : {
 
     },
     "Alarm mode plays the full athan sound and bypasses Silent Mode. Requires Alarm permission." : {
@@ -354,6 +354,9 @@
       }
     },
     "Alarm mode requires iOS 26 or later. Please update your device to use this feature." : {
+
+    },
+    "Alarm mode requires permission. Go to Settings > Apps > Adhan to enable alarms." : {
 
     },
     "Alarm name" : {
@@ -1816,6 +1819,9 @@
           }
         }
       }
+    },
+    "Skip" : {
+
     },
     "Snooze" : {
       "localizations" : {

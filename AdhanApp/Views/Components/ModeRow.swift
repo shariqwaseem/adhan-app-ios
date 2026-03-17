@@ -3,31 +3,42 @@ import SwiftUI
 struct ModeRow: View {
     let mode: PrayerNotificationMode
     let isSelected: Bool
+    var isAlarmAuthorized: Bool = true
     let onTap: () -> Void
 
-    private var isAlarmUnavailable: Bool {
-        mode == .alarm && !AdhanAlarmManager.isAlarmSupported
+    private var isDisabled: Bool {
+        guard mode == .alarm else { return false }
+        if !AdhanAlarmManager.isAlarmSupported { return true }
+        if !isAlarmAuthorized { return true }
+        return false
+    }
+
+    private var disabledReason: String {
+        if !AdhanAlarmManager.isAlarmSupported {
+            return "Requires iOS 26"
+        }
+        return "Requires alarm permission in Settings"
     }
 
     var body: some View {
         Button(action: {
-            if !isAlarmUnavailable {
+            if !isDisabled {
                 onTap()
             }
         }) {
             HStack {
                 Image(systemName: mode.systemImage)
-                    .foregroundStyle(isAlarmUnavailable ? Color.secondary : (mode == .alarm ? Color.orange : Color.primary))
+                    .foregroundStyle(isDisabled ? Color.secondary : (mode == .alarm ? Color.orange : Color.primary))
                     .frame(width: 28)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(mode.localizedName)
                         .font(.body)
-                    Text(isAlarmUnavailable ? "Requires iOS 26" : mode.localizedDescription)
+                    Text(isDisabled ? disabledReason : mode.localizedDescription)
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
-                if isSelected && !isAlarmUnavailable {
+                if isSelected && !isDisabled {
                     Image(systemName: "checkmark")
                         .foregroundStyle(Color.accentColor)
                         .fontWeight(.semibold)
@@ -35,6 +46,6 @@ struct ModeRow: View {
             }
         }
         .tint(.primary)
-        .disabled(isAlarmUnavailable)
+        .disabled(isDisabled)
     }
 }

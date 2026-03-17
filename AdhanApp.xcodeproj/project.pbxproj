@@ -38,6 +38,7 @@
 		A8493A5A6D73263E08DAE619 /* BackgroundTaskService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A1A0F649E7517C03735632 /* BackgroundTaskService.swift */; };
 		A9177CAF9F01969A0C4A38F9 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9378C5C31A5426E5F590D9 /* TestView.swift */; };
 		AA3333333333333333333333 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = AA4444444444444444444444 /* InfoPlist.xcstrings */; };
+		AB7890ABCDEF1234567890AB /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF123456 /* AppIcon.icon */; };
 		B05D5C3F2634CC6FE8812A19 /* CalculationMethodInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19D45AB2382BD4832AD25E90 /* CalculationMethodInfo.swift */; };
 		BB123E4E076FD62B30FB031A /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7455E9CD1D4B2FF469410E /* LocationManager.swift */; };
 		BB5555555555555555555555 /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB6666666666666666666666 /* LanguageManager.swift */; };
@@ -45,6 +46,7 @@
 		CCA433459760F68763448D9A /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30394D5CA6CCCBB252C838E0 /* MainTabView.swift */; };
 		D1C0A22E9718763CFDBD7BAF /* AdhanAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1E1C45B58CFA861A866551 /* AdhanAppUITests.swift */; };
 		D66B2ACC76A7B6B0AA567E5A /* SharedDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C53B7CDE7F84F19E0B5A240 /* SharedDataManager.swift */; };
+		DBEA5A7B7FD8C02E278F131A /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3698D8CCFAC221BAA7D68E5 /* OnboardingView.swift */; };
 		DC65AC1784BB298C20D09F1B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 478EAB48B84FB739A4D0B6C8 /* Assets.xcassets */; };
 		E8037C94829423A98ADD06CC /* AdhanWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBEB408C548B53395DCB6F47 /* AdhanWidgetsBundle.swift */; };
 		ECF2FB6ED2283D7F1C9B4839 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F411C3FD58DF44F9B5DECA7B /* Localizable.xcstrings */; };
@@ -53,7 +55,6 @@
 		FBE7C52EBD08C94A8B2E1C4B /* ModeRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9A8A69010D0331B1F41E07 /* ModeRow.swift */; };
 		FD663BBAD96D16E8822AC133 /* QiblaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4D326DBF004858A72AA257 /* QiblaView.swift */; };
 		FE6937887E01F906ADB64DBC /* NotificationScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD968AC6BC9281FE0845FC4 /* NotificationScheduler.swift */; };
-		AB7890ABCDEF1234567890AB /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = AB1234567890ABCDEF123456 /* AppIcon.icon */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -128,6 +129,7 @@
 		9C53B7CDE7F84F19E0B5A240 /* SharedDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedDataManager.swift; sourceTree = "<group>"; };
 		A29C07C7EDF86A6EF11BF36D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		AA4444444444444444444444 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
+		AB1234567890ABCDEF123456 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = "folder.icon-composer"; path = AppIcon.icon; sourceTree = "<group>"; };
 		AD0C68EC202C0527AA8E5CC4 /* CustomAlarmSoundSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlarmSoundSelectionView.swift; sourceTree = "<group>"; };
 		AE8A9767151C609EEB186277 /* AlarmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmManager.swift; sourceTree = "<group>"; };
 		B103343411EFB1E337AF6153 /* PrayerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerDetailView.swift; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 		BDA589EB266BB3A48172D644 /* RamadanDetectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RamadanDetectionService.swift; sourceTree = "<group>"; };
 		BF064F669D2B2F20B3D4B07F /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		CC9A8A69010D0331B1F41E07 /* ModeRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeRow.swift; sourceTree = "<group>"; };
+		D3698D8CCFAC221BAA7D68E5 /* OnboardingView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		DC9EDB3F7D7574C2A6762EA1 /* PrayerTimesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTimesViewModel.swift; sourceTree = "<group>"; };
 		DD7455E9CD1D4B2FF469410E /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		E59865709438A67C4F922C28 /* AdhanAudio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdhanAudio.swift; sourceTree = "<group>"; };
@@ -146,7 +149,6 @@
 		EA99DF427BB2D4F453FEDE2E /* AdhanWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AdhanWidgets.entitlements; sourceTree = "<group>"; };
 		EAAF6A5FBF7F814B3FAEA242 /* GlassCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassCard.swift; sourceTree = "<group>"; };
 		F411C3FD58DF44F9B5DECA7B /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
-		AB1234567890ABCDEF123456 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.icon-composer; path = AppIcon.icon; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -235,6 +237,7 @@
 				C5C2DA14619C5D74BCAEF4D7 /* Settings */,
 				D4C32A8FC5468358D9F6B4A3 /* Test */,
 				30394D5CA6CCCBB252C838E0 /* MainTabView.swift */,
+				762E77BC0A8E71D27BAB080C /* Onboarding */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -254,6 +257,15 @@
 				B103343411EFB1E337AF6153 /* PrayerDetailView.swift */,
 			);
 			path = Prayer;
+			sourceTree = "<group>";
+		};
+		762E77BC0A8E71D27BAB080C /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				D3698D8CCFAC221BAA7D68E5 /* OnboardingView.swift */,
+			);
+			name = Onboarding;
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 		7A113A55642E023AD81D5956 /* Products */ = {
@@ -402,8 +414,6 @@
 				F2C8FD34CC44B1FA0C94CA51 /* PBXTargetDependency */,
 			);
 			name = AdhanAppUITests;
-			packageProductDependencies = (
-			);
 			productName = AdhanAppUITests;
 			productReference = 5FDA4C092003AAEE20EB004B /* AdhanAppUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -420,8 +430,6 @@
 				66877FA87EBE19D7F0355E37 /* PBXTargetDependency */,
 			);
 			name = AdhanAppTests;
-			packageProductDependencies = (
-			);
 			productName = AdhanAppTests;
 			productReference = 57EF298D138CC60AA0290D44 /* AdhanAppTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -509,6 +517,7 @@
 			packageReferences = (
 				8ED22B473EE1EF78205918E3 /* XCRemoteSwiftPackageReference "adhan-swift" */,
 			);
+			productRefGroup = 7A113A55642E023AD81D5956 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -591,6 +600,7 @@
 				6B3908F5FF2A91F51A499373 /* TimeOfDayBackground.swift in Sources */,
 				7611E90FE28FD44EFEF667FB /* UserPreferences.swift in Sources */,
 				BB5555555555555555555555 /* LanguageManager.swift in Sources */,
+				DBEA5A7B7FD8C02E278F131A /* OnboardingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

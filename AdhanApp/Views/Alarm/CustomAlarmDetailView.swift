@@ -84,6 +84,7 @@ struct CustomAlarmDetailView: View {
                 ModeRow(
                     mode: mode,
                     isSelected: selectedMode == mode,
+                    isAlarmAuthorized: scheduler.alarmManager.isAuthorized,
                     onTap: {
                         selectedMode = mode
                         Task {

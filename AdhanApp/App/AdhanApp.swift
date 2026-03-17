@@ -83,6 +83,7 @@ struct AdhanApp: App {
     @State private var locationManager = LocationManager()
     @State private var notificationScheduler = NotificationScheduler()
     @State private var selectedTab = "prayer"
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
 
     var sharedModelContainer: ModelContainer = {
         try! ModelContainer(for: UserPreferences.self, CustomAlarm.self)
@@ -90,7 +91,13 @@ struct AdhanApp: App {
 
     var body: some Scene {
         WindowGroup {
-            MainTabView(selectedTab: $selectedTab)
+            Group {
+                if hasCompletedOnboarding {
+                    MainTabView(selectedTab: $selectedTab)
+                } else {
+                    OnboardingView()
+                }
+            }
                 .id(LanguageManager.shared.currentLanguage)
                 .environment(prayerTimesViewModel)
                 .environment(locationManager)
@@ -98,14 +105,6 @@ struct AdhanApp: App {
                 .environment(LanguageManager.shared)
                 .environment(\.locale, LanguageManager.shared.locale)
                 .environment(\.layoutDirection, LanguageManager.shared.isRTL ? .rightToLeft : .leftToRight)
-                .task {
-                    locationManager.requestWhenInUsePermission()
-                    await notificationScheduler.requestPermission()
-                    // After getting WhenInUse, request Always for background location updates
-                    if locationManager.authorizationStatus == .authorizedWhenInUse {
-                        locationManager.requestAlwaysPermission()
-                    }
-                }
                 .onChange(of: locationManager.latitude) { _, _ in
                     onLocationChanged()
                 }

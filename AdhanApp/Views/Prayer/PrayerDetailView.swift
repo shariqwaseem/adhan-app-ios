@@ -38,6 +38,7 @@ struct PrayerDetailView: View {
                 ModeRow(
                     mode: mode,
                     isSelected: selectedMode == mode,
+                    isAlarmAuthorized: scheduler.alarmManager.isAuthorized,
                     onTap: { setMode(mode) }
                 )
             }
@@ -46,8 +47,10 @@ struct PrayerDetailView: View {
         } footer: {
             if !AdhanAlarmManager.isAlarmSupported {
                 Text("Alarm mode requires iOS 26 or later. Please update your device to use this feature.")
+            } else if !scheduler.alarmManager.isAuthorized {
+                Text("Alarm mode requires permission. Go to Settings > Apps > Adhan to enable alarms.")
             } else if selectedMode == .alarm {
-                Text("Alarm mode plays the full adhan sound and bypasses Silent Mode. Requires Alarm permission.")
+                Text("Alarm mode plays the full adhan sound and bypasses Silent Mode.")
             }
         }
     }
