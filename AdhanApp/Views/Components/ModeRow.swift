@@ -4,16 +4,22 @@ struct ModeRow: View {
     let mode: PrayerNotificationMode
     let isSelected: Bool
     var isAlarmAuthorized: Bool = true
+    var isNotificationAuthorized: Bool = true
     let onTap: () -> Void
 
     private var isDisabled: Bool {
-        guard mode == .alarm else { return false }
-        if !AdhanAlarmManager.isAlarmSupported { return true }
-        if !isAlarmAuthorized { return true }
+        if mode == .alarm {
+            if !AdhanAlarmManager.isAlarmSupported { return true }
+            if !isAlarmAuthorized { return true }
+        }
+        if mode == .notification && !isNotificationAuthorized { return true }
         return false
     }
 
     private var disabledReason: String {
+        if mode == .notification && !isNotificationAuthorized {
+            return "Requires notification permission in Settings"
+        }
         if !AdhanAlarmManager.isAlarmSupported {
             return "Requires iOS 26"
         }

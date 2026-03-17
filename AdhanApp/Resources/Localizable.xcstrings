@@ -330,7 +330,7 @@
     "Alarm mode plays the full adhan sound and bypasses Silent Mode." : {
 
     },
-    "Alarm mode plays the full athan sound and bypasses Silent Mode. Requires Alarm permission." : {
+    "Alarm mode plays the full adhan sound and bypasses Silent Mode. Requires Alarm permission." : {
       "extractionState" : "stale",
       "localizations" : {
         "ar" : {
@@ -354,9 +354,6 @@
       }
     },
     "Alarm mode requires iOS 26 or later. Please update your device to use this feature." : {
-
-    },
-    "Alarm mode requires permission. Go to Settings > Apps > Adhan to enable alarms." : {
 
     },
     "Alarm name" : {
@@ -425,6 +422,9 @@
           }
         }
       }
+    },
+    "Allow Location Permission" : {
+
     },
     "Asr" : {
       "extractionState" : "stale",
@@ -793,7 +793,7 @@
         }
       }
     },
-    "Full athan alarm, bypasses Silent Mode" : {
+    "Full adhan alarm, bypasses Silent Mode" : {
       "extractionState" : "stale",
       "localizations" : {
         "ar" : {
@@ -1362,6 +1362,9 @@
         }
       }
     },
+    "Open Settings" : {
+
+    },
     "Other" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1543,6 +1546,9 @@
           }
         }
       }
+    },
+    "Qibla direction requires location access to work accurately." : {
+
     },
     "Ramadan" : {
       "extractionState" : "stale",
@@ -1820,9 +1826,6 @@
         }
       }
     },
-    "Skip" : {
-
-    },
     "Snooze" : {
       "localizations" : {
         "ar" : {
@@ -1844,6 +1847,15 @@
           }
         }
       }
+    },
+    "Snooze (5 min)" : {
+
+    },
+    "Snoozing — %@" : {
+
+    },
+    "Snoozing — %@ Prayer" : {
+
     },
     "Snoozing — %@ pre-alarm" : {
 

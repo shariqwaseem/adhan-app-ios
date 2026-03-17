@@ -1,13 +1,13 @@
 import Foundation
 
 enum Constants {
-    static let appGroupIdentifier = "group.com.adhanshariq.app"
-    static let backgroundRefreshIdentifier = "com.adhanshariq.app.refresh"
-    static let iCloudKeyValueStoreIdentifier = "com.adhanshariq.app"
+    static let appGroupIdentifier = "group.com.shariq.adhan"
+    static let backgroundRefreshIdentifier = "com.shariq.adhan.refresh"
+    static let iCloudKeyValueStoreIdentifier = "com.shariq.adhan"
 
     nonisolated(unsafe) static let sharedDefaults: UserDefaults? = UserDefaults(suiteName: appGroupIdentifier)
 
-    static let processingTaskIdentifier = "com.adhanshariq.app.processing"
+    static let processingTaskIdentifier = "com.shariq.adhan.processing"
 
     enum Keys {
         static let cachedPrayerTimes = "cachedPrayerTimes"

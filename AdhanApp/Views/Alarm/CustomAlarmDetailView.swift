@@ -36,6 +36,7 @@ struct CustomAlarmDetailView: View {
         .animation(.default, value: selectedMode)
         .navigationTitle(isNew ? "New Alarm" : "Edit Alarm")
         .navigationBarTitleDisplayMode(.inline)
+        .task { await scheduler.checkNotificationPermission() }
         .onAppear { loadFromExisting() }
 
         if isNew {
@@ -85,6 +86,7 @@ struct CustomAlarmDetailView: View {
                     mode: mode,
                     isSelected: selectedMode == mode,
                     isAlarmAuthorized: scheduler.alarmManager.isAuthorized,
+                    isNotificationAuthorized: scheduler.isPermissionGranted,
                     onTap: {
                         selectedMode = mode
                         Task {
@@ -99,6 +101,21 @@ struct CustomAlarmDetailView: View {
             }
         } header: {
             Text("Delivery Mode")
+        } footer: {
+            if !scheduler.alarmManager.isAuthorized || !scheduler.isPermissionGranted {
+                let missingBoth = !scheduler.isPermissionGranted && !scheduler.alarmManager.isAuthorized
+                let message = missingBoth
+                    ? "Notification and alarm modes require permission. "
+                    : !scheduler.isPermissionGranted
+                        ? "Notification mode requires permission. "
+                        : "Alarm mode requires permission. "
+                (Text(message) + Text("Open Settings").foregroundColor(.accentColor))
+                    .onTapGesture {
+                        if let url = URL(string: UIApplication.openSettingsURLString) {
+                            UIApplication.shared.open(url)
+                        }
+                    }
+            }
         }
     }
 

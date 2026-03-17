@@ -27,6 +27,7 @@ struct PrayerDetailView: View {
             preAlarmSection
         }
         .animation(.default, value: selectedMode)
+        .task { await scheduler.checkNotificationPermission() }
         .navigationTitle(prayer.localizedName)
     }
 
@@ -39,6 +40,7 @@ struct PrayerDetailView: View {
                     mode: mode,
                     isSelected: selectedMode == mode,
                     isAlarmAuthorized: scheduler.alarmManager.isAuthorized,
+                    isNotificationAuthorized: scheduler.isPermissionGranted,
                     onTap: { setMode(mode) }
                 )
             }
@@ -47,8 +49,19 @@ struct PrayerDetailView: View {
         } footer: {
             if !AdhanAlarmManager.isAlarmSupported {
                 Text("Alarm mode requires iOS 26 or later. Please update your device to use this feature.")
-            } else if !scheduler.alarmManager.isAuthorized {
-                Text("Alarm mode requires permission. Go to Settings > Apps > Adhan to enable alarms.")
+            } else if !scheduler.alarmManager.isAuthorized || !scheduler.isPermissionGranted {
+                let missingBoth = !scheduler.isPermissionGranted && !scheduler.alarmManager.isAuthorized
+                let message = missingBoth
+                    ? "Notification and alarm modes require permission. "
+                    : !scheduler.isPermissionGranted
+                        ? "Notification mode requires permission. "
+                        : "Alarm mode requires permission. "
+                (Text(message) + Text("Open Settings").foregroundColor(.accentColor))
+                    .onTapGesture {
+                        if let url = URL(string: UIApplication.openSettingsURLString) {
+                            UIApplication.shared.open(url)
+                        }
+                    }
             } else if selectedMode == .alarm {
                 Text("Alarm mode plays the full adhan sound and bypasses Silent Mode.")
             }

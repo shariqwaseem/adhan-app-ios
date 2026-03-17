@@ -28,14 +28,20 @@ struct OnboardingView: View {
                 subtitle: "We need your location to calculate accurate prayer times for your area.",
                 buttonTitle: "Allow Location"
             ),
-            OnboardingStep(
+        ]
+
+        if locationManager.isAuthorized {
+            result.append(OnboardingStep(
                 type: .backgroundLocation,
                 icon: "airplane",
                 iconColor: .cyan,
                 title: "Traveling?",
                 subtitle: "Allow background location so your prayer times update automatically when you move to a new city. Your location never leaves your device.",
                 buttonTitle: "Allow Background Location"
-            ),
+            ))
+        }
+
+        result += [
             OnboardingStep(
                 type: .notifications,
                 icon: "bell.badge.fill",
@@ -128,17 +134,8 @@ struct OnboardingView: View {
                 .padding(.horizontal, 40)
                 .padding(.bottom, 16)
 
-                if steps[currentStep].type != .welcome {
-                    Button("Skip") {
-                        advanceStep()
-                    }
-                    .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.5))
-                    .padding(.bottom, 16)
-                } else {
-                    Spacer()
-                        .frame(height: 36)
-                }
+                Spacer()
+                    .frame(height: 36)
             }
         }
         .animation(.easeInOut(duration: 0.3), value: currentStep)
@@ -162,7 +159,7 @@ struct OnboardingView: View {
                 advanceStep()
             } else if locationManager.authorizationStatus == .authorizedWhenInUse {
                 locationManager.requestAlwaysPermission()
-                waitForAuthorizationChange()
+                waitForAuthorizationChange(maxAttempts: 15)
             } else {
                 advanceStep()
             }
@@ -183,10 +180,10 @@ struct OnboardingView: View {
         }
     }
 
-    private func waitForAuthorizationChange() {
+    private func waitForAuthorizationChange(maxAttempts: Int = 50) {
         Task {
             let startStatus = locationManager.authorizationStatus
-            for _ in 0..<50 {
+            for _ in 0..<maxAttempts {
                 try? await Task.sleep(for: .milliseconds(200))
                 if locationManager.authorizationStatus != startStatus {
                     break
@@ -229,6 +226,14 @@ struct OnboardingView: View {
             prefs.asrNotificationMode = notif
             prefs.maghribNotificationMode = notif
             prefs.ishaNotificationMode = notif
+        } else {
+            // No permissions granted → all prayers to silent
+            let silent = PrayerNotificationMode.silent.rawValue
+            prefs.fajrNotificationMode = silent
+            prefs.dhuhrNotificationMode = silent
+            prefs.asrNotificationMode = silent
+            prefs.maghribNotificationMode = silent
+            prefs.ishaNotificationMode = silent
         }
         // tahajjud stays silent (the default)
 

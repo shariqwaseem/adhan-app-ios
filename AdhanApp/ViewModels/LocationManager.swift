@@ -116,7 +116,6 @@ extension LocationManager: @preconcurrency CLLocationManagerDelegate {
             updateIsAuthorized()
             if isAuthorized {
                 self.manager.requestLocation()
-                startMonitoringSignificantLocationChanges()
             }
         }
     }

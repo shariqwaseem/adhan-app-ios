@@ -1,6 +1,6 @@
-name: AthanApp
+name: AdhanApp
 options:
-  bundleIdPrefix: com.athanapp
+  bundleIdPrefix: com.shariq.adhan
   deploymentTarget:
     iOS: "18.0"
   xcodeVersion: "18.0"
@@ -22,77 +22,78 @@ packages:
     from: "1.3.0"
 
 targets:
-  AthanApp:
+  AdhanApp:
     type: application
     platform: iOS
     deploymentTarget: "18.0"
     sources:
-      - path: AthanApp
-      - path: AdhanAudio
-        type: folder
+      - path: AdhanApp
+      - path: AppIcon.icon
+        type: file
+        buildPhase: resources
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.shariqwaseem.athanapp
-        INFOPLIST_FILE: AthanApp/Info.plist
-        CODE_SIGN_ENTITLEMENTS: AthanApp/AthanApp.entitlements
-        PRODUCT_NAME: Athan
-        MARKETING_VERSION: "1.0.0"
-        CURRENT_PROJECT_VERSION: "1"
+        PRODUCT_BUNDLE_IDENTIFIER: com.shariq.adhan
+        INFOPLIST_FILE: AdhanApp/Info.plist
+        CODE_SIGN_ENTITLEMENTS: AdhanApp/AdhanApp.entitlements
+        PRODUCT_NAME: "Adhan alarm app"
+        MARKETING_VERSION: "1.0.1"
+        CURRENT_PROJECT_VERSION: "5"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         SWIFT_EMIT_LOC_STRINGS: "YES"
         GENERATE_INFOPLIST_FILE: false
     dependencies:
       - package: Adhan
-      - target: AthanWidgets
+      - target: AdhanWidgets
     scheme:
       testTargets:
-        - AthanAppTests
+        - AdhanAppTests
       gatherCoverageData: true
 
-  AthanWidgets:
+  AdhanWidgets:
     type: app-extension
     platform: iOS
     deploymentTarget: "18.0"
     sources:
-      - path: AthanWidgets
+      - path: AdhanWidgets
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.shariqwaseem.athanapp.widgets
-        INFOPLIST_FILE: AthanWidgets/Info.plist
-        CODE_SIGN_ENTITLEMENTS: AthanWidgets/AthanWidgets.entitlements
-        PRODUCT_NAME: AthanWidgets
-        MARKETING_VERSION: "1.0.0"
-        CURRENT_PROJECT_VERSION: "1"
+        PRODUCT_BUNDLE_IDENTIFIER: com.shariq.adhan.widgets
+        INFOPLIST_FILE: AdhanWidgets/Info.plist
+        CODE_SIGN_ENTITLEMENTS: AdhanWidgets/AdhanWidgets.entitlements
+        PRODUCT_NAME: AdhanWidgets
+        MARKETING_VERSION: "1.0.1"
+        CURRENT_PROJECT_VERSION: "5"
         GENERATE_INFOPLIST_FILE: false
         CODE_SIGN_STYLE: Automatic
         CODE_SIGN_IDENTITY: "Apple Development"
     dependencies:
       - package: Adhan
 
-  AthanAppTests:
+  AdhanAppTests:
     type: bundle.unit-test
     platform: iOS
     deploymentTarget: "18.0"
     sources:
-      - path: AthanAppTests
+      - path: AdhanAppTests
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.shariqwaseem.athanapp.tests
+        PRODUCT_BUNDLE_IDENTIFIER: com.shariq.adhan.tests
         GENERATE_INFOPLIST_FILE: true
-        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Athan.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Athan"
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Adhan alarm app.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Adhan alarm app"
         BUNDLE_LOADER: "$(TEST_HOST)"
     dependencies:
-      - target: AthanApp
+      - target: AdhanApp
 
-  AthanAppUITests:
+  AdhanAppUITests:
     type: bundle.ui-testing
     platform: iOS
     deploymentTarget: "18.0"
     sources:
-      - path: AthanAppUITests
+      - path: AdhanAppUITests
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.shariqwaseem.athanapp.uitests
+        PRODUCT_BUNDLE_IDENTIFIER: com.shariq.adhan.uitests
         GENERATE_INFOPLIST_FILE: true
     dependencies:
-      - target: AthanApp
+      - target: AdhanApp

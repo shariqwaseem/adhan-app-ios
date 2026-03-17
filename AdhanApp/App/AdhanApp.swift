@@ -13,6 +13,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, CLLocationManagerDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         UNUserNotificationCenter.current().delegate = notificationDelegate
+        NotificationDelegate.registerCategories()
         BackgroundTaskService.registerBackgroundTasks()
         BackgroundTaskService.scheduleBackgroundRefresh()
         BackgroundTaskService.scheduleProcessingTask()
@@ -30,7 +31,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, CLLocationManagerDelegate {
         let manager = CLLocationManager()
         manager.delegate = self
         manager.allowsBackgroundLocationUpdates = true
-        manager.pausesLocationUpdatesAutomatically = false
+        manager.pausesLocationUpdatesAutomatically = true
         manager.startMonitoringSignificantLocationChanges()
         backgroundLocationManager = manager
     }
@@ -45,7 +46,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, CLLocationManagerDelegate {
             let shouldRefresh: Bool
             if let saved = SharedDataManager.loadLocation() {
                 let savedLocation = CLLocation(latitude: saved.latitude, longitude: saved.longitude)
-                shouldRefresh = location.distance(from: savedLocation) > 1000 // 1km
+                shouldRefresh = location.distance(from: savedLocation) > 25_000 // 25km – city-level change
             } else {
                 // No saved location — always refresh
                 shouldRefresh = true
@@ -66,11 +67,52 @@ class AppDelegate: NSObject, UIApplicationDelegate, CLLocationManagerDelegate {
 }
 
 class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
+
+    static let snoozeActionIdentifier = "SNOOZE_ACTION"
+
+    /// Register notification categories with a snooze action for all alarm types.
+    static func registerCategories() {
+        let snoozeAction = UNNotificationAction(
+            identifier: snoozeActionIdentifier,
+            title: String(localized: "Snooze (5 min)", bundle: LanguageManager.shared.bundle),
+            options: []
+        )
+        let categoryIDs = ["PRAYER_TIME", "PRAYER_PRE_ALARM", "CUSTOM_ALARM", "CUSTOM_PRE_ALARM"]
+        let categories: Set<UNNotificationCategory> = Set(categoryIDs.map { id in
+            UNNotificationCategory(
+                identifier: id,
+                actions: [snoozeAction],
+                intentIdentifiers: []
+            )
+        })
+        UNUserNotificationCenter.current().setNotificationCategories(categories)
+    }
+
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
         [.banner, .sound, .badge]
+    }
+
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse
+    ) async {
+        guard response.actionIdentifier == Self.snoozeActionIdentifier else { return }
+
+        let original = response.notification.request.content
+        let content = UNMutableNotificationContent()
+        content.title = original.title
+        content.body = original.body
+        content.categoryIdentifier = original.categoryIdentifier
+        content.sound = original.sound ?? .default
+
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5 * 60, repeats: false)
+        let identifier = "snooze_\(response.notification.request.identifier)_\(Date().timeIntervalSince1970)"
+        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+
+        try? await center.add(request)
     }
 }
 
@@ -82,6 +124,7 @@ struct AdhanApp: App {
     @State private var prayerTimesViewModel = PrayerTimesViewModel()
     @State private var locationManager = LocationManager()
     @State private var notificationScheduler = NotificationScheduler()
+    @State private var downloadManager = AdhanAudioDownloadManager()
     @State private var selectedTab = "prayer"
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
 
@@ -102,6 +145,7 @@ struct AdhanApp: App {
                 .environment(prayerTimesViewModel)
                 .environment(locationManager)
                 .environment(notificationScheduler)
+                .environment(downloadManager)
                 .environment(LanguageManager.shared)
                 .environment(\.locale, LanguageManager.shared.locale)
                 .environment(\.layoutDirection, LanguageManager.shared.isRTL ? .rightToLeft : .leftToRight)
@@ -150,6 +194,23 @@ struct AdhanApp: App {
             prayerTimesViewModel.calculateToday()
         }
 
+        // Verify downloaded sounds — reset preferences for any missing files
+        let missingIDs = Set(downloadManager.verifyDownloadedSounds())
+        if !missingIDs.isEmpty, let prefs = fetchPreferences() {
+            let audioFields: [ReferenceWritableKeyPath<UserPreferences, String>] = [
+                \.tahajjudAlarmAudio, \.fajrAlarmAudio, \.dhuhrAlarmAudio,
+                \.asrAlarmAudio, \.maghribAlarmAudio, \.ishaAlarmAudio
+            ]
+            for keyPath in audioFields {
+                if missingIDs.contains(prefs[keyPath: keyPath]) {
+                    prefs[keyPath: keyPath] = ""
+                }
+            }
+            for alarm in fetchCustomAlarms() where missingIDs.contains(alarm.alarmAudio) {
+                alarm.alarmAudio = ""
+            }
+        }
+
         Task { @MainActor in
             await notificationScheduler.rescheduleAll(
                 prayerEntries: prayerTimesViewModel.multiDayTimes(),
@@ -158,9 +219,11 @@ struct AdhanApp: App {
             )
         }
 
-        // Request a fresh location — if the user moved, this fires
-        // didUpdateLocations → onChange(of: latitude) → onLocationChanged()
-        if locationManager.isAuthorized {
+        // Request a fresh location only if stale (>30 min) — avoids unnecessary
+        // location fetches when rapidly switching in/out of the app.
+        if locationManager.isAuthorized,
+           locationManager.lastLocationUpdate == nil ||
+           locationManager.lastLocationUpdate!.timeIntervalSinceNow < -1800 {
             locationManager.requestLocation()
         }
     }

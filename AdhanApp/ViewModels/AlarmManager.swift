@@ -77,16 +77,34 @@ final class AdhanAlarmManager {
             let bundle = LanguageManager.shared.bundle
             let prayerTitle = String(localized: "\(prayer.localizedName) Prayer", bundle: bundle)
             let stopText = String(localized: "Stop", bundle: bundle)
+            let snoozeText = String(localized: "Snooze", bundle: bundle)
+            let snoozeCountdownTitle = String(localized: "Snoozing — \(prayer.localizedName) Prayer", bundle: bundle)
+
+            let stopButton = AlarmButton(
+                text: LocalizedStringResource(stringLiteral: stopText),
+                textColor: .white,
+                systemImageName: "stop.fill"
+            )
+
+            let alert = AlarmPresentation.Alert(
+                title: LocalizedStringResource(stringLiteral: prayerTitle),
+                stopButton: stopButton,
+                secondaryButton: AlarmButton(
+                    text: LocalizedStringResource(stringLiteral: snoozeText),
+                    textColor: .white,
+                    systemImageName: "moon.zzz"
+                ),
+                secondaryButtonBehavior: .countdown
+            )
+
+            let countdown = AlarmPresentation.Countdown(
+                title: LocalizedStringResource(stringLiteral: snoozeCountdownTitle),
+                pauseButton: stopButton
+            )
 
             let presentation = AlarmPresentation(
-                alert: AlarmPresentation.Alert(
-                    title: LocalizedStringResource(stringLiteral: prayerTitle),
-                    stopButton: AlarmButton(
-                        text: LocalizedStringResource(stringLiteral: stopText),
-                        textColor: .white,
-                        systemImageName: "stop.fill"
-                    )
-                )
+                alert: alert,
+                countdown: countdown
             )
 
             let attributes = AlarmAttributes<AdhanAlarmMetadata>(
@@ -102,7 +120,9 @@ final class AdhanAlarmManager {
                 sound = .default
             }
 
-            let configuration = AlarmKit.AlarmManager.AlarmConfiguration.alarm(
+            let snoozeDuration: TimeInterval = 5 * 60  // 5 minutes
+            let configuration = AlarmKit.AlarmManager.AlarmConfiguration(
+                countdownDuration: Alarm.CountdownDuration(preAlert: nil, postAlert: snoozeDuration),
                 schedule: .fixed(prayerTime),
                 attributes: attributes,
                 sound: sound
@@ -136,16 +156,34 @@ final class AdhanAlarmManager {
 
             let bundle = LanguageManager.shared.bundle
             let stopText = String(localized: "Stop", bundle: bundle)
+            let snoozeText = String(localized: "Snooze", bundle: bundle)
+            let snoozeCountdownTitle = String(localized: "Snoozing — \(title)", bundle: bundle)
+
+            let stopButton = AlarmButton(
+                text: LocalizedStringResource(stringLiteral: stopText),
+                textColor: .white,
+                systemImageName: "stop.fill"
+            )
+
+            let alert = AlarmPresentation.Alert(
+                title: LocalizedStringResource(stringLiteral: title),
+                stopButton: stopButton,
+                secondaryButton: AlarmButton(
+                    text: LocalizedStringResource(stringLiteral: snoozeText),
+                    textColor: .white,
+                    systemImageName: "moon.zzz"
+                ),
+                secondaryButtonBehavior: .countdown
+            )
+
+            let countdown = AlarmPresentation.Countdown(
+                title: LocalizedStringResource(stringLiteral: snoozeCountdownTitle),
+                pauseButton: stopButton
+            )
 
             let presentation = AlarmPresentation(
-                alert: AlarmPresentation.Alert(
-                    title: LocalizedStringResource(stringLiteral: title),
-                    stopButton: AlarmButton(
-                        text: LocalizedStringResource(stringLiteral: stopText),
-                        textColor: .white,
-                        systemImageName: "stop.fill"
-                    )
-                )
+                alert: alert,
+                countdown: countdown
             )
 
             let attributes = AlarmAttributes<AdhanAlarmMetadata>(
@@ -161,7 +199,9 @@ final class AdhanAlarmManager {
                 sound = .default
             }
 
-            let configuration = AlarmKit.AlarmManager.AlarmConfiguration.alarm(
+            let snoozeDuration: TimeInterval = 5 * 60  // 5 minutes
+            let configuration = AlarmKit.AlarmManager.AlarmConfiguration(
+                countdownDuration: Alarm.CountdownDuration(preAlert: nil, postAlert: snoozeDuration),
                 schedule: .fixed(alarmTime),
                 attributes: attributes,
                 sound: sound

@@ -13,6 +13,11 @@ final class NotificationScheduler {
 
     var alarmManager = AdhanAlarmManager()
 
+    func checkNotificationPermission() async {
+        let settings = await UNUserNotificationCenter.current().notificationSettings()
+        isPermissionGranted = settings.authorizationStatus == .authorized
+    }
+
     func requestPermission() async {
         do {
             isPermissionGranted = try await UNUserNotificationCenter.current()
@@ -207,7 +212,7 @@ final class NotificationScheduler {
                 case .alarm:
                     let audioPath: String? = alarm.alarmAudio.isEmpty
                         ? nil
-                        : AdhanAudioCatalog.bundleRelativePath(forID: alarm.alarmAudio)
+                        : AdhanAudioCatalog.alarmSoundPath(forID: alarm.alarmAudio)
                     do {
                         try await alarmManager.scheduleCustomAlarm(
                             id: alarm.id,
@@ -411,7 +416,7 @@ final class NotificationScheduler {
         case .isha: value = prefs.ishaAlarmAudio
         }
         guard !value.isEmpty else { return nil }
-        return AdhanAudioCatalog.bundleRelativePath(forID: value)
+        return AdhanAudioCatalog.alarmSoundPath(forID: value)
     }
 
     private func preAlarmMinutes(for prayer: PrayerName, preferences: UserPreferences?) -> Int {

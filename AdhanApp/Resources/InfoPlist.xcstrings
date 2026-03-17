@@ -13,13 +13,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Athan"
+            "value" : "Adhan"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Athan"
+            "value" : "Adhan"
           }
         },
         "tr" : {
@@ -37,7 +37,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Adhan"
+            "value" : "Adhan alarm app"
           }
         }
       }
@@ -54,19 +54,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Athan uses alarms to alert you for prayer times, even when your phone is on silent."
+            "value" : "Adhan uses alarms to alert you for prayer times, even when your phone is on silent."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Athan menggunakan alarm untuk mengingatkan Anda waktu sholat, bahkan saat ponsel dalam mode senyap."
+            "value" : "Adhan menggunakan alarm untuk mengingatkan Anda waktu sholat, bahkan saat ponsel dalam mode senyap."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Athan, telefonunuz sessiz moddayken bile namaz vakitlerinde sizi uyarmak için alarm kullanır."
+            "value" : "Adhan, telefonunuz sessiz moddayken bile namaz vakitlerinde sizi uyarmak için alarm kullanır."
           }
         }
       }
@@ -83,19 +83,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Athan uses your location in the background to update prayer times when you move to a new area."
+            "value" : "Adhan uses your location in the background to update prayer times when you move to a new area."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Athan menggunakan lokasi Anda di latar belakang untuk memperbarui waktu sholat saat Anda pindah ke daerah baru."
+            "value" : "Adhan menggunakan lokasi Anda di latar belakang untuk memperbarui waktu sholat saat Anda pindah ke daerah baru."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Athan, yeni bir bölgeye taşındığınızda namaz vakitlerini güncellemek için arka planda konumunuzu kullanır."
+            "value" : "Adhan, yeni bir bölgeye taşındığınızda namaz vakitlerini güncellemek için arka planda konumunuzu kullanır."
           }
         }
       }
@@ -112,19 +112,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Athan needs your location to calculate accurate prayer times for your area."
+            "value" : "Adhan needs your location to calculate accurate prayer times for your area."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Athan memerlukan lokasi Anda untuk menghitung waktu sholat yang akurat untuk daerah Anda."
+            "value" : "Adhan memerlukan lokasi Anda untuk menghitung waktu sholat yang akurat untuk daerah Anda."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Athan, bölgeniz için doğru namaz vakitlerini hesaplamak için konumunuza ihtiyaç duyar."
+            "value" : "Adhan, bölgeniz için doğru namaz vakitlerini hesaplamak için konumunuza ihtiyaç duyar."
           }
         }
       }

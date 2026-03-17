@@ -5,20 +5,30 @@ struct AdhanAudioFile: Identifiable, Hashable {
     let displayName: String // human-readable, e.g. "Al Arake"
     let fileName: String    // full filename, e.g. "Al-Arake.caf"
 
-    var bundleURL: URL? {
-        Bundle.main.url(
-            forResource: id,
-            withExtension: "caf",
-            subdirectory: "AdhanAudio"
-        )
+    var localFileURL: URL {
+        let libraryDir = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
+        return libraryDir.appendingPathComponent("Sounds/\(fileName)")
+    }
+
+    var playbackURL: URL? {
+        isDownloaded ? localFileURL : nil
+    }
+
+    var isDownloaded: Bool {
+        FileManager.default.fileExists(atPath: localFileURL.path)
+    }
+
+    var downloadURL: URL {
+        URL(string: "\(AdhanAudioCatalog.baseURL)/\(id).caf")!
     }
 }
 
 enum AdhanAudioCatalog {
+    static let baseURL = "https://pub-266c20788f114addb715d76354fbf729.r2.dev/adhan_audio"
+
     static let allFiles: [AdhanAudioFile] = [
         "Adhan-Makkah-New",
         "Al-Aassaf-Iraq",
-        "Al-Arake",
         "Al-Deen-Obade",
         "Al-Haddad",
         "Al-Jabar-Qatar",
@@ -28,10 +38,7 @@ enum AdhanAudioCatalog {
         "Al-Nabet-Qatar",
         "Al-Qaseme-Qatar",
         "Al-Qatami-Riyadh",
-        "At-Trablsi",
-        "Duman-Turkey",
         "El-Kourdi",
-        "Majde",
         "Ramadan-Saad-Makkah",
     ].map { makeFile($0) }
 
@@ -44,11 +51,17 @@ enum AdhanAudioCatalog {
         return file(forID: id)?.displayName ?? id.replacingOccurrences(of: "-", with: " ")
     }
 
-    /// Returns the bundle-relative path for use with AlertConfiguration.AlertSound.named().
-    /// e.g. "AdhanAudio/Al-Arake.caf"
-    static func bundleRelativePath(forID id: String) -> String? {
+    /// Returns the sound path for use with AlertConfiguration.AlertSound.named().
+    /// Downloaded → "{fileName}" (AlarmKit finds it in Library/Sounds/)
+    /// Not downloaded → nil (triggers fallback to default)
+    static func alarmSoundPath(forID id: String) -> String? {
         guard let file = file(forID: id) else { return nil }
-        return "AdhanAudio/\(file.fileName)"
+        return file.isDownloaded ? file.fileName : nil
+    }
+
+    /// Backward-compatible alias.
+    static func bundleRelativePath(forID id: String) -> String? {
+        alarmSoundPath(forID: id)
     }
 
     private static func makeFile(_ id: String) -> AdhanAudioFile {

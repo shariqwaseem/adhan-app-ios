@@ -45,7 +45,7 @@ struct PrayerWidgetEntry: TimelineEntry {
 // MARK: - Timeline Provider
 
 struct PrayerTimelineProvider: TimelineProvider {
-    private let appGroupId = "group.com.adhanshariq.app"
+    private let appGroupId = "group.com.shariq.adhan"
 
     func placeholder(in context: Context) -> PrayerWidgetEntry {
         sampleEntry()

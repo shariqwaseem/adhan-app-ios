@@ -13,19 +13,29 @@ struct LocationSettings: View {
     var body: some View {
         List {
             Section {
-                Button {
-                    isLocating = true
-                    locationManager.requestLocation()
-                } label: {
-                    HStack {
-                        Label("Use Current Location", systemImage: "location.fill")
-                        if isLocating {
-                            Spacer()
-                            ProgressView()
+                if locationManager.isAuthorized {
+                    Button {
+                        isLocating = true
+                        locationManager.requestLocation()
+                    } label: {
+                        HStack {
+                            Label("Use Current Location", systemImage: "location.fill")
+                            if isLocating {
+                                Spacer()
+                                ProgressView()
+                            }
                         }
                     }
+                    .disabled(isLocating)
+                } else {
+                    Button {
+                        if let url = URL(string: UIApplication.openSettingsURLString) {
+                            UIApplication.shared.open(url)
+                        }
+                    } label: {
+                        Label("Allow Location Permission", systemImage: "location.slash.fill")
+                    }
                 }
-                .disabled(isLocating)
             } footer: {
                 if viewModel.cityName.isEmpty == false {
                     Text("Currently set to \(viewModel.cityName)")

@@ -3,6 +3,7 @@ import AVFoundation
 
 struct CustomAlarmSoundSelectionView: View {
     @Binding var selectedAudioID: String
+    @Environment(AdhanAudioDownloadManager.self) private var downloadManager
 
     @State private var player: AVAudioPlayer?
     @State private var playingID: String?
@@ -15,7 +16,7 @@ struct CustomAlarmSoundSelectionView: View {
 
             Section("Adhan Sounds") {
                 ForEach(AdhanAudioCatalog.allFiles) { file in
-                    audioRow(id: file.id, displayName: file.displayName)
+                    downloadableRow(file: file)
                 }
             }
         }
@@ -25,7 +26,7 @@ struct CustomAlarmSoundSelectionView: View {
         }
     }
 
-    // MARK: - Row
+    // MARK: - Default Row
 
     private func audioRow(id: String, displayName: String) -> some View {
         Button {
@@ -37,7 +38,7 @@ struct CustomAlarmSoundSelectionView: View {
                 }
             } else {
                 selectedAudioID = id
-                playPreview(id: id)
+                stopPlayback()
             }
         } label: {
             HStack {
@@ -53,6 +54,55 @@ struct CustomAlarmSoundSelectionView: View {
         .tint(.primary)
     }
 
+    // MARK: - Downloadable Row
+
+    private func downloadableRow(file: AdhanAudioFile) -> some View {
+        let state = downloadManager.state(for: file.id)
+        return Button {
+            switch state {
+            case .notDownloaded, .failed:
+                downloadManager.download(file)
+            case .downloading:
+                downloadManager.cancelDownload(file)
+            case .downloaded:
+                if selectedAudioID == file.id {
+                    if playingID == file.id {
+                        stopPlayback()
+                    } else {
+                        playPreview(id: file.id)
+                    }
+                } else {
+                    selectedAudioID = file.id
+                    playPreview(id: file.id)
+                }
+            }
+        } label: {
+            HStack {
+                Text(file.displayName)
+                Spacer()
+                switch state {
+                case .notDownloaded:
+                    Image(systemName: "icloud.and.arrow.down")
+                        .foregroundStyle(.secondary)
+                case .downloading(let progress):
+                    DownloadProgressButton(progress: progress) {
+                        downloadManager.cancelDownload(file)
+                    }
+                case .downloaded:
+                    if selectedAudioID == file.id {
+                        Image(systemName: "checkmark")
+                            .foregroundStyle(Color.accentColor)
+                            .fontWeight(.semibold)
+                    }
+                case .failed:
+                    Image(systemName: "exclamationmark.icloud")
+                        .foregroundStyle(.red)
+                }
+            }
+        }
+        .tint(.primary)
+    }
+
     // MARK: - Playback
 
     private func playPreview(id: String) {
@@ -60,7 +110,7 @@ struct CustomAlarmSoundSelectionView: View {
 
         guard !id.isEmpty,
               let file = AdhanAudioCatalog.file(forID: id),
-              let url = file.bundleURL else {
+              let url = file.playbackURL else {
             playingID = nil
             return
         }

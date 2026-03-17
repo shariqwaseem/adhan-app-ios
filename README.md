@@ -1,4 +1,4 @@
-# Athan
+# Adhan
 
 A beautiful, open-source Islamic prayer times app for iOS built with SwiftUI and Swift 6.
 
@@ -6,9 +6,9 @@ A beautiful, open-source Islamic prayer times app for iOS built with SwiftUI and
 
 **Prayer Times** - Accurate daily times for Tahajjud, Fajr, Dhuhr, Asr, Maghrib, and Isha with a live countdown to the next prayer. Supports manual per-prayer time adjustments.
 
-**Alarms & Notifications** - Three modes per prayer: silent, notification, or full alarm (iOS 26+) that plays the athan even in Silent Mode via [AlarmKit](https://developer.apple.com/documentation/alarmkit). Pre-alarm support for Fajr and Tahajjud (10-120 minutes before).
+**Alarms & Notifications** - Three modes per prayer: silent, notification, or full alarm (iOS 26+) that plays the adhan even in Silent Mode via [AlarmKit](https://developer.apple.com/documentation/alarmkit). Pre-alarm support for Fajr and Tahajjud (10-120 minutes before).
 
-**Custom Alarms** - Create unlimited daily alarms independent of prayer times, each with its own delivery mode and athan sound.
+**Custom Alarms** - Create unlimited daily alarms independent of prayer times, each with its own delivery mode and adhan sound.
 
 **Qibla Compass** - Real-time compass-based Qibla direction with haptic feedback on alignment.
 
@@ -50,9 +50,9 @@ Supports both Standard and Hanafi Asr juristic methods, plus high-latitude rules
 
 The project uses [XcodeGen](https://github.com/yonaskolb/XcodeGen) — run `xcodegen generate` after cloning if the `.xcodeproj` needs to be regenerated.
 
-## Athan Audio
+## Adhan Audio
 
-17 built-in athan recordings from muezzins across the Islamic world. Each prayer can be assigned a different athan sound.
+17 built-in adhan recordings from muezzins across the Islamic world. Each prayer can be assigned a different adhan sound.
 
 ## License
 
