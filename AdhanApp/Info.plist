@@ -4,8 +4,8 @@
 <dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>com.shariqw.adhanpro.refresh</string>
-		<string>com.shariqw.adhanpro.processing</string>
+		<string>CHANGE_ME.refresh</string>
+		<string>CHANGE_ME.processing</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>

@@ -130,6 +130,12 @@ final class PrayerTimesViewModel {
             self.calculationMethod = CalculationMethodInfo.recommendedMethod(forCountryCode: code)
         }
         calculateToday()
+
+        Task {
+            await GeofenceMonitorService.shared.updateGeofenceForManualLocationChange(
+                latitude: latitude, longitude: longitude
+            )
+        }
     }
 
     func recalculate() {

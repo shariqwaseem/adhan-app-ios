@@ -7,6 +7,7 @@ struct HomeView: View {
     @Query private var preferences: [UserPreferences]
     @Query(sort: \CustomAlarm.createdAt) private var customAlarms: [CustomAlarm]
 
+    @Environment(\.colorScheme) private var systemColorScheme
     @State private var showingNewAlarm = false
 
     private var prefs: UserPreferences? { preferences.first }
@@ -31,11 +32,11 @@ struct HomeView: View {
                     .padding(.horizontal)
                     .padding(.top, 4)
                     .padding(.bottom, 24)
+                    .animation(.easeInOut(duration: 0.3), value: scheduler.nextScheduledAlarmTime != nil)
                 }
             }
-            .environment(\.colorScheme, currentPhase.prefersDarkAppearance ? .dark : .light)
             .navigationTitle(viewModel.cityName.isEmpty ? "Adhan" : viewModel.cityName)
-            .toolbarColorScheme(currentPhase.prefersDarkAppearance ? .dark : .light, for: .navigationBar)
+            .toolbarColorScheme(currentPhase.prefersDarkAppearance ? .dark : .light, for: .navigationBar, .tabBar)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button {
@@ -50,6 +51,11 @@ struct HomeView: View {
             }
             .onAppear {
                 viewModel.calculateToday()
+                scheduler.refreshNextAlarmTime(
+                    prayerEntries: viewModel.multiDayTimes().flatMap { $0 },
+                    customAlarms: customAlarms,
+                    preferences: prefs
+                )
             }
         }
         .environment(\.colorScheme, currentPhase.prefersDarkAppearance ? .dark : .light)
@@ -94,7 +100,8 @@ struct HomeView: View {
         if let alarmTime = scheduler.nextScheduledAlarmTime {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(scheduler.nextScheduledIsAlarm ? "Next alarm" : "Next notification")
+                    let label = scheduler.nextScheduledIsAlarm ? String(localized: "Next alarm", bundle: LanguageManager.shared.bundle) : String(localized: "Next notification", bundle: LanguageManager.shared.bundle)
+                    Text(scheduler.nextScheduledName.map { "\(label) — \($0)" } ?? label)
                         .font(.subheadline)
                         .foregroundStyle(currentPhase.textColor.opacity(0.7))
                     Text(alarmTime, style: .time)
@@ -105,6 +112,7 @@ struct HomeView: View {
                 Spacer()
             }
             .glassCard()
+            .transition(.move(edge: .top).combined(with: .opacity))
         }
     }
 
@@ -113,10 +121,14 @@ struct HomeView: View {
     private var prayerListSection: some View {
         VStack(spacing: 0) {
             ForEach(viewModel.prayerEntries) { entry in
+                let effectiveEntry = customAlarmIsNext
+                    ? PrayerTimeEntry(prayer: entry.prayer, time: entry.time, isNext: false, isCurrent: entry.isCurrent, manualAdjustmentMinutes: entry.manualAdjustmentMinutes)
+                    : entry
                 NavigationLink {
                     PrayerDetailView(prayer: entry.prayer)
+                        .environment(\.colorScheme, systemColorScheme)
                 } label: {
-                    PrayerRow(entry: entry, mode: currentMode(for: entry.prayer))
+                    PrayerRow(entry: effectiveEntry, mode: currentMode(for: entry.prayer))
                 }
                 .tint(.primary)
                 if entry.prayer != .isha {
@@ -137,8 +149,9 @@ struct HomeView: View {
                 ForEach(Array(customAlarms.enumerated()), id: \.element.id) { index, alarm in
                     NavigationLink {
                         CustomAlarmDetailView(existingAlarm: alarm)
+                            .environment(\.colorScheme, systemColorScheme)
                     } label: {
-                        CustomAlarmRow(alarm: alarm)
+                        CustomAlarmRow(alarm: alarm, isNext: alarm.id == nextCustomAlarmID)
                     }
                     .tint(.primary)
                     if index < customAlarms.count - 1 {
@@ -152,6 +165,58 @@ struct HomeView: View {
     }
 
     // MARK: - Helpers
+
+    /// The next enabled custom alarm's fire time today (or tomorrow if past).
+    private var nextCustomAlarmTime: Date? {
+        let now = Date()
+        let calendar = Calendar.current
+        var earliest: Date? = nil
+        for alarm in customAlarms where alarm.isEnabled && alarm.mode != .silent {
+            var comps = calendar.dateComponents([.year, .month, .day], from: now)
+            comps.hour = alarm.hour
+            comps.minute = alarm.minute
+            comps.second = 0
+            guard var time = calendar.date(from: comps) else { continue }
+            if time <= now {
+                time = calendar.date(byAdding: .day, value: 1, to: time) ?? time
+            }
+            if earliest == nil || time < earliest! {
+                earliest = time
+            }
+        }
+        return earliest
+    }
+
+    /// Whether a custom alarm fires before the next prayer.
+    private var customAlarmIsNext: Bool {
+        guard let customTime = nextCustomAlarmTime else { return false }
+        guard let nextPrayer = viewModel.prayerEntries.first(where: { $0.isNext }) else { return true }
+        return customTime < nextPrayer.adjustedTime
+    }
+
+    /// The ID of the custom alarm that fires next (if it's before next prayer).
+    private var nextCustomAlarmID: UUID? {
+        guard customAlarmIsNext else { return nil }
+        let now = Date()
+        let calendar = Calendar.current
+        var earliestAlarm: CustomAlarm? = nil
+        var earliestTime: Date? = nil
+        for alarm in customAlarms where alarm.isEnabled && alarm.mode != .silent {
+            var comps = calendar.dateComponents([.year, .month, .day], from: now)
+            comps.hour = alarm.hour
+            comps.minute = alarm.minute
+            comps.second = 0
+            guard var time = calendar.date(from: comps) else { continue }
+            if time <= now {
+                time = calendar.date(byAdding: .day, value: 1, to: time) ?? time
+            }
+            if earliestTime == nil || time < earliestTime! {
+                earliestTime = time
+                earliestAlarm = alarm
+            }
+        }
+        return earliestAlarm?.id
+    }
 
     private func currentMode(for prayer: PrayerName) -> PrayerNotificationMode {
         guard let prefs = prefs else {
@@ -197,6 +262,7 @@ struct HomeView: View {
 
 struct CustomAlarmRow: View {
     let alarm: CustomAlarm
+    var isNext: Bool = false
 
     private var formattedTime: String {
         var components = DateComponents()
@@ -213,26 +279,22 @@ struct CustomAlarmRow: View {
 
     var body: some View {
         HStack {
-            Image(systemName: "alarm.fill")
+            Image(systemName: alarm.mode.systemImage)
                 .font(.body)
-                .foregroundStyle(alarm.isEnabled ? .orange : .secondary)
+                .foregroundStyle(alarm.mode == .alarm ? .orange : alarm.mode == .notification ? Color.accentColor : .secondary)
                 .frame(width: 28)
 
             Text(alarm.title)
-                .font(.body.weight(.regular))
+                .font(.body.weight(isNext ? .semibold : .regular))
                 .lineLimit(1)
 
             Spacer()
 
-            Image(systemName: alarm.mode.systemImage)
-                .font(.caption)
-                .foregroundStyle(alarm.mode == .alarm ? .orange : .secondary)
-
             Text(formattedTime)
-                .font(.body)
+                .font(.body.weight(isNext ? .semibold : .regular))
                 .monospacedDigit()
 
-            Image(systemName: "chevron.right")
+            Image(systemName: "chevron.forward")
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundStyle(.tertiary)
         }
@@ -250,9 +312,9 @@ struct PrayerRow: View {
 
     var body: some View {
         HStack {
-            Image(systemName: entry.prayer.systemImage)
+            Image(systemName: mode.systemImage)
                 .font(.body)
-                .foregroundStyle(entry.isNext ? Color.accentColor : .secondary)
+                .foregroundStyle(mode == .alarm ? .orange : mode == .notification ? Color.accentColor : .secondary)
                 .frame(width: 28)
 
             Text(entry.prayer.localizedName)
@@ -261,15 +323,11 @@ struct PrayerRow: View {
 
             Spacer()
 
-            Image(systemName: mode.systemImage)
-                .font(.caption)
-                .foregroundStyle(mode == .alarm ? .orange : .secondary)
-
             Text(entry.adjustedTime, style: .time)
                 .font(.body.weight(entry.isNext ? .semibold : .regular))
                 .monospacedDigit()
 
-            Image(systemName: "chevron.right")
+            Image(systemName: "chevron.forward")
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundStyle(.tertiary)
         }

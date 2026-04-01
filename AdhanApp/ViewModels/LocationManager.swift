@@ -1,5 +1,6 @@
 import Foundation
 import CoreLocation
+import MapKit
 import Observation
 
 @Observable
@@ -43,27 +44,23 @@ final class LocationManager: NSObject {
         manager.requestLocation()
     }
 
-    func startMonitoringSignificantLocationChanges() {
-        guard isAuthorized else { return }
-        manager.startMonitoringSignificantLocationChanges()
-    }
-
-    func stopMonitoringSignificantLocationChanges() {
-        manager.stopMonitoringSignificantLocationChanges()
-    }
-
     func searchCity(_ query: String) async -> [(name: String, latitude: Double, longitude: Double, countryCode: String?)] {
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = query
+        request.resultTypes = .address
+        let search = MKLocalSearch(request: request)
         do {
-            let placemarks = try await geocoder.geocodeAddressString(query)
-            return placemarks.compactMap { placemark in
-                guard let location = placemark.location else { return nil }
+            let response = try await search.start()
+            return response.mapItems.compactMap { item in
+                let placemark = item.placemark
                 let name = [placemark.locality, placemark.administrativeArea, placemark.country]
                     .compactMap { $0 }
                     .joined(separator: ", ")
+                guard !name.isEmpty else { return nil }
                 return (
-                    name: name.isEmpty ? query : name,
-                    latitude: location.coordinate.latitude,
-                    longitude: location.coordinate.longitude,
+                    name: name,
+                    latitude: placemark.coordinate.latitude,
+                    longitude: placemark.coordinate.longitude,
                     countryCode: placemark.isoCountryCode
                 )
             }

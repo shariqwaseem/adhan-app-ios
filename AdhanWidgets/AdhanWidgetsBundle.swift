@@ -9,6 +9,27 @@ struct AdhanWidgetsBundle: WidgetBundle {
     }
 }
 
+// MARK: - Widget Language Helper
+
+enum WidgetLanguage {
+    private static let appGroupId = "group.shariq.adhanapp.com"
+
+    static var currentLanguage: String {
+        UserDefaults(suiteName: appGroupId)?.string(forKey: "appLanguage") ?? "en"
+    }
+
+    static func localized(_ key: String) -> String {
+        let lang = currentLanguage
+        // English is the source language — keys are already English, no lookup needed
+        if lang == "en" { return key }
+        if let path = Bundle.main.path(forResource: lang, ofType: "lproj"),
+           let lprojBundle = Bundle(path: path) {
+            return lprojBundle.localizedString(forKey: key, value: key, table: nil)
+        }
+        return key
+    }
+}
+
 // MARK: - Widget
 
 struct PrayerTimesWidget: Widget {
@@ -37,15 +58,12 @@ struct PrayerWidgetEntry: TimelineEntry {
     let date: Date
     let prayers: [(name: String, time: Date, isNext: Bool)]
     let cityName: String
-    let hijriDate: String
-    let isRamadan: Bool
-    let ramadanDay: Int?
 }
 
 // MARK: - Timeline Provider
 
 struct PrayerTimelineProvider: TimelineProvider {
-    private let appGroupId = "group.com.shariqw.adhanpro"
+    private let appGroupId = "group.shariq.adhanapp.com"
 
     func placeholder(in context: Context) -> PrayerWidgetEntry {
         sampleEntry()
@@ -77,16 +95,24 @@ struct PrayerTimelineProvider: TimelineProvider {
             entries.append(PrayerWidgetEntry(
                 date: transitionDate,
                 prayers: updatedPrayers,
-                cityName: baseEntry.cityName,
-                hijriDate: baseEntry.hijriDate,
-                isRamadan: baseEntry.isRamadan,
-                ramadanDay: baseEntry.ramadanDay
+                cityName: baseEntry.cityName
             ))
         }
 
-        // Refresh at midnight to get tomorrow's times
-        let tomorrow = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: 1, to: now)!)
-        let timeline = Timeline(entries: entries, policy: .after(tomorrow))
+        // If no future prayers today, refresh soon to pick up tomorrow's data.
+        // Otherwise refresh at midnight.
+        let refreshDate: Date
+        if futurePrayers.isEmpty {
+            // All prayers past — refresh in 1 minute to show tomorrow's prayers
+            refreshDate = now.addingTimeInterval(60)
+        } else if let lastPrayer = futurePrayers.last {
+            // Refresh right after the last prayer of the day
+            refreshDate = baseEntry.prayers[lastPrayer.offset].time.addingTimeInterval(60)
+        } else {
+            let tomorrow = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: 1, to: now)!)
+            refreshDate = tomorrow
+        }
+        let timeline = Timeline(entries: entries, policy: .after(refreshDate))
         completion(timeline)
     }
 
@@ -102,13 +128,16 @@ struct PrayerTimelineProvider: TimelineProvider {
             (name: entry.prayer, time: entry.time, isNext: entry.isNext)
         }
 
+        // If all cached prayers are past (after Isha), recalculate to get tomorrow's
+        let hasUpcoming = prayers.contains { $0.time > now }
+        if !hasUpcoming {
+            return calculateFreshEntry()
+        }
+
         return PrayerWidgetEntry(
             date: now,
             prayers: prayers,
-            cityName: daily.cityName,
-            hijriDate: daily.hijriDate,
-            isRamadan: false,
-            ramadanDay: nil
+            cityName: daily.cityName
         )
     }
 
@@ -172,23 +201,36 @@ struct PrayerTimelineProvider: TimelineProvider {
             prayers.append((name: names[i], time: times[i], isNext: isNext))
         }
 
-        var hijriCal = Calendar(identifier: .islamicUmmAlQura)
-        hijriCal.locale = .current
-        let formatter = DateFormatter()
-        formatter.calendar = hijriCal
-        formatter.dateStyle = .long
-        let hijri = formatter.string(from: now)
+        // If all today's prayers are past (after Isha), calculate tomorrow's prayers
+        if !foundNext {
+            guard let tomorrow = cal.date(byAdding: .day, value: 1, to: now) else {
+                return PrayerWidgetEntry(date: now, prayers: prayers, cityName: cityName)
+            }
+            let tComps = cal.dateComponents([.year, .month, .day], from: tomorrow)
+            let tDateComps = DateComponents(calendar: cal, year: tComps.year, month: tComps.month, day: tComps.day)
+            guard let tPrayerTimes = PrayerTimes(coordinates: coordinates, date: tDateComps, calculationParameters: params) else {
+                return PrayerWidgetEntry(date: now, prayers: prayers, cityName: cityName)
+            }
 
-        let hijriComponents = hijriCal.dateComponents([.month, .day], from: now)
-        let isRamadan = hijriComponents.month == 9
+            let tTahajjud: Date = {
+                let nightDuration = tPrayerTimes.fajr.timeIntervalSince(prayerTimes.isha)
+                return prayerTimes.isha.addingTimeInterval(nightDuration * 2.0 / 3.0)
+            }()
+
+            let tTimes = [tTahajjud, tPrayerTimes.fajr, tPrayerTimes.dhuhr, tPrayerTimes.asr, tPrayerTimes.maghrib, tPrayerTimes.isha]
+            prayers = []
+            var tFoundNext = false
+            for i in 0..<names.count {
+                let isNext = !tFoundNext && tTimes[i] > now
+                if isNext { tFoundNext = true }
+                prayers.append((name: names[i], time: tTimes[i], isNext: isNext))
+            }
+        }
 
         return PrayerWidgetEntry(
             date: now,
             prayers: prayers,
-            cityName: cityName,
-            hijriDate: hijri,
-            isRamadan: isRamadan,
-            ramadanDay: isRamadan ? hijriComponents.day : nil
+            cityName: cityName
         )
     }
 
@@ -205,10 +247,7 @@ struct PrayerTimelineProvider: TimelineProvider {
                 ("Maghrib", cal.date(bySettingHour: 18, minute: 42, second: 0, of: now)!, true),
                 ("Isha", cal.date(bySettingHour: 20, minute: 15, second: 0, of: now)!, false),
             ],
-            cityName: "Mecca",
-            hijriDate: "",
-            isRamadan: false,
-            ramadanDay: nil
+            cityName: "Mecca"
         )
     }
 }
@@ -254,6 +293,10 @@ struct PrayerWidgetEntryView: View {
     @Environment(\.widgetFamily) var family
     var entry: PrayerWidgetEntry
 
+    private func localizedName(_ name: String) -> String {
+        WidgetLanguage.localized(name)
+    }
+
     var body: some View {
         switch family {
         case .systemSmall:
@@ -278,16 +321,13 @@ struct PrayerWidgetEntryView: View {
     private var smallWidget: some View {
         VStack(alignment: .leading, spacing: 4) {
             if let next = entry.prayers.first(where: { $0.isNext }) {
-                Text(next.name)
+                Text(localizedName(next.name))
                     .font(.headline)
                 Text(next.time, style: .time)
-                    .font(.title2.bold())
+                    .font(.title.bold())
                     .monospacedDigit()
-                Text(next.time, style: .relative)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
             } else {
-                Text("No upcoming")
+                Text(WidgetLanguage.localized("No upcoming"))
                     .font(.headline)
             }
         }
@@ -309,7 +349,7 @@ struct PrayerWidgetEntryView: View {
             let upcoming = entry.prayers.filter { $0.time > entry.date }.prefix(3)
             ForEach(Array(upcoming.enumerated()), id: \.offset) { _, prayer in
                 HStack {
-                    Text(prayer.name)
+                    Text(localizedName(prayer.name))
                         .font(.subheadline.weight(prayer.isNext ? .bold : .regular))
                     Spacer()
                     Text(prayer.time, style: .time)
@@ -325,29 +365,14 @@ struct PrayerWidgetEntryView: View {
 
     private var largeWidget: some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                VStack(alignment: .leading) {
-                    Text(entry.cityName)
-                        .font(.headline)
-                    Text(entry.hijriDate)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                Spacer()
-                if entry.isRamadan, let day = entry.ramadanDay {
-                    Text("Ramadan Day \(day)")
-                        .font(.caption.bold())
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(.yellow.opacity(0.2), in: Capsule())
-                }
-            }
+            Text(entry.cityName)
+                .font(.headline)
 
             Divider()
 
             ForEach(Array(entry.prayers.enumerated()), id: \.offset) { _, prayer in
                 HStack {
-                    Text(prayer.name)
+                    Text(localizedName(prayer.name))
                         .font(.body.weight(prayer.isNext ? .bold : .regular))
                     Spacer()
                     Text(prayer.time, style: .time)
@@ -366,9 +391,9 @@ struct PrayerWidgetEntryView: View {
     private var inlineWidget: some View {
         Group {
             if let next = entry.prayers.first(where: { $0.isNext }) {
-                Text("\(next.name) \(next.time, style: .time)")
+                Text("\(localizedName(next.name)) \(next.time, style: .time)")
             } else {
-                Text("No upcoming prayer")
+                Text(WidgetLanguage.localized("No upcoming prayer"))
             }
         }
     }
@@ -395,7 +420,7 @@ struct PrayerWidgetEntryView: View {
             let upcoming = entry.prayers.filter { $0.time > entry.date }.prefix(3)
             ForEach(Array(upcoming.enumerated()), id: \.offset) { _, prayer in
                 HStack {
-                    Text(prayer.name)
+                    Text(localizedName(prayer.name))
                         .font(.caption2)
                     Spacer()
                     Text(prayer.time, style: .time)

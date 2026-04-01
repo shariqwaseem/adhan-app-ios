@@ -17,13 +17,14 @@ struct ModeRow: View {
     }
 
     private var disabledReason: String {
+        let bundle = LanguageManager.shared.bundle
         if mode == .notification && !isNotificationAuthorized {
-            return "Requires notification permission in Settings"
+            return String(localized: "Requires notification permission in Settings", bundle: bundle)
         }
         if !AdhanAlarmManager.isAlarmSupported {
-            return "Requires iOS 26"
+            return String(localized: "Requires iOS 26", bundle: bundle)
         }
-        return "Requires alarm permission in Settings"
+        return String(localized: "Requires alarm permission in Settings", bundle: bundle)
     }
 
     var body: some View {

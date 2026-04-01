@@ -88,7 +88,10 @@ struct LocationSettings: View {
                 guard !Task.isCancelled else { return }
                 isSearching = true
                 let results = await locationManager.searchCity(trimmed)
-                guard !Task.isCancelled else { return }
+                if Task.isCancelled {
+                    isSearching = false
+                    return
+                }
                 searchResults = results
                 isSearching = false
             }

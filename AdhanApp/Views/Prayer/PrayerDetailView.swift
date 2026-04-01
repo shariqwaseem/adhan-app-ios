@@ -26,8 +26,11 @@ struct PrayerDetailView: View {
             alarmSoundSection
             preAlarmSection
         }
-        .animation(.default, value: selectedMode)
-        .task { await scheduler.checkNotificationPermission() }
+        .animation(.easeInOut(duration: 0.3), value: selectedMode)
+        .task {
+            await scheduler.checkNotificationPermission()
+            scheduler.alarmManager.checkAuthorization()
+        }
         .navigationTitle(prayer.localizedName)
     }
 
@@ -52,18 +55,16 @@ struct PrayerDetailView: View {
             } else if !scheduler.alarmManager.isAuthorized || !scheduler.isPermissionGranted {
                 let missingBoth = !scheduler.isPermissionGranted && !scheduler.alarmManager.isAuthorized
                 let message = missingBoth
-                    ? "Notification and alarm modes require permission. "
+                    ? String(localized: "Notification and alarm modes require permission. ", bundle: LanguageManager.shared.bundle)
                     : !scheduler.isPermissionGranted
-                        ? "Notification mode requires permission. "
-                        : "Alarm mode requires permission. "
+                        ? String(localized: "Notification mode requires permission. ", bundle: LanguageManager.shared.bundle)
+                        : String(localized: "Alarm mode requires permission. ", bundle: LanguageManager.shared.bundle)
                 (Text(message) + Text("Open Settings").foregroundColor(.accentColor))
                     .onTapGesture {
                         if let url = URL(string: UIApplication.openSettingsURLString) {
                             UIApplication.shared.open(url)
                         }
                     }
-            } else if selectedMode == .alarm {
-                Text("Alarm mode plays the full adhan sound and bypasses Silent Mode.")
             }
         }
     }
@@ -111,7 +112,7 @@ struct PrayerDetailView: View {
                             Text(formattedPreAlarmTime(minutes)).tag(minutes)
                         }
                     }
-                    LabeledContent("Sound", value: "Default")
+                    LabeledContent("Sound", value: String(localized: "Default", bundle: LanguageManager.shared.bundle))
                 }
             } header: {
                 Text("Pre-Alarm")

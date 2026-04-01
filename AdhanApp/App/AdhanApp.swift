@@ -1,15 +1,10 @@
 import SwiftUI
 import SwiftData
 import UserNotifications
-import CoreLocation
 
 // Show notifications even when app is in foreground
-class AppDelegate: NSObject, UIApplicationDelegate, CLLocationManagerDelegate {
+class AppDelegate: NSObject, UIApplicationDelegate {
     let notificationDelegate = NotificationDelegate()
-
-    // MUST be stored property — a local variable would be deallocated
-    // before the location event arrives when iOS relaunches a terminated app.
-    var backgroundLocationManager: CLLocationManager?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         UNUserNotificationCenter.current().delegate = notificationDelegate
@@ -18,51 +13,14 @@ class AppDelegate: NSObject, UIApplicationDelegate, CLLocationManagerDelegate {
         BackgroundTaskService.scheduleBackgroundRefresh()
         BackgroundTaskService.scheduleProcessingTask()
 
-        // Always start background location monitoring — this ensures monitoring
-        // persists across terminations and handles background-location relaunches.
-        startBackgroundLocationManager()
+        // Geofence monitoring is started after onboarding completes
+        // (see AdhanApp.onBecameActive) to avoid prompting for location
+        // permission before the user reaches the onboarding location step.
+        if UserDefaults.standard.bool(forKey: "hasCompletedOnboarding") {
+            Task { await GeofenceMonitorService.shared.startMonitoring() }
+        }
 
         return true
-    }
-
-    // MARK: - Background Location Manager
-
-    func startBackgroundLocationManager() {
-        let manager = CLLocationManager()
-        manager.delegate = self
-        manager.allowsBackgroundLocationUpdates = true
-        manager.pausesLocationUpdatesAutomatically = true
-        manager.startMonitoringSignificantLocationChanges()
-        backgroundLocationManager = manager
-    }
-
-    // MARK: - CLLocationManagerDelegate
-
-    nonisolated func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last else { return }
-
-        Task { @MainActor in
-            // Check if location changed >1km from persisted location
-            let shouldRefresh: Bool
-            if let saved = SharedDataManager.loadLocation() {
-                let savedLocation = CLLocation(latitude: saved.latitude, longitude: saved.longitude)
-                shouldRefresh = location.distance(from: savedLocation) > 25_000 // 25km – city-level change
-            } else {
-                // No saved location — always refresh
-                shouldRefresh = true
-            }
-
-            if shouldRefresh {
-                await BackgroundTaskService.performFullRefresh(
-                    newLatitude: location.coordinate.latitude,
-                    newLongitude: location.coordinate.longitude
-                )
-            }
-        }
-    }
-
-    nonisolated func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        // Background location errors can be ignored — the system will retry
     }
 }
 
@@ -161,6 +119,16 @@ struct AdhanApp: App {
                         onBecameActive()
                     }
                 }
+                .onReceive(NotificationCenter.default.publisher(for: .NSSystemTimeZoneDidChange)) { _ in
+                    prayerTimesViewModel.recalculate()
+                    Task { @MainActor in
+                        await notificationScheduler.rescheduleAll(
+                            prayerEntries: prayerTimesViewModel.multiDayTimes(),
+                            preferences: fetchPreferences(),
+                            customAlarms: fetchCustomAlarms()
+                        )
+                    }
+                }
         }
         .modelContainer(sharedModelContainer)
     }
@@ -225,6 +193,12 @@ struct AdhanApp: App {
            locationManager.lastLocationUpdate == nil ||
            locationManager.lastLocationUpdate!.timeIntervalSinceNow < -1800 {
             locationManager.requestLocation()
+        }
+
+        // Start geofence monitoring once onboarding is done (handles the case
+        // where the app launched during onboarding and skipped it in AppDelegate).
+        if hasCompletedOnboarding {
+            Task { await GeofenceMonitorService.shared.startMonitoring() }
         }
     }
 

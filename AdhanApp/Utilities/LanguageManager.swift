@@ -1,5 +1,6 @@
 import Foundation
 import Observation
+import WidgetKit
 
 @Observable
 final class LanguageManager: @unchecked Sendable {
@@ -12,6 +13,8 @@ final class LanguageManager: @unchecked Sendable {
         didSet {
             guard oldValue != currentLanguage else { return }
             UserDefaults.standard.set(currentLanguage, forKey: Self.languageKey)
+            SharedDataManager.saveLanguage(currentLanguage)
+            SharedDataManager.reloadWidgets()
             reloadBundle()
         }
     }
@@ -44,6 +47,7 @@ final class LanguageManager: @unchecked Sendable {
         }
         self.currentLanguage = lang
         self.bundle = Self.loadBundle(for: lang)
+        SharedDataManager.saveLanguage(lang)
     }
 
     private func reloadBundle() {

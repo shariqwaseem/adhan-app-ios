@@ -303,7 +303,26 @@
       }
     },
     "Adhan Sounds" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أصوات الأذان"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suara Adzan"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ezan Sesleri"
+          }
+        }
+      }
     },
     "Alarm" : {
       "localizations" : {
@@ -328,7 +347,27 @@
       }
     },
     "Alarm mode plays the full adhan sound and bypasses Silent Mode." : {
-
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "وضع التنبيه يشغل صوت الأذان الكامل ويتجاوز الوضع الصامت."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode alarm memutar suara adzan penuh dan mengabaikan Mode Senyap."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm modu tam ezan sesini çalar ve Sessiz Modu devre dışı bırakır."
+          }
+        }
+      }
     },
     "Alarm mode plays the full adhan sound and bypasses Silent Mode. Requires Alarm permission." : {
       "extractionState" : "stale",
@@ -354,7 +393,48 @@
       }
     },
     "Alarm mode requires iOS 26 or later. Please update your device to use this feature." : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "وضع التنبيه يتطلب iOS 26 أو أحدث. يرجى تحديث جهازك لاستخدام هذه الميزة."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode alarm memerlukan iOS 26 atau lebih baru. Silakan perbarui perangkat Anda untuk menggunakan fitur ini."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm modu iOS 26 veya üstünü gerektirir. Bu özelliği kullanmak için cihazınızı güncelleyin."
+          }
+        }
+      }
+    },
+    "Alarm mode requires permission. " : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "وضع التنبيه يتطلب إذنًا. "
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode alarm memerlukan izin. "
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm modu izin gerektirir. "
+          }
+        }
+      }
     },
     "Alarm name" : {
       "localizations" : {
@@ -424,7 +504,26 @@
       }
     },
     "Allow Location Permission" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "السماح بإذن الموقع"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izinkan Akses Lokasi"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konum İznine İzin Ver"
+          }
+        }
+      }
     },
     "Asr" : {
       "extractionState" : "stale",
@@ -492,6 +591,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "İptal"
+          }
+        }
+      }
+    },
+    "Cannot Send Email" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تعذر إرسال البريد الإلكتروني"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tidak Dapat Mengirim Email"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-posta Gönderilemiyor"
           }
         }
       }
@@ -606,6 +727,28 @@
         }
       }
     },
+    "Delete Notification" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حذف الإشعار"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hapus Notifikasi"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildirimi Sil"
+          }
+        }
+      }
+    },
     "Delivery Mode" : {
       "localizations" : {
         "ar" : {
@@ -652,7 +795,26 @@
       }
     },
     "Display" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "العرض"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tampilan"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görünüm"
+          }
+        }
+      }
     },
     "Diyanet İşleri Başkanlığı, Turkey" : {
       "extractionState" : "stale",
@@ -722,6 +884,28 @@
         }
       }
     },
+    "Edit Notification" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تعديل الإشعار"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit Notifikasi"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildirimi Düzenle"
+          }
+        }
+      }
+    },
     "Egyptian General Authority" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -771,6 +955,28 @@
         }
       }
     },
+    "Feedback & Bug Report" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ملاحظات والإبلاغ عن خطأ"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umpan Balik & Laporan Bug"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geri Bildirim ve Hata Raporu"
+          }
+        }
+      }
+    },
     "Fire in 5 seconds" : {
       "localizations" : {
         "ar" : {
@@ -793,25 +999,25 @@
         }
       }
     },
-    "Full adhan alarm, bypasses Silent Mode" : {
+    "Full alarm, bypasses Silent and Focus Modes" : {
       "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "تنبيه الأذان الكامل، يتجاوز الوضع الصامت"
+            "value" : "تنبيه كامل، يتجاوز الوضع الصامت ووضع التركيز"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alarm adzan penuh, mengabaikan Mode Senyap"
+            "value" : "Alarm penuh, mengabaikan Mode Senyap dan Mode Fokus"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tam ezan alarmı, Sessiz Modu devre dışı bırakır"
+            "value" : "Tam alarm, Sessiz ve Odaklanma Modlarını devre dışı bırakır"
           }
         }
       }
@@ -1221,11 +1427,71 @@
         }
       }
     },
+    "New Notification" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إشعار جديد"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifikasi Baru"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni Bildirim"
+          }
+        }
+      }
+    },
     "Next alarm" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "التنبيه التالي"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm berikutnya"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sonraki alarm"
+          }
+        }
+      }
     },
     "Next notification" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الإشعار التالي"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifikasi berikutnya"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sonraki bildirim"
+          }
+        }
+      }
     },
     "No custom adhan audio selected. Set a prayer to Alarm mode and choose an adhan sound to test it here." : {
       "localizations" : {
@@ -1272,6 +1538,28 @@
         }
       }
     },
+    "Not Set" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "غير محدد"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belum Diatur"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarlanmadı"
+          }
+        }
+      }
+    },
     "Notification" : {
       "localizations" : {
         "ar" : {
@@ -1290,6 +1578,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bildirim"
+          }
+        }
+      }
+    },
+    "Notification and alarm modes require permission. " : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "وضعا الإشعار والتنبيه يتطلبان إذنًا. "
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode notifikasi dan alarm memerlukan izin. "
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildirim ve alarm modları izin gerektirir. "
           }
         }
       }
@@ -1313,6 +1623,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bildirim Modu"
+          }
+        }
+      }
+    },
+    "Notification mode requires permission. " : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "وضع الإشعار يتطلب إذنًا. "
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode notifikasi memerlukan izin. "
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildirim modu izin gerektirir. "
+          }
+        }
+      }
+    },
+    "Notification name" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اسم الإشعار"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nama notifikasi"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildirim adı"
           }
         }
       }
@@ -1362,8 +1716,30 @@
         }
       }
     },
-    "Open Settings" : {
+    "OK" : {
 
+    },
+    "Open Settings" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "فتح الإعدادات"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buka Pengaturan"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarları Aç"
+          }
+        }
+      }
     },
     "Other" : {
       "extractionState" : "stale",
@@ -1384,6 +1760,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Diğer"
+          }
+        }
+      }
+    },
+    "Please configure a mail account in Settings, or email shariqwaseem41@gmail.com directly." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يرجى إعداد حساب بريد إلكتروني في الإعدادات، أو أرسل بريدًا إلى shariqwaseem41@gmail.com مباشرة."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Silakan atur akun email di Pengaturan, atau kirim email ke shariqwaseem41@gmail.com secara langsung."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lütfen Ayarlar'da bir e-posta hesabı yapılandırın veya doğrudan shariqwaseem41@gmail.com adresine e-posta gönderin."
           }
         }
       }
@@ -1432,6 +1830,28 @@
         }
       }
     },
+    "Pre" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "قبل"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pra"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ön"
+          }
+        }
+      }
+    },
     "Pre-Alarm" : {
       "localizations" : {
         "ar" : {
@@ -1454,8 +1874,49 @@
         }
       }
     },
+    "Pre-Notification" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إشعار مسبق"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pra-Notifikasi"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ön Bildirim"
+          }
+        }
+      }
+    },
     "Prepare for %@" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "استعد لـ %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bersiap untuk %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ için hazırlan"
+          }
+        }
+      }
     },
     "Prepare for %@ prayer" : {
       "localizations" : {
@@ -1548,7 +2009,26 @@
       }
     },
     "Qibla direction requires location access to work accurately." : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تحديد اتجاه القبلة يتطلب إذن الوصول إلى الموقع للعمل بدقة."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arah kiblat memerlukan akses lokasi agar berfungsi dengan akurat."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kıble yönü, doğru çalışması için konum erişimi gerektirir."
+          }
+        }
+      }
     },
     "Ramadan" : {
       "extractionState" : "stale",
@@ -1591,6 +2071,72 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ramazan %lld. Gün"
+          }
+        }
+      }
+    },
+    "Requires alarm permission in Settings" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يتطلب إذن التنبيه في الإعدادات"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memerlukan izin alarm di Pengaturan"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarlar'da alarm izni gerektirir"
+          }
+        }
+      }
+    },
+    "Requires iOS 26" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يتطلب iOS 26"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memerlukan iOS 26"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iOS 26 gerektirir"
+          }
+        }
+      }
+    },
+    "Requires notification permission in Settings" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يتطلب إذن الإشعارات في الإعدادات"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memerlukan izin notifikasi di Pengaturan"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarlar'da bildirim izni gerektirir"
           }
         }
       }
@@ -1641,10 +2187,70 @@
       }
     },
     "Rings before %@ using the same delivery mode with the default sound." : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يرن قبل %@ باستخدام نفس نمط التسليم مع الصوت الافتراضي."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Berbunyi sebelum %@ menggunakan mode pengiriman yang sama dengan suara bawaan."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ öncesinde aynı bildirim modu ve varsayılan sesle çalar."
+          }
+        }
+      }
     },
     "Rings before this alarm using the same delivery mode with the default sound." : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يرن قبل هذا التنبيه باستخدام نفس نمط التسليم مع الصوت الافتراضي."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Berbunyi sebelum alarm ini menggunakan mode pengiriman yang sama dengan suara bawaan."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu alarm öncesinde aynı bildirim modu ve varsayılan sesle çalar."
+          }
+        }
+      }
+    },
+    "Rings before this notification using the same delivery mode with the default sound." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يرن قبل هذا الإشعار باستخدام نفس نمط التسليم مع الصوت الافتراضي."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Berbunyi sebelum notifikasi ini menggunakan mode pengiriman yang sama dengan suara bawaan."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu bildirim öncesinde aynı bildirim modu ve varsayılan sesle çalar."
+          }
+        }
+      }
     },
     "Save" : {
       "localizations" : {
@@ -1849,16 +2455,92 @@
       }
     },
     "Snooze (5 min)" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تأجيل (5 دقائق)"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tunda (5 menit)"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ertele (5 dk)"
+          }
+        }
+      }
     },
     "Snoozing — %@" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تأجيل — %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ditunda — %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erteleniyor — %@"
+          }
+        }
+      }
     },
     "Snoozing — %@ Prayer" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تأجيل — صلاة %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ditunda — Shalat %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erteleniyor — %@ Namazı"
+          }
+        }
+      }
     },
     "Snoozing — %@ pre-alarm" : {
-
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تأجيل — تنبيه مسبق %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ditunda — Pra-alarm %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erteleniyor — %@ ön alarm"
+          }
+        }
+      }
     },
     "Sound" : {
       "localizations" : {
@@ -2059,6 +2741,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sistem Varsayılanı"
+          }
+        }
+      }
+    },
+    "Tahajjud" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "التهجد"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tahajud"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teheccüd"
           }
         }
       }

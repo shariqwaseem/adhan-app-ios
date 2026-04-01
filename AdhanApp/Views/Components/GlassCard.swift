@@ -12,7 +12,7 @@ struct GlassEffectFallback: ViewModifier {
     func body(content: Content) -> some View {
         if #available(iOS 26, *) {
             content
-                .glassEffect(.regular, in: .rect(cornerRadius: 20))
+                .glassEffect(.clear, in: .rect(cornerRadius: 20))
         } else {
             content
                 .background(.ultraThinMaterial)

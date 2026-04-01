@@ -15,12 +15,14 @@ struct CustomAlarmDetailView: View {
     // Local editing state (used for both new and existing)
     @State private var title: String = ""
     @State private var selectedTime: Date = Date()
-    @State private var selectedMode: PrayerNotificationMode = .alarm
+    @State private var selectedMode: PrayerNotificationMode = .notification
     @State private var selectedAudio: String = ""
     @State private var isEnabled: Bool = true
     @State private var preAlarmMinutes: Int = 0
 
     private var isNew: Bool { existingAlarm == nil }
+    private var isNotificationMode: Bool { selectedMode == .notification }
+    private var langBundle: Bundle { LanguageManager.shared.bundle }
 
     var body: some View {
         let content = Form {
@@ -33,10 +35,15 @@ struct CustomAlarmDetailView: View {
                 deleteSection
             }
         }
-        .animation(.default, value: selectedMode)
-        .navigationTitle(isNew ? "New Alarm" : "Edit Alarm")
+        .animation(.easeInOut(duration: 0.3), value: selectedMode)
+        .navigationTitle(isNew
+            ? (isNotificationMode ? "New Notification" : "New Alarm")
+            : (isNotificationMode ? "Edit Notification" : "Edit Alarm"))
         .navigationBarTitleDisplayMode(.inline)
-        .task { await scheduler.checkNotificationPermission() }
+        .task {
+            await scheduler.checkNotificationPermission()
+            scheduler.alarmManager.checkAuthorization()
+        }
         .onAppear { loadFromExisting() }
 
         if isNew {
@@ -67,7 +74,7 @@ struct CustomAlarmDetailView: View {
 
     private var titleSection: some View {
         Section("Name") {
-            TextField("Alarm name", text: $title)
+            TextField(isNotificationMode ? "Notification name" : "Alarm name", text: $title)
         }
     }
 
@@ -81,7 +88,8 @@ struct CustomAlarmDetailView: View {
 
     private var deliveryModeSection: some View {
         Section {
-            ForEach(PrayerNotificationMode.allCases) { mode in
+            let modes = isNew ? PrayerNotificationMode.allCases.filter { $0 != .silent } : PrayerNotificationMode.allCases
+            ForEach(modes) { mode in
                 ModeRow(
                     mode: mode,
                     isSelected: selectedMode == mode,
@@ -104,11 +112,12 @@ struct CustomAlarmDetailView: View {
         } footer: {
             if !scheduler.alarmManager.isAuthorized || !scheduler.isPermissionGranted {
                 let missingBoth = !scheduler.isPermissionGranted && !scheduler.alarmManager.isAuthorized
+                let bundle = LanguageManager.shared.bundle
                 let message = missingBoth
-                    ? "Notification and alarm modes require permission. "
+                    ? String(localized: "Notification and alarm modes require permission. ", bundle: bundle)
                     : !scheduler.isPermissionGranted
-                        ? "Notification mode requires permission. "
-                        : "Alarm mode requires permission. "
+                        ? String(localized: "Notification mode requires permission. ", bundle: bundle)
+                        : String(localized: "Alarm mode requires permission. ", bundle: bundle)
                 (Text(message) + Text("Open Settings").foregroundColor(.accentColor))
                     .onTapGesture {
                         if let url = URL(string: UIApplication.openSettingsURLString) {
@@ -138,7 +147,7 @@ struct CustomAlarmDetailView: View {
     private var preAlarmSection: some View {
         if selectedMode != .silent {
             Section {
-                Toggle("Pre-Alarm", isOn: Binding(
+                Toggle(isNotificationMode ? "Pre-Notification" : "Pre-Alarm", isOn: Binding(
                     get: { preAlarmMinutes > 0 },
                     set: { enabled in
                         preAlarmMinutes = enabled ? 30 : 0
@@ -151,12 +160,14 @@ struct CustomAlarmDetailView: View {
                             Text(formattedPreAlarmTime(minutes)).tag(minutes)
                         }
                     }
-                    LabeledContent("Sound", value: "Default")
+                    LabeledContent("Sound", value: String(localized: "Default", bundle: langBundle))
                 }
             } header: {
-                Text("Pre-Alarm")
+                Text(isNotificationMode ? "Pre-Notification" : "Pre-Alarm")
             } footer: {
-                Text("Rings before this alarm using the same delivery mode with the default sound.")
+                Text(isNotificationMode
+                    ? "Rings before this notification using the same delivery mode with the default sound."
+                    : "Rings before this alarm using the same delivery mode with the default sound.")
             }
         }
     }
@@ -176,7 +187,7 @@ struct CustomAlarmDetailView: View {
 
     private var deleteSection: some View {
         Section {
-            Button("Delete Alarm", role: .destructive) {
+            Button(isNotificationMode ? "Delete Notification" : "Delete Alarm", role: .destructive) {
                 if let alarm = existingAlarm {
                     modelContext.delete(alarm)
                 }

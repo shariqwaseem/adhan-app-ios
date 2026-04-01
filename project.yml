@@ -1,6 +1,6 @@
 name: AdhanApp
 options:
-  bundleIdPrefix: com.shariqw.adhanpro
+  bundleIdPrefix: com.yourteam
   deploymentTarget:
     iOS: "18.0"
   xcodeVersion: "18.0"
@@ -33,7 +33,7 @@ targets:
         buildPhase: resources
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.shariqw.adhanpro
+        PRODUCT_BUNDLE_IDENTIFIER: CHANGE_ME
         INFOPLIST_FILE: AdhanApp/Info.plist
         CODE_SIGN_ENTITLEMENTS: AdhanApp/AdhanApp.entitlements
         PRODUCT_NAME: "Adhan alarm app"
@@ -58,7 +58,7 @@ targets:
       - path: AdhanWidgets
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.shariqw.adhanpro.widgets
+        PRODUCT_BUNDLE_IDENTIFIER: CHANGE_ME.widgets
         INFOPLIST_FILE: AdhanWidgets/Info.plist
         CODE_SIGN_ENTITLEMENTS: AdhanWidgets/AdhanWidgets.entitlements
         PRODUCT_NAME: AdhanWidgets
@@ -78,7 +78,7 @@ targets:
       - path: AdhanAppTests
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.shariqw.adhanpro.tests
+        PRODUCT_BUNDLE_IDENTIFIER: CHANGE_ME.tests
         GENERATE_INFOPLIST_FILE: true
         TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Adhan alarm app.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Adhan alarm app"
         BUNDLE_LOADER: "$(TEST_HOST)"
@@ -93,7 +93,7 @@ targets:
       - path: AdhanAppUITests
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.shariqw.adhanpro.uitests
+        PRODUCT_BUNDLE_IDENTIFIER: CHANGE_ME.uitests
         GENERATE_INFOPLIST_FILE: true
     dependencies:
       - target: AdhanApp

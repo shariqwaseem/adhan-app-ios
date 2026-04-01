@@ -32,6 +32,11 @@ struct SharedDataManager: Sendable {
         defaults.set(rawValue, forKey: "calculationMethod")
     }
 
+    static func saveLanguage(_ languageCode: String) {
+        guard let defaults = Constants.sharedDefaults else { return }
+        defaults.set(languageCode, forKey: "appLanguage")
+    }
+
     static func loadLocation() -> (latitude: Double, longitude: Double, cityName: String, countryCode: String?)? {
         guard let defaults = Constants.sharedDefaults else { return nil }
         let lat = defaults.double(forKey: Constants.Keys.lastLocationLatitude)

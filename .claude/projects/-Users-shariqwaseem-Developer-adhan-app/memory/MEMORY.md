@@ -1,0 +1,1 @@
+- [No Ramadan features](project_no_ramadan.md) — Ramadan features omitted from app scope, do not implement or reference

@@ -9,6 +9,7 @@ final class NotificationScheduler {
     private var isScheduling: Bool = false
     var nextScheduledAlarmTime: Date? = nil
     var nextScheduledIsAlarm: Bool = false
+    var nextScheduledName: String? = nil
     private var scheduledAlarmTimes: [String: [Date]] = [:]  // tracking AlarmKit-scheduled fire dates
 
     var alarmManager = AdhanAlarmManager()
@@ -135,8 +136,9 @@ final class NotificationScheduler {
         // Schedule custom alarms
         await scheduleCustomAlarms(customAlarms: customAlarms)
 
-        // Update next scheduled alarm time from the system
-        await refreshNextAlarmTime()
+        // Update next scheduled alarm time from all prayer entries (today + future days)
+        let allEntries = prayerEntries.flatMap { $0 }
+        refreshNextAlarmTime(prayerEntries: allEntries, customAlarms: customAlarms, preferences: preferences)
 
         // Persist the nearest alarm fire time so background tasks can respect the cooldown
         if let next = nextScheduledAlarmTime {
@@ -144,36 +146,85 @@ final class NotificationScheduler {
         }
     }
 
-    /// Query all pending notifications to find the soonest fire date.
-    func refreshNextAlarmTime() async {
-        let pending = await UNUserNotificationCenter.current().pendingNotificationRequests()
+    /// Compute the soonest upcoming notification or alarm from prayer entries and custom alarms.
+    func refreshNextAlarmTime(
+        prayerEntries: [PrayerTimeEntry] = [],
+        customAlarms: [CustomAlarm] = [],
+        preferences: UserPreferences? = nil
+    ) {
         let now = Date()
         var earliest: Date? = nil
         var earliestIsAlarm = false
+        var earliestName: String? = nil
 
-        for request in pending {
-            if let trigger = request.trigger as? UNCalendarNotificationTrigger,
-               let fireDate = trigger.nextTriggerDate(),
-               fireDate > now {
-                if earliest == nil || fireDate < earliest! {
-                    earliest = fireDate
-                    earliestIsAlarm = false
+        // Check prayer entries (main + pre-alarm)
+        for entry in prayerEntries {
+            let time = entry.adjustedTime
+            let mode = notificationMode(for: entry.prayer, preferences: preferences)
+            guard mode != .silent else { continue }
+
+            // Main prayer time
+            if time > now {
+                if earliest == nil || time < earliest! {
+                    earliest = time
+                    earliestIsAlarm = mode == .alarm
+                    earliestName = entry.prayer.localizedName
+                }
+            }
+
+            // Pre-alarm
+            let preMinutes = preAlarmMinutes(for: entry.prayer, preferences: preferences)
+            if preMinutes > 0 {
+                let preTime = time.addingTimeInterval(-Double(preMinutes) * 60)
+                if preTime > now {
+                    if earliest == nil || preTime < earliest! {
+                        earliest = preTime
+                        earliestIsAlarm = mode == .alarm
+                        let bundle = LanguageManager.shared.bundle
+                        earliestName = String(localized: "Pre", bundle: bundle) + " " + entry.prayer.localizedName
+                    }
                 }
             }
         }
 
-        // Also include AlarmKit-scheduled times we tracked ourselves
-        for (_, times) in scheduledAlarmTimes {
-            for time in times where time > now {
-                if earliest == nil || time < earliest! {
-                    earliest = time
-                    earliestIsAlarm = true
+        // Check enabled custom alarms (main + pre-alarm)
+        let calendar = Calendar.current
+        for alarm in customAlarms where alarm.isEnabled {
+            let mode = alarm.mode
+            guard mode != .silent else { continue }
+            var comps = calendar.dateComponents([.year, .month, .day], from: now)
+            comps.hour = alarm.hour
+            comps.minute = alarm.minute
+            comps.second = 0
+            guard var alarmTime = calendar.date(from: comps) else { continue }
+            if alarmTime <= now {
+                alarmTime = calendar.date(byAdding: .day, value: 1, to: alarmTime) ?? alarmTime
+            }
+
+            // Main custom alarm
+            if earliest == nil || alarmTime < earliest! {
+                earliest = alarmTime
+                earliestIsAlarm = mode == .alarm
+                earliestName = alarm.title
+            }
+
+            // Pre-alarm for custom
+            if alarm.preAlarmMinutes > 0 {
+                let preTime = alarmTime.addingTimeInterval(-Double(alarm.preAlarmMinutes) * 60)
+                if preTime > now {
+                    if earliest == nil || preTime < earliest! {
+                        earliest = preTime
+                        earliestIsAlarm = mode == .alarm
+                        let bundle = LanguageManager.shared.bundle
+                        earliestName = String(localized: "Pre", bundle: bundle) + " " + alarm.title
+                    }
                 }
             }
         }
 
         nextScheduledAlarmTime = earliest
         nextScheduledIsAlarm = earliestIsAlarm
+        nextScheduledName = earliestName
     }
 
     // MARK: - Custom Alarm Scheduling

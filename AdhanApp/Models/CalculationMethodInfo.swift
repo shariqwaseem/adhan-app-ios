@@ -96,7 +96,7 @@ enum PrayerNotificationMode: String, CaseIterable, Identifiable, Sendable {
         switch self {
         case .silent: return "No notification"
         case .notification: return "Standard notification with sound"
-        case .alarm: return "Full adhan alarm, bypasses Silent Mode"
+        case .alarm: return "Full alarm, bypasses Silent and Focus Modes"
         }
     }
 
