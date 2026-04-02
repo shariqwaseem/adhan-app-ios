@@ -375,16 +375,21 @@ struct PrayerWidgetEntryView: View {
     // MARK: - Accessory Circular
 
     private var circularWidget: some View {
-        VStack(spacing: 2) {
-            if let next = entry.upcoming.first(where: { $0.isNext }) ?? entry.upcoming.first {
-                Image(systemName: iconFor(next.name))
-                    .font(.caption)
-                Text(next.time, style: .time)
-                    .font(.caption2)
-                    .monospacedDigit()
+        ZStack {
+            AccessoryWidgetBackground()
+            VStack(spacing: 1) {
+                if let next = entry.upcoming.first(where: { $0.isNext }) ?? entry.upcoming.first {
+                    Image(systemName: iconFor(next.name))
+                        .font(.caption2)
+                    Text(next.time, style: .time)
+                        .font(.system(.body, design: .rounded, weight: .bold))
+                        .monospacedDigit()
+                        .minimumScaleFactor(0.8)
+                        .lineLimit(1)
+                }
             }
         }
-        .containerBackground(.fill.tertiary, for: .widget)
+        .containerBackground(.clear, for: .widget)
     }
 
     // MARK: - Accessory Rectangular
@@ -402,7 +407,7 @@ struct PrayerWidgetEntryView: View {
                 }
             }
         }
-        .containerBackground(.fill.tertiary, for: .widget)
+        .containerBackground(.clear, for: .widget)
     }
 
     private func iconFor(_ name: String) -> String {

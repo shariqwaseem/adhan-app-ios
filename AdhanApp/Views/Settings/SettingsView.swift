@@ -57,7 +57,7 @@ struct SettingsView: View {
                     }
                 }
 
-                Section("About") {
+                Section {
                     LabeledContent("Version", value: appVersion)
 
                     Button {
@@ -69,6 +69,13 @@ struct SettingsView: View {
                     } label: {
                         Text("Feedback & Bug Report")
                     }
+                } header: {
+                    Text("About")
+                } footer: {
+                    Text(String(localized: "Made by Shariq Waseem", bundle: LanguageManager.shared.bundle))
+                        .font(.caption)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.top, 8)
                 }
             }
             .navigationTitle("Settings")
