@@ -24,8 +24,9 @@ struct CustomAlarmDetailView: View {
     private var isNotificationMode: Bool { selectedMode == .notification }
     private var langBundle: Bundle { LanguageManager.shared.bundle }
 
-    var body: some View {
-        let content = Form {
+    @ViewBuilder
+    private var formContent: some View {
+        Form {
             titleSection
             timeSection
             deliveryModeSection
@@ -35,20 +36,22 @@ struct CustomAlarmDetailView: View {
                 deleteSection
             }
         }
-        .animation(.easeInOut(duration: 0.3), value: selectedMode)
         .navigationTitle(isNew
             ? (isNotificationMode ? "New Notification" : "New Alarm")
             : (isNotificationMode ? "Edit Notification" : "Edit Alarm"))
         .navigationBarTitleDisplayMode(.inline)
+        .animation(.easeInOut(duration: 0.2), value: selectedMode)
         .task {
             await scheduler.checkNotificationPermission()
             scheduler.alarmManager.checkAuthorization()
         }
         .onAppear { loadFromExisting() }
+    }
 
+    var body: some View {
         if isNew {
             NavigationStack {
-                content
+                formContent
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
                             Button("Cancel") { dismiss() }
@@ -60,7 +63,7 @@ struct CustomAlarmDetailView: View {
                     }
             }
         } else {
-            content
+            formContent
                 .onChange(of: title) { _, _ in syncToExisting() }
                 .onChange(of: selectedTime) { _, _ in syncToExisting() }
                 .onChange(of: selectedMode) { _, _ in syncToExisting() }
@@ -96,7 +99,9 @@ struct CustomAlarmDetailView: View {
                     isAlarmAuthorized: scheduler.alarmManager.isAuthorized,
                     isNotificationAuthorized: scheduler.isPermissionGranted,
                     onTap: {
-                        selectedMode = mode
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            selectedMode = mode
+                        }
                         Task {
                             if mode == .alarm {
                                 await scheduler.alarmManager.requestAuthorization()

@@ -548,6 +548,336 @@
         }
       }
     },
+    "Assalamu Alaikum" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "السلام عليكم"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Assalamu Alaikum"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selamün Aleyküm"
+          }
+        }
+      }
+    },
+    "Location accurate prayer times, full-length adhan alarms, reminders and Qibla direction — all in one place." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أوقات صلاة دقيقة حسب الموقع، تنبيهات أذان كاملة، تذكيرات واتجاه القبلة — الكل في مكان واحد."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waktu sholat akurat berdasarkan lokasi, alarm adzan penuh, pengingat dan arah kiblat — semua dalam satu tempat."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konuma dayalı doğru namaz vakitleri, tam ezan alarmları, hatırlatıcılar ve kıble yönü — hepsi tek bir yerde."
+          }
+        }
+      }
+    },
+    "Get Started" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ابدأ"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mulai"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Başla"
+          }
+        }
+      }
+    },
+    "Your Location" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "موقعك"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lokasi Anda"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konumunuz"
+          }
+        }
+      }
+    },
+    "We need your location to calculate accurate prayer times for your area." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نحتاج إلى موقعك لحساب أوقات الصلاة الدقيقة لمنطقتك."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kami memerlukan lokasi Anda untuk menghitung waktu sholat yang akurat untuk wilayah Anda."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bölgeniz için doğru namaz vakitlerini hesaplamak için konumunuza ihtiyacımız var."
+          }
+        }
+      }
+    },
+    "Allow Location" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "السماح بالموقع"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izinkan Lokasi"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konuma İzin Ver"
+          }
+        }
+      }
+    },
+    "Traveling?" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مسافر؟"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sedang Bepergian?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seyahatte misiniz?"
+          }
+        }
+      }
+    },
+    "Allow background location so your prayer times update automatically when you move to a new city. Your location never leaves your device." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اسمح بالموقع في الخلفية لتحديث أوقات الصلاة تلقائيًا عند انتقالك إلى مدينة جديدة. موقعك لا يغادر جهازك أبدًا."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izinkan lokasi latar belakang agar waktu sholat diperbarui otomatis saat Anda pindah ke kota baru. Lokasi Anda tidak pernah meninggalkan perangkat."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni bir şehre taşındığınızda namaz vakitlerinin otomatik güncellenmesi için arka plan konumuna izin verin. Konumunuz cihazınızdan asla çıkmaz."
+          }
+        }
+      }
+    },
+    "Allow Background Location" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "السماح بالموقع في الخلفية"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izinkan Lokasi Latar Belakang"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arka Plan Konumuna İzin Ver"
+          }
+        }
+      }
+    },
+    "Never Miss a Prayer" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا تفوّت صلاة أبدًا"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jangan Pernah Lewatkan Sholat"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiçbir Namazı Kaçırmayın"
+          }
+        }
+      }
+    },
+    "Get notified when it's time to pray so you can stay on track throughout the day." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "احصل على إشعار عند حلول وقت الصلاة لتبقى على المسار طوال اليوم."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dapatkan notifikasi saat waktu sholat tiba agar Anda tetap tepat waktu sepanjang hari."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Namaz vakti geldiğinde bildirim alın, gün boyunca takipte kalın."
+          }
+        }
+      }
+    },
+    "Allow Notifications" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "السماح بالإشعارات"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izinkan Notifikasi"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildirimlere İzin Ver"
+          }
+        }
+      }
+    },
+    "Full Adhan Alarms" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تنبيهات الأذان الكاملة"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm Adzan Penuh"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tam Ezan Alarmları"
+          }
+        }
+      }
+    },
+    "This app supports full-length alarms and adhan sounds that play even when your phone is on silent or in Focus mode." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يدعم هذا التطبيق تنبيهات كاملة وأصوات أذان تعمل حتى عندما يكون هاتفك على الوضع الصامت أو في وضع التركيز."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikasi ini mendukung alarm dan suara adzan penuh yang berbunyi bahkan saat ponsel Anda dalam mode senyap atau mode Fokus."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu uygulama, telefonunuz sessiz modda veya Odaklanma modunda olsa bile çalan tam uzunlukta alarm ve ezan seslerini destekler."
+          }
+        }
+      }
+    },
+    "Allow Alarms" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "السماح بالتنبيهات"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izinkan Alarm"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarmlara İzin Ver"
+          }
+        }
+      }
+    },
     "Asr Calculation" : {
       "localizations" : {
         "ar" : {

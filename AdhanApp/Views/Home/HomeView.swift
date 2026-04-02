@@ -25,14 +25,16 @@ struct HomeView: View {
                 ScrollView {
                     VStack(spacing: 12) {
                         countdownSection
-                        nextAlarmBadge
+                        VStack {
+                            nextAlarmBadge
+                        }
+                        .animation(.easeInOut(duration: 0.3), value: scheduler.nextScheduledAlarmTime != nil)
                         prayerListSection
                         customAlarmsSection
                     }
                     .padding(.horizontal)
                     .padding(.top, 4)
                     .padding(.bottom, 24)
-                    .animation(.easeInOut(duration: 0.3), value: scheduler.nextScheduledAlarmTime != nil)
                 }
             }
             .navigationTitle(viewModel.cityName.isEmpty ? "Adhan" : viewModel.cityName)
@@ -51,6 +53,9 @@ struct HomeView: View {
             }
             .onAppear {
                 viewModel.calculateToday()
+            }
+            .task {
+                try? await Task.sleep(for: .milliseconds(300))
                 scheduler.refreshNextAlarmTime(
                     prayerEntries: viewModel.multiDayTimes().flatMap { $0 },
                     customAlarms: customAlarms,

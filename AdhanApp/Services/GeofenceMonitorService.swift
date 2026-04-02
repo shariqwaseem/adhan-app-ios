@@ -65,7 +65,7 @@ actor GeofenceMonitorService {
 
         // Refresh prayer times, notifications, and widget.
         await MainActor.run {
-            Task {
+            _ = Task {
                 await BackgroundTaskService.performFullRefresh(
                     newLatitude: lat,
                     newLongitude: lon

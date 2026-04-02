@@ -48,25 +48,25 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "يستخدم أذان التنبيهات لإعلامك بأوقات الصلاة، حتى عندما يكون هاتفك على الوضع الصامت."
+            "value" : "يستخدم أذان التنبيهات لإعلامك بأوقات الصلاة، حتى عندما يكون هاتفك على الوضع الصامت أو في وضع التركيز."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Adhan uses alarms to alert you for prayer times, even when your phone is on silent."
+            "value" : "Adhan uses alarms to alert you for prayer times, even when your phone is on silent or in Focus mode."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Adhan menggunakan alarm untuk mengingatkan Anda waktu sholat, bahkan saat ponsel dalam mode senyap."
+            "value" : "Adhan menggunakan alarm untuk mengingatkan Anda waktu sholat, bahkan saat ponsel dalam mode senyap atau mode Fokus."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Adhan, telefonunuz sessiz moddayken bile namaz vakitlerinde sizi uyarmak için alarm kullanır."
+            "value" : "Adhan, telefonunuz sessiz modda veya Odaklanma modunda olsa bile namaz vakitlerinde sizi uyarmak için alarm kullanır."
           }
         }
       }

@@ -30,7 +30,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAlarmKitUsageDescription</key>
-	<string>Adhan uses alarms to alert you for prayer times, even when your phone is on silent.</string>
+	<string>Adhan uses alarms to alert you for prayer times, even when your phone is on silent or in Focus mode.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Adhan uses your location in the background to update prayer times when you move to a new area.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

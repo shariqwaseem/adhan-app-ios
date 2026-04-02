@@ -11,22 +11,23 @@ struct OnboardingView: View {
     @State private var currentStep = 0
 
     private var steps: [OnboardingStep] {
+        let bundle = LanguageManager.shared.bundle
         var result: [OnboardingStep] = [
             OnboardingStep(
                 type: .welcome,
                 icon: "moon.stars.fill",
                 iconColor: .yellow,
-                title: "Assalamu Alaikum",
-                subtitle: "Accurate prayer times, beautiful reminders, and Qibla direction — all in one place.",
-                buttonTitle: "Get Started"
+                title: String(localized: "Assalamu Alaikum", bundle: bundle),
+                subtitle: String(localized: "Location accurate prayer times, full-length adhan alarms, reminders and Qibla direction — all in one place.", bundle: bundle),
+                buttonTitle: String(localized: "Get Started", bundle: bundle)
             ),
             OnboardingStep(
                 type: .location,
                 icon: "location.fill",
                 iconColor: .blue,
-                title: "Your Location",
-                subtitle: "We need your location to calculate accurate prayer times for your area.",
-                buttonTitle: "Allow Location"
+                title: String(localized: "Your Location", bundle: bundle),
+                subtitle: String(localized: "We need your location to calculate accurate prayer times for your area.", bundle: bundle),
+                buttonTitle: String(localized: "Allow Location", bundle: bundle)
             ),
         ]
 
@@ -35,9 +36,9 @@ struct OnboardingView: View {
                 type: .backgroundLocation,
                 icon: "airplane",
                 iconColor: .cyan,
-                title: "Traveling?",
-                subtitle: "Allow background location so your prayer times update automatically when you move to a new city. Your location never leaves your device.",
-                buttonTitle: "Allow Background Location"
+                title: String(localized: "Traveling?", bundle: bundle),
+                subtitle: String(localized: "Allow background location so your prayer times update automatically when you move to a new city. Your location never leaves your device.", bundle: bundle),
+                buttonTitle: String(localized: "Allow Background Location", bundle: bundle)
             ))
         }
 
@@ -46,9 +47,9 @@ struct OnboardingView: View {
                 type: .notifications,
                 icon: "bell.badge.fill",
                 iconColor: .orange,
-                title: "Never Miss a Prayer",
-                subtitle: "Get notified when it's time to pray so you can stay on track throughout the day.",
-                buttonTitle: "Allow Notifications"
+                title: String(localized: "Never Miss a Prayer", bundle: bundle),
+                subtitle: String(localized: "Get notified when it's time to pray so you can stay on track throughout the day.", bundle: bundle),
+                buttonTitle: String(localized: "Allow Notifications", bundle: bundle)
             ),
         ]
 
@@ -57,9 +58,9 @@ struct OnboardingView: View {
                 type: .alarms,
                 icon: "alarm.waves.left.and.right.fill",
                 iconColor: .green,
-                title: "Full Adhan Alarms",
-                subtitle: "This app supports full-length alarms and adhan sounds that play even when your phone is on silent or locked.",
-                buttonTitle: "Allow Alarms"
+                title: String(localized: "Full Adhan Alarms", bundle: bundle),
+                subtitle: String(localized: "This app supports full-length alarms and adhan sounds that play even when your phone is on silent or in Focus mode.", bundle: bundle),
+                buttonTitle: String(localized: "Allow Alarms", bundle: bundle)
             ))
         }
 

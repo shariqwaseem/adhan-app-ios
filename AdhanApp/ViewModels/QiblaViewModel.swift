@@ -45,7 +45,7 @@ final class QiblaViewModel: NSObject {
     }
 }
 
-extension QiblaViewModel: @preconcurrency CLLocationManagerDelegate {
+extension QiblaViewModel: CLLocationManagerDelegate {
     nonisolated func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         guard newHeading.headingAccuracy >= 0 else { return }
         let headingValue = newHeading.trueHeading > 0 ? newHeading.trueHeading : newHeading.magneticHeading

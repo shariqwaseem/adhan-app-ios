@@ -56,7 +56,10 @@ struct PrayerTimesWidget: Widget {
 
 struct PrayerWidgetEntry: TimelineEntry {
     let date: Date
-    let prayers: [(name: String, time: Date, isNext: Bool)]
+    /// Upcoming prayers (crosses day boundary) — used by small/medium/rectangular/inline/circular
+    let upcoming: [(name: String, time: Date, isNext: Bool)]
+    /// Full day of prayers (6 entries, current or next day) — used by large widget
+    let allPrayers: [(name: String, time: Date, isNext: Bool)]
     let cityName: String
 }
 
@@ -77,68 +80,33 @@ struct PrayerTimelineProvider: TimelineProvider {
         let baseEntry = createEntry() ?? sampleEntry()
         let now = Date()
 
-        // Create one entry per prayer transition so WidgetKit can swap them automatically
-        var entries: [PrayerWidgetEntry] = []
+        var entries: [PrayerWidgetEntry] = [baseEntry]
 
-        // Entry for right now
-        entries.append(baseEntry)
-
-        // Create an entry at each future prayer time, shifting isNext forward
-        let futurePrayers = baseEntry.prayers.enumerated().filter { $0.element.time > now }
-        for (idx, _) in futurePrayers {
-            let transitionDate = baseEntry.prayers[idx].time
-            var updatedPrayers: [(name: String, time: Date, isNext: Bool)] = []
-            for (j, prayer) in baseEntry.prayers.enumerated() {
-                let isNext = (j == idx + 1) && (idx + 1 < baseEntry.prayers.count)
-                updatedPrayers.append((name: prayer.name, time: prayer.time, isNext: isNext))
+        // Create a transition entry at each upcoming prayer time so the widget refreshes
+        for (idx, prayer) in baseEntry.upcoming.enumerated() where prayer.time > now {
+            // Shift isNext to the next prayer in the upcoming list
+            var updatedUpcoming = baseEntry.upcoming.map { ($0.name, $0.time, false) }
+            if idx + 1 < updatedUpcoming.count {
+                updatedUpcoming[idx + 1].2 = true
             }
             entries.append(PrayerWidgetEntry(
-                date: transitionDate,
-                prayers: updatedPrayers,
+                date: prayer.time,
+                upcoming: updatedUpcoming,
+                allPrayers: baseEntry.allPrayers,
                 cityName: baseEntry.cityName
             ))
         }
 
-        // If no future prayers today, refresh soon to pick up tomorrow's data.
-        // Otherwise refresh at midnight.
-        let refreshDate: Date
-        if futurePrayers.isEmpty {
-            // All prayers past — refresh in 1 minute to show tomorrow's prayers
-            refreshDate = now.addingTimeInterval(60)
-        } else if let lastPrayer = futurePrayers.last {
-            // Refresh right after the last prayer of the day
-            refreshDate = baseEntry.prayers[lastPrayer.offset].time.addingTimeInterval(60)
-        } else {
-            let tomorrow = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: 1, to: now)!)
-            refreshDate = tomorrow
-        }
+        // Refresh after the last upcoming prayer, or in 1 minute if none
+        let lastUpcomingTime = baseEntry.upcoming.last(where: { $0.time > now })?.time
+        let refreshDate = lastUpcomingTime?.addingTimeInterval(60) ?? now.addingTimeInterval(60)
         let timeline = Timeline(entries: entries, policy: .after(refreshDate))
         completion(timeline)
     }
 
     private func createEntry() -> PrayerWidgetEntry? {
-        guard let defaults = UserDefaults(suiteName: appGroupId),
-              let data = defaults.data(forKey: "cachedPrayerTimes"),
-              let daily = try? JSONDecoder().decode(SharedDailyPrayerTimes.self, from: data) else {
-            return calculateFreshEntry()
-        }
-
-        let now = Date()
-        let prayers = daily.entries.map { entry in
-            (name: entry.prayer, time: entry.time, isNext: entry.isNext)
-        }
-
-        // If all cached prayers are past (after Isha), recalculate to get tomorrow's
-        let hasUpcoming = prayers.contains { $0.time > now }
-        if !hasUpcoming {
-            return calculateFreshEntry()
-        }
-
-        return PrayerWidgetEntry(
-            date: now,
-            prayers: prayers,
-            cityName: daily.cityName
-        )
+        // Always use calculateFreshEntry which computes today + tomorrow
+        return calculateFreshEntry()
     }
 
     private func calculateFreshEntry() -> PrayerWidgetEntry? {
@@ -193,43 +161,47 @@ struct PrayerTimelineProvider: TimelineProvider {
         let names = ["Tahajjud", "Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"]
         let times = [tahajjudTime, prayerTimes.fajr, prayerTimes.dhuhr, prayerTimes.asr, prayerTimes.maghrib, prayerTimes.isha]
 
-        var prayers: [(name: String, time: Date, isNext: Bool)] = []
+        // Build today's full list
+        var todayPrayers: [(name: String, time: Date, isNext: Bool)] = []
         var foundNext = false
         for i in 0..<names.count {
             let isNext = !foundNext && times[i] > now
             if isNext { foundNext = true }
-            prayers.append((name: names[i], time: times[i], isNext: isNext))
+            todayPrayers.append((name: names[i], time: times[i], isNext: isNext))
         }
 
-        // If all today's prayers are past (after Isha), calculate tomorrow's prayers
-        if !foundNext {
-            guard let tomorrow = cal.date(byAdding: .day, value: 1, to: now) else {
-                return PrayerWidgetEntry(date: now, prayers: prayers, cityName: cityName)
-            }
-            let tComps = cal.dateComponents([.year, .month, .day], from: tomorrow)
-            let tDateComps = DateComponents(calendar: cal, year: tComps.year, month: tComps.month, day: tComps.day)
-            guard let tPrayerTimes = PrayerTimes(coordinates: coordinates, date: tDateComps, calculationParameters: params) else {
-                return PrayerWidgetEntry(date: now, prayers: prayers, cityName: cityName)
-            }
+        // Calculate tomorrow's prayers
+        let tomorrow = cal.date(byAdding: .day, value: 1, to: now)!
+        let tComps = cal.dateComponents([.year, .month, .day], from: tomorrow)
+        let tDateComps = DateComponents(calendar: cal, year: tComps.year, month: tComps.month, day: tComps.day)
+        let tPrayerTimes = PrayerTimes(coordinates: coordinates, date: tDateComps, calculationParameters: params)
 
+        var tomorrowPrayers: [(name: String, time: Date, isNext: Bool)] = []
+        if let tPrayerTimes {
             let tTahajjud: Date = {
                 let nightDuration = tPrayerTimes.fajr.timeIntervalSince(prayerTimes.isha)
                 return prayerTimes.isha.addingTimeInterval(nightDuration * 2.0 / 3.0)
             }()
-
             let tTimes = [tTahajjud, tPrayerTimes.fajr, tPrayerTimes.dhuhr, tPrayerTimes.asr, tPrayerTimes.maghrib, tPrayerTimes.isha]
-            prayers = []
             var tFoundNext = false
             for i in 0..<names.count {
-                let isNext = !tFoundNext && tTimes[i] > now
+                let isNext = !foundNext && !tFoundNext && tTimes[i] > now
                 if isNext { tFoundNext = true }
-                prayers.append((name: names[i], time: tTimes[i], isNext: isNext))
+                tomorrowPrayers.append((name: names[i], time: tTimes[i], isNext: isNext))
             }
         }
 
+        // Upcoming: today's remaining future prayers + tomorrow's prayers
+        let todayUpcoming = todayPrayers.filter { $0.time > now }
+        let upcoming = todayUpcoming + tomorrowPrayers
+
+        // For large widget: show today's full 6 if any are upcoming, otherwise tomorrow's full 6
+        let allPrayers = foundNext ? todayPrayers : tomorrowPrayers.isEmpty ? todayPrayers : tomorrowPrayers
+
         return PrayerWidgetEntry(
             date: now,
-            prayers: prayers,
+            upcoming: upcoming,
+            allPrayers: allPrayers,
             cityName: cityName
         )
     }
@@ -237,16 +209,19 @@ struct PrayerTimelineProvider: TimelineProvider {
     private func sampleEntry() -> PrayerWidgetEntry {
         let now = Date()
         let cal = Calendar.current
+        let all: [(name: String, time: Date, isNext: Bool)] = [
+            ("Tahajjud", cal.date(bySettingHour: 3, minute: 30, second: 0, of: now)!, false),
+            ("Fajr", cal.date(bySettingHour: 5, minute: 15, second: 0, of: now)!, false),
+            ("Dhuhr", cal.date(bySettingHour: 12, minute: 30, second: 0, of: now)!, false),
+            ("Asr", cal.date(bySettingHour: 15, minute: 45, second: 0, of: now)!, false),
+            ("Maghrib", cal.date(bySettingHour: 18, minute: 42, second: 0, of: now)!, true),
+            ("Isha", cal.date(bySettingHour: 20, minute: 15, second: 0, of: now)!, false),
+        ]
+        let upcoming = all.filter { $0.time > now || $0.isNext }
         return PrayerWidgetEntry(
             date: now,
-            prayers: [
-                ("Tahajjud", cal.date(bySettingHour: 3, minute: 30, second: 0, of: now)!, false),
-                ("Fajr", cal.date(bySettingHour: 5, minute: 15, second: 0, of: now)!, false),
-                ("Dhuhr", cal.date(bySettingHour: 12, minute: 30, second: 0, of: now)!, false),
-                ("Asr", cal.date(bySettingHour: 15, minute: 45, second: 0, of: now)!, false),
-                ("Maghrib", cal.date(bySettingHour: 18, minute: 42, second: 0, of: now)!, true),
-                ("Isha", cal.date(bySettingHour: 20, minute: 15, second: 0, of: now)!, false),
-            ],
+            upcoming: upcoming.isEmpty ? all : upcoming,
+            allPrayers: all,
             cityName: "Mecca"
         )
     }
@@ -320,7 +295,7 @@ struct PrayerWidgetEntryView: View {
 
     private var smallWidget: some View {
         VStack(alignment: .leading, spacing: 4) {
-            if let next = entry.prayers.first(where: { $0.isNext }) {
+            if let next = entry.upcoming.first(where: { $0.isNext }) ?? entry.upcoming.first {
                 Text(localizedName(next.name))
                     .font(.headline)
                 Text(next.time, style: .time)
@@ -346,8 +321,7 @@ struct PrayerWidgetEntryView: View {
                 Spacer()
             }
 
-            let upcoming = entry.prayers.filter { $0.time > entry.date }.prefix(3)
-            ForEach(Array(upcoming.enumerated()), id: \.offset) { _, prayer in
+            ForEach(Array(entry.upcoming.prefix(3).enumerated()), id: \.offset) { _, prayer in
                 HStack {
                     Text(localizedName(prayer.name))
                         .font(.subheadline.weight(prayer.isNext ? .bold : .regular))
@@ -370,7 +344,7 @@ struct PrayerWidgetEntryView: View {
 
             Divider()
 
-            ForEach(Array(entry.prayers.enumerated()), id: \.offset) { _, prayer in
+            ForEach(Array(entry.allPrayers.enumerated()), id: \.offset) { _, prayer in
                 HStack {
                     Text(localizedName(prayer.name))
                         .font(.body.weight(prayer.isNext ? .bold : .regular))
@@ -390,7 +364,7 @@ struct PrayerWidgetEntryView: View {
 
     private var inlineWidget: some View {
         Group {
-            if let next = entry.prayers.first(where: { $0.isNext }) {
+            if let next = entry.upcoming.first(where: { $0.isNext }) ?? entry.upcoming.first {
                 Text("\(localizedName(next.name)) \(next.time, style: .time)")
             } else {
                 Text(WidgetLanguage.localized("No upcoming prayer"))
@@ -402,7 +376,7 @@ struct PrayerWidgetEntryView: View {
 
     private var circularWidget: some View {
         VStack(spacing: 2) {
-            if let next = entry.prayers.first(where: { $0.isNext }) {
+            if let next = entry.upcoming.first(where: { $0.isNext }) ?? entry.upcoming.first {
                 Image(systemName: iconFor(next.name))
                     .font(.caption)
                 Text(next.time, style: .time)
@@ -417,8 +391,7 @@ struct PrayerWidgetEntryView: View {
 
     private var rectangularWidget: some View {
         VStack(alignment: .leading, spacing: 2) {
-            let upcoming = entry.prayers.filter { $0.time > entry.date }.prefix(3)
-            ForEach(Array(upcoming.enumerated()), id: \.offset) { _, prayer in
+            ForEach(Array(entry.upcoming.prefix(3).enumerated()), id: \.offset) { _, prayer in
                 HStack {
                     Text(localizedName(prayer.name))
                         .font(.caption2)

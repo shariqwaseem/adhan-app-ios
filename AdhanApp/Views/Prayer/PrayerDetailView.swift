@@ -26,7 +26,6 @@ struct PrayerDetailView: View {
             alarmSoundSection
             preAlarmSection
         }
-        .animation(.easeInOut(duration: 0.3), value: selectedMode)
         .task {
             await scheduler.checkNotificationPermission()
             scheduler.alarmManager.checkAuthorization()
@@ -92,11 +91,13 @@ struct PrayerDetailView: View {
 
     private static let preAlarmOptions: [Int] = stride(from: 10, through: 120, by: 5).map { $0 }
 
+    private var isNotificationMode: Bool { selectedMode == .notification }
+
     @ViewBuilder
     private var preAlarmSection: some View {
         if selectedMode != .silent {
             Section {
-                Toggle("Pre-Alarm", isOn: Binding(
+                Toggle(isNotificationMode ? "Pre-Notification" : "Pre-Alarm", isOn: Binding(
                     get: { getPreAlarmMinutes() > 0 },
                     set: { enabled in
                         setPreAlarmMinutes(enabled ? 30 : 0)
@@ -115,7 +116,7 @@ struct PrayerDetailView: View {
                     LabeledContent("Sound", value: String(localized: "Default", bundle: LanguageManager.shared.bundle))
                 }
             } header: {
-                Text("Pre-Alarm")
+                Text(isNotificationMode ? "Pre-Notification" : "Pre-Alarm")
             } footer: {
                 Text("Rings before \(prayer.localizedName) using the same delivery mode with the default sound.")
             }
@@ -198,13 +199,15 @@ struct PrayerDetailView: View {
     }
 
     private func setMode(_ newValue: PrayerNotificationMode) {
-        switch prayer {
-        case .tahajjud: prefs.tahajjudNotificationMode = newValue.rawValue
-        case .fajr: prefs.fajrNotificationMode = newValue.rawValue
-        case .dhuhr: prefs.dhuhrNotificationMode = newValue.rawValue
-        case .asr: prefs.asrNotificationMode = newValue.rawValue
-        case .maghrib: prefs.maghribNotificationMode = newValue.rawValue
-        case .isha: prefs.ishaNotificationMode = newValue.rawValue
+        withAnimation(.easeInOut(duration: 0.3)) {
+            switch prayer {
+            case .tahajjud: prefs.tahajjudNotificationMode = newValue.rawValue
+            case .fajr: prefs.fajrNotificationMode = newValue.rawValue
+            case .dhuhr: prefs.dhuhrNotificationMode = newValue.rawValue
+            case .asr: prefs.asrNotificationMode = newValue.rawValue
+            case .maghrib: prefs.maghribNotificationMode = newValue.rawValue
+            case .isha: prefs.ishaNotificationMode = newValue.rawValue
+            }
         }
 
         Task {
