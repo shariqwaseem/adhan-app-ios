@@ -50,6 +50,11 @@
 		BE5155456596EBCC1FC2D896 /* AdhanAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75BFA6A7A7B0717F00925D0F /* AdhanAppTests.swift */; };
 		C0C9E5CA97C14F3188145520 /* GlassCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA7FC06DD49E520BC3C9B80 /* GlassCard.swift */; };
 		C4F552F58B62EAD8041EB0A0 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1573829B5F1072680EB085FF /* SettingsView.swift */; };
+		DBE50F6D2F7FF68D007B3C16 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = DBE50F6C2F7FF68D007B3C16 /* FirebaseAnalytics */; };
+		DBE50F6F2F7FF68D007B3C16 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = DBE50F6E2F7FF68D007B3C16 /* FirebaseCore */; };
+		DBE50F712F7FF68D007B3C16 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = DBE50F702F7FF68D007B3C16 /* FirebaseCrashlytics */; };
+		DBE50F732F7FFA16007B3C16 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DBE50F722F7FFA16007B3C16 /* GoogleService-Info.plist */; };
+		DBE50F762F7FFBB5007B3C16 /* AppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBE50F752F7FFBB5007B3C16 /* AppLogger.swift */; };
 		E0A91FCDBDEA0DFF21E1E1D4 /* AdhanAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F428D792497229FB8FDC77 /* AdhanAudio.swift */; };
 		E9ED2B76756FAE3C78A4E1AE /* TimeOfDayBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5317978492FF0BF787E9508 /* TimeOfDayBackground.swift */; };
 		ED1E16323F3B111820A2ED1B /* LocationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CFC7FC7F263BB65AA16DA82 /* LocationSettings.swift */; };
@@ -147,6 +152,8 @@
 		CB49AA047585E81149EEE2D5 /* ModeRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeRow.swift; sourceTree = "<group>"; };
 		CC7B3F41DDEE129AABBFF8E6 /* RamadanDetectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RamadanDetectionService.swift; sourceTree = "<group>"; };
 		CFFBADFA6A7C46A434D9701F /* SharedDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedDataManager.swift; sourceTree = "<group>"; };
+		DBE50F722F7FFA16007B3C16 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		DBE50F752F7FFBB5007B3C16 /* AppLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLogger.swift; sourceTree = "<group>"; };
 		E5EA650E7B60A519EA577FA9 /* AdhanWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AdhanWidgets.entitlements; sourceTree = "<group>"; };
 		E6F428D792497229FB8FDC77 /* AdhanAudio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdhanAudio.swift; sourceTree = "<group>"; };
 		EB3B9FA14F4E72FD863E85F2 /* BackgroundTaskService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTaskService.swift; sourceTree = "<group>"; };
@@ -168,6 +175,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DBE50F6D2F7FF68D007B3C16 /* FirebaseAnalytics in Frameworks */,
+				DBE50F712F7FF68D007B3C16 /* FirebaseCrashlytics in Frameworks */,
+				DBE50F6F2F7FF68D007B3C16 /* FirebaseCore in Frameworks */,
 				545872A387F6573BCB177D5B /* Adhan in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -219,6 +229,7 @@
 		23066BFFC4A37385A1EB4FAC /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				DBE50F752F7FFBB5007B3C16 /* AppLogger.swift */,
 				121298217F8A6F74B7D203DC /* Constants.swift */,
 				331993B85EDD1C1AA8EA1CA8 /* LanguageManager.swift */,
 				CFFBADFA6A7C46A434D9701F /* SharedDataManager.swift */,
@@ -303,6 +314,7 @@
 		998428FD0BB7AFB170604F94 = {
 			isa = PBXGroup;
 			children = (
+				DBE50F722F7FFA16007B3C16 /* GoogleService-Info.plist */,
 				20FB1934B420504F126B97A3 /* AdhanApp */,
 				00942DACC36A5776F6AD0512 /* AdhanAppTests */,
 				15BA13F66EF929A6153ABF61 /* AdhanAppUITests */,
@@ -453,6 +465,7 @@
 				D325872513FA592B12FFC31F /* Resources */,
 				C357DBF96DE41DF0AB8F9D61 /* Frameworks */,
 				DEDAA65DA4B4D2E0DDA97586 /* Embed Foundation Extensions */,
+				DBE50F742F7FFA5E007B3C16 /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -462,6 +475,9 @@
 			name = AdhanApp;
 			packageProductDependencies = (
 				C02E3492A3D2E5D4FB1DC959 /* Adhan */,
+				DBE50F6C2F7FF68D007B3C16 /* FirebaseAnalytics */,
+				DBE50F6E2F7FF68D007B3C16 /* FirebaseCore */,
+				DBE50F702F7FF68D007B3C16 /* FirebaseCrashlytics */,
 			);
 			productName = AdhanApp;
 			productReference = C234017519098BF3768F8275 /* Adhan alarm app.app */;
@@ -524,6 +540,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				6B9E4EF75D269AB357D070B3 /* XCRemoteSwiftPackageReference "adhan-swift" */,
+				DBE50F6B2F7FF68D007B3C16 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			projectDirPath = "";
 			projectRoot = "";
@@ -543,6 +560,7 @@
 			files = (
 				A472A548F63FB8417EA2D1EB /* AppIcon.icon in Resources */,
 				264D0EDB778A248CD554F889 /* Assets.xcassets in Resources */,
+				DBE50F732F7FFA16007B3C16 /* GoogleService-Info.plist in Resources */,
 				381679F9856CDC2F7CB625BB /* InfoPlist.xcstrings in Resources */,
 				3F541F4219E39869A8652076 /* Localizable.xcstrings in Resources */,
 			);
@@ -558,6 +576,31 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		DBE50F742F7FFA5E007B3C16 /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
+				"$(DWARF_DSYM_FOLDER_PATH)/$(DWARF_DSYM_FILE_NAME)/Contents/Resources/DWARF/$(PRODUCT_NAME)",
+				"$(DWARF_DSYM_FOLDER_PATH)/$(DWARF_DSYM_FILE_NAME)/Contents/Info.plist",
+				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
+			);
+			name = "Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/upload-symbols\" -gsp \"${SRCROOT}/AdhanApp/GoogleService-Info.plist\" -p ios \"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1225161B0C2165BFE9AE9E2F /* Sources */ = {
@@ -583,6 +626,7 @@
 				9E836436F02462BB160D3480 /* AdhanAlarmAttributes.swift in Sources */,
 				7927EAB1EC99A857EF1D7493 /* AdhanApp.swift in Sources */,
 				E0A91FCDBDEA0DFF21E1E1D4 /* AdhanAudio.swift in Sources */,
+				DBE50F762F7FFBB5007B3C16 /* AppLogger.swift in Sources */,
 				B412CC15900B8D46692A8F0A /* AdhanAudioDownloadManager.swift in Sources */,
 				591819A5E7CA4E53CA939008 /* AdhanAudioSelectionView.swift in Sources */,
 				F3115AF86C7131C014811BF0 /* AlarmManager.swift in Sources */,
@@ -667,7 +711,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.shariq.adhanapp.widgets;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shariqw.adhanpro.widgets;
 				PRODUCT_NAME = AdhanWidgets;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -691,7 +735,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.shariq.adhanapp.widgets;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shariqw.adhanpro.widgets;
 				PRODUCT_NAME = AdhanWidgets;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -828,13 +872,15 @@
 				DEVELOPMENT_TEAM = 5SMQ9QJ75S;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = AdhanApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Adhan;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.shariq.adhanapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shariqw.adhanpro;
 				PRODUCT_NAME = "Adhan alarm app";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -911,13 +957,15 @@
 				DEVELOPMENT_TEAM = 5SMQ9QJ75S;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = AdhanApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Adhan;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.shariq.adhanapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shariqw.adhanpro;
 				PRODUCT_NAME = "Adhan alarm app";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1002,6 +1050,14 @@
 				minimumVersion = 1.3.0;
 			};
 		};
+		DBE50F6B2F7FF68D007B3C16 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.11.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1014,6 +1070,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 6B9E4EF75D269AB357D070B3 /* XCRemoteSwiftPackageReference "adhan-swift" */;
 			productName = Adhan;
+		};
+		DBE50F6C2F7FF68D007B3C16 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DBE50F6B2F7FF68D007B3C16 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		DBE50F6E2F7FF68D007B3C16 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DBE50F6B2F7FF68D007B3C16 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		DBE50F702F7FF68D007B3C16 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DBE50F6B2F7FF68D007B3C16 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

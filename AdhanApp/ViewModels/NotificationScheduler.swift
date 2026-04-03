@@ -1,6 +1,14 @@
 import Foundation
 import UserNotifications
 import Observation
+import os.log
+
+#if canImport(FirebaseCrashlytics)
+import FirebaseCrashlytics
+#endif
+#if canImport(FirebaseAnalytics)
+import FirebaseAnalytics
+#endif
 
 @Observable
 @MainActor
@@ -38,7 +46,10 @@ final class NotificationScheduler {
         preferences: UserPreferences?,
         customAlarms: [CustomAlarm] = []
     ) async {
-        guard !isScheduling else { return }
+        guard !isScheduling else {
+            AppLogger.scheduling.warning("rescheduleAll: skipped — already scheduling")
+            return
+        }
 
         // Don't reschedule if an alarm fired (or was due) within the last 10 minutes —
         // cancelAll() would silence a currently-ringing alarm.
@@ -47,13 +58,25 @@ final class NotificationScheduler {
             let elapsed = now.timeIntervalSince(fireTime)
             return elapsed >= 0 && elapsed < Self.alarmCooldown
         }
-        if recentlyFired { return }
+        if recentlyFired {
+            AppLogger.scheduling.info("rescheduleAll: skipped — in-memory cooldown active")
+            return
+        }
 
         // Also check the persisted fire time (covers fresh instances, e.g. background tasks)
         if let fireTime = Constants.sharedDefaults?.object(forKey: Constants.Keys.nextAlarmFireTime) as? Date {
             let elapsed = now.timeIntervalSince(fireTime)
-            if elapsed >= 0 && elapsed < Self.alarmCooldown { return }
+            if elapsed >= 0 && elapsed < Self.alarmCooldown {
+                AppLogger.scheduling.info("rescheduleAll: skipped — persisted cooldown active (fireTime=\(fireTime.formatted()))")
+                return
+            }
         }
+
+        let totalEntries = prayerEntries.flatMap { $0 }.count
+        AppLogger.scheduling.info("rescheduleAll: starting with \(totalEntries) entries across \(prayerEntries.count) days")
+        #if canImport(FirebaseCrashlytics)
+        Crashlytics.crashlytics().log("rescheduleAll: starting with \(totalEntries) entries")
+        #endif
 
         isScheduling = true
         defer { isScheduling = false }
@@ -83,7 +106,13 @@ final class NotificationScheduler {
                     do {
                         try await center.add(request)
                         scheduledCount += 1
-                    } catch { /* main notification failed; still attempt pre-alarm below */ }
+                        AppLogger.scheduling.debug("scheduled notification: \(entry.prayer.rawValue) at \(entry.adjustedTime.formatted(date: .abbreviated, time: .standard))")
+                    } catch {
+                        AppLogger.scheduling.error("notification failed for \(entry.prayer.rawValue): \(error.localizedDescription)")
+                        #if canImport(FirebaseCrashlytics)
+                        Crashlytics.crashlytics().record(error: error, userInfo: ["context": "schedule_notification", "prayer": entry.prayer.rawValue])
+                        #endif
+                    }
 
                 case .alarm:
                     let audio = alarmAudio(for: entry.prayer, preferences: preferences)
@@ -95,7 +124,12 @@ final class NotificationScheduler {
                         )
                         scheduledAlarmTimes[entry.prayer.rawValue, default: []].append(entry.adjustedTime)
                         scheduledCount += 1
-                    } catch { /* main alarm failed; still attempt pre-alarm below */ }
+                    } catch {
+                        AppLogger.scheduling.error("alarm failed for \(entry.prayer.rawValue) at \(entry.adjustedTime.formatted()): \(error.localizedDescription)")
+                        #if canImport(FirebaseCrashlytics)
+                        Crashlytics.crashlytics().record(error: error, userInfo: ["context": "schedule_alarm", "prayer": entry.prayer.rawValue])
+                        #endif
+                    }
                 }
 
                 // Pre-alarm scheduling
@@ -133,6 +167,8 @@ final class NotificationScheduler {
             }
         }
 
+        AppLogger.scheduling.info("rescheduleAll: scheduled \(scheduledCount) prayer alarms/notifications")
+
         // Schedule custom alarms
         await scheduleCustomAlarms(customAlarms: customAlarms)
 
@@ -143,7 +179,18 @@ final class NotificationScheduler {
         // Persist the nearest alarm fire time so background tasks can respect the cooldown
         if let next = nextScheduledAlarmTime {
             Constants.sharedDefaults?.set(next, forKey: Constants.Keys.nextAlarmFireTime)
+            AppLogger.scheduling.info("rescheduleAll: done. Next alarm: \(self.nextScheduledName ?? "?") at \(next.formatted(date: .abbreviated, time: .standard))")
+        } else {
+            AppLogger.scheduling.info("rescheduleAll: done. No upcoming alarms.")
         }
+
+        #if canImport(FirebaseCrashlytics)
+        Crashlytics.crashlytics().setCustomValue(scheduledCount, forKey: "last_scheduled_count")
+        if let next = nextScheduledAlarmTime {
+            Crashlytics.crashlytics().setCustomValue(next.timeIntervalSince1970, forKey: "next_alarm_timestamp")
+            Crashlytics.crashlytics().setCustomValue(nextScheduledName ?? "unknown", forKey: "next_alarm_name")
+        }
+        #endif
     }
 
     /// Compute the soonest upcoming notification or alarm from prayer entries and custom alarms.

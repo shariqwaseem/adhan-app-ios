@@ -2,11 +2,19 @@ import SwiftUI
 import SwiftData
 import UserNotifications
 
+#if canImport(FirebaseCore)
+import FirebaseCore
+#endif
+
 // Show notifications even when app is in foreground
 class AppDelegate: NSObject, UIApplicationDelegate {
     let notificationDelegate = NotificationDelegate()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        #if canImport(FirebaseCore)
+        FirebaseApp.configure()
+        #endif
+
         UNUserNotificationCenter.current().delegate = notificationDelegate
         NotificationDelegate.registerCategories()
         BackgroundTaskService.registerBackgroundTasks()

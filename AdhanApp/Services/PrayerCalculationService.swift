@@ -1,5 +1,13 @@
 import Foundation
+import os.log
 @preconcurrency import Adhan
+
+#if canImport(FirebaseCrashlytics)
+import FirebaseCrashlytics
+#endif
+#if canImport(FirebaseAnalytics)
+import FirebaseAnalytics
+#endif
 
 protocol PrayerCalculationServiceProtocol: Sendable {
     func calculatePrayerTimes(
@@ -83,6 +91,46 @@ struct PrayerCalculationService: PrayerCalculationServiceProtocol {
             PrayerTimeEntry(prayer: .maghrib, time: prayerTimes.maghrib, manualAdjustmentMinutes: adjustments[.maghrib] ?? 0),
             PrayerTimeEntry(prayer: .isha, time: prayerTimes.isha, manualAdjustmentMinutes: adjustments[.isha] ?? 0),
         ]
+
+        // Log all computed prayer times
+        let tf = DateFormatter()
+        tf.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        tf.timeZone = .current
+        let timesLog = entries.map { "\($0.prayer.rawValue)=\(tf.string(from: $0.adjustedTime))" }.joined(separator: ", ")
+        AppLogger.calculation.info("Prayer times for \(tf.string(from: date)) at (\(latitude), \(longitude)) method=\(method.rawValue): \(timesLog)")
+
+        // Flag anomaly: Isha between midnight and 3 AM at non-extreme latitudes
+        let ishaHour = cal.component(.hour, from: prayerTimes.isha)
+        if abs(latitude) < 50 && ishaHour >= 0 && ishaHour < 3 {
+            AppLogger.calculation.error("ANOMALY: Isha at \(tf.string(from: prayerTimes.isha)) — unexpected for latitude \(latitude)")
+            #if canImport(FirebaseCrashlytics)
+            let anomalyError = NSError(domain: "com.shariq.adhanapp.anomaly", code: 1, userInfo: [
+                "prayer": "Isha",
+                "time": tf.string(from: prayerTimes.isha),
+                "latitude": latitude,
+                "longitude": longitude,
+                "method": method.rawValue
+            ])
+            Crashlytics.crashlytics().record(error: anomalyError)
+            #endif
+            #if canImport(FirebaseAnalytics)
+            Analytics.logEvent("prayer_time_anomaly", parameters: [
+                "prayer": "Isha",
+                "isha_time": tf.string(from: prayerTimes.isha),
+                "latitude": latitude,
+                "longitude": longitude,
+                "method": method.rawValue
+            ])
+            #endif
+        }
+
+        #if canImport(FirebaseCrashlytics)
+        let crashlytics = Crashlytics.crashlytics()
+        crashlytics.setCustomValue(tf.string(from: prayerTimes.isha), forKey: "last_computed_isha")
+        crashlytics.setCustomValue(tf.string(from: prayerTimes.fajr), forKey: "last_computed_fajr")
+        crashlytics.setCustomValue("\(latitude),\(longitude)", forKey: "last_coordinates")
+        crashlytics.setCustomValue(method.rawValue, forKey: "last_calc_method")
+        #endif
 
         // Determine current and next prayer
         if cal.isDate(date, inSameDayAs: now) {

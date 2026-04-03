@@ -2,6 +2,14 @@ import Foundation
 import BackgroundTasks
 import SwiftData
 import CoreLocation
+import os.log
+
+#if canImport(FirebaseCrashlytics)
+import FirebaseCrashlytics
+#endif
+#if canImport(FirebaseAnalytics)
+import FirebaseAnalytics
+#endif
 
 @MainActor
 struct BackgroundTaskService {
@@ -94,11 +102,19 @@ struct BackgroundTaskService {
         newLatitude: Double? = nil,
         newLongitude: Double? = nil
     ) async {
+        AppLogger.background.info("performFullRefresh: started (newCoords=\(newLatitude != nil))")
+        #if canImport(FirebaseCrashlytics)
+        Crashlytics.crashlytics().log("performFullRefresh: started")
+        #endif
+
         // Don't reschedule if an alarm was due within the last 10 minutes —
         // cancelAll() inside rescheduleAll would silence a currently-ringing alarm.
         if let fireTime = Constants.sharedDefaults?.object(forKey: Constants.Keys.nextAlarmFireTime) as? Date {
             let elapsed = Date().timeIntervalSince(fireTime)
-            if elapsed >= 0 && elapsed < 600 { return }
+            if elapsed >= 0 && elapsed < 600 {
+                AppLogger.background.info("performFullRefresh: skipped — cooldown active (fireTime=\(fireTime.formatted()))")
+                return
+            }
         }
 
         // 1. Determine location
@@ -183,6 +199,7 @@ struct BackgroundTaskService {
         }()
 
         // 4. Calculate prayer times for N days
+        AppLogger.background.info("performFullRefresh: calculating for (\(latitude), \(longitude)) method=\(calculationMethod.rawValue) hlr=\(highLatitudeRule.rawValue)")
         let service = PrayerCalculationService()
         let days = Constants.NotificationBudget.daysToScheduleAhead
         let multiDayEntries = service.calculateMultipleDays(
@@ -196,6 +213,24 @@ struct BackgroundTaskService {
             adjustments: [:]
         )
 
+        // Log today's Isha specifically (the prayer we're debugging)
+        if let todayEntries = multiDayEntries.first,
+           let isha = todayEntries.first(where: { $0.prayer == .isha }) {
+            AppLogger.background.info("performFullRefresh: today's Isha = \(isha.adjustedTime.formatted(date: .abbreviated, time: .standard))")
+            #if canImport(FirebaseCrashlytics)
+            Crashlytics.crashlytics().log("bg_isha_time: \(isha.adjustedTime.formatted(date: .abbreviated, time: .standard))")
+            #endif
+            #if canImport(FirebaseAnalytics)
+            Analytics.logEvent("background_refresh", parameters: [
+                "latitude": latitude,
+                "longitude": longitude,
+                "method": calculationMethod.rawValue,
+                "isha_hour": Calendar.current.component(.hour, from: isha.adjustedTime),
+                "isha_minute": Calendar.current.component(.minute, from: isha.adjustedTime)
+            ])
+            #endif
+        }
+
         // 5. Reschedule all notifications/alarms
         let scheduler = NotificationScheduler()
         await scheduler.rescheduleAll(
@@ -203,6 +238,7 @@ struct BackgroundTaskService {
             preferences: prefs,
             customAlarms: customAlarms
         )
+        AppLogger.background.info("performFullRefresh: completed")
 
         // 6. Update widget data with today's times
         if let todayEntries = multiDayEntries.first {

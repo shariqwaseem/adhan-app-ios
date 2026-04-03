@@ -1,5 +1,10 @@
 import Foundation
 import Observation
+import os.log
+
+#if canImport(FirebaseCrashlytics)
+import FirebaseCrashlytics
+#endif
 
 #if canImport(AlarmKit)
 import AlarmKit
@@ -65,11 +70,15 @@ final class AdhanAlarmManager {
     ) async throws {
         #if canImport(AlarmKit)
         if #available(iOS 26, *) {
+            AppLogger.alarm.info("scheduleAlarm: \(prayer.rawValue) at \(prayerTime.formatted(date: .abbreviated, time: .standard))")
+
             if !isAuthorized {
                 await requestAuthorization()
             }
             guard isAuthorized else {
-                throw AlarmScheduleError.notAuthorized(authError ?? "Alarm permission not granted")
+                let msg = authError ?? "Alarm permission not granted"
+                AppLogger.alarm.error("scheduleAlarm: not authorized — \(msg)")
+                throw AlarmScheduleError.notAuthorized(msg)
             }
 
             let alarmID = UUID()
@@ -130,6 +139,10 @@ final class AdhanAlarmManager {
 
             _ = try await _manager.schedule(id: alarmID, configuration: configuration)
             scheduledAlarmIDs[prayer.rawValue, default: []].append(alarmID)
+            AppLogger.alarm.info("scheduleAlarm: \(prayer.rawValue) scheduled with UUID \(alarmID) at \(prayerTime.formatted(date: .abbreviated, time: .standard))")
+            #if canImport(FirebaseCrashlytics)
+            Crashlytics.crashlytics().setCustomValue(prayerTime.timeIntervalSince1970, forKey: "last_\(prayer.rawValue)_alarm_time")
+            #endif
             return
         }
         #endif
@@ -381,10 +394,24 @@ final class AdhanAlarmManager {
     func cancelAll() {
         #if canImport(AlarmKit)
         if #available(iOS 26, *) {
-            if let alarms = try? _manager.alarms {
+            do {
+                let alarms = try _manager.alarms
+                AppLogger.alarm.info("cancelAll: found \(alarms.count) alarms to cancel")
                 for alarm in alarms {
-                    try? _manager.cancel(id: alarm.id)
+                    do {
+                        try _manager.cancel(id: alarm.id)
+                    } catch {
+                        AppLogger.alarm.error("cancelAll: failed to cancel alarm \(alarm.id): \(error.localizedDescription)")
+                        #if canImport(FirebaseCrashlytics)
+                        Crashlytics.crashlytics().record(error: error, userInfo: ["context": "cancelAll_individual", "alarmId": alarm.id.uuidString])
+                        #endif
+                    }
                 }
+            } catch {
+                AppLogger.alarm.error("cancelAll: failed to enumerate alarms: \(error.localizedDescription)")
+                #if canImport(FirebaseCrashlytics)
+                Crashlytics.crashlytics().record(error: error, userInfo: ["context": "cancelAll_enumerate"])
+                #endif
             }
         }
         #endif

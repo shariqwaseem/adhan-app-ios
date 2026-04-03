@@ -272,6 +272,20 @@ struct PrayerWidgetEntryView: View {
         WidgetLanguage.localized(name)
     }
 
+    private func formattedTime(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        formatter.locale = Locale.autoupdatingCurrent
+        return formatter.string(from: date)
+    }
+
+    private func formattedTimeCompact(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "H:mm"
+        return formatter.string(from: date)
+    }
+
     var body: some View {
         switch family {
         case .systemSmall:
@@ -365,7 +379,7 @@ struct PrayerWidgetEntryView: View {
     private var inlineWidget: some View {
         Group {
             if let next = entry.upcoming.first(where: { $0.isNext }) ?? entry.upcoming.first {
-                Text("\(localizedName(next.name)) \(next.time, style: .time)")
+                Text("\(localizedName(next.name)) \(formattedTime(next.time))")
             } else {
                 Text(WidgetLanguage.localized("No upcoming prayer"))
             }
@@ -377,14 +391,14 @@ struct PrayerWidgetEntryView: View {
     private var circularWidget: some View {
         ZStack {
             AccessoryWidgetBackground()
-            VStack(spacing: 1) {
+            VStack(spacing: 2) {
                 if let next = entry.upcoming.first(where: { $0.isNext }) ?? entry.upcoming.first {
                     Image(systemName: iconFor(next.name))
                         .font(.caption2)
-                    Text(next.time, style: .time)
-                        .font(.system(.body, design: .rounded, weight: .bold))
+                    Text(formattedTimeCompact(next.time))
+                        .font(.system(size: 13, weight: .bold, design: .rounded))
                         .monospacedDigit()
-                        .minimumScaleFactor(0.8)
+                        .minimumScaleFactor(0.6)
                         .lineLimit(1)
                 }
             }
@@ -401,7 +415,7 @@ struct PrayerWidgetEntryView: View {
                     Text(localizedName(prayer.name))
                         .font(.caption2)
                     Spacer()
-                    Text(prayer.time, style: .time)
+                    Text(formattedTime(prayer.time))
                         .font(.caption2)
                         .monospacedDigit()
                 }

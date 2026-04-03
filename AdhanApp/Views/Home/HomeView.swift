@@ -93,6 +93,11 @@ struct HomeView: View {
                                 .foregroundStyle(currentPhase.textColor.opacity(0.7))
                         }
                     }
+                    .onChange(of: remaining <= 0) { _, expired in
+                        if expired {
+                            viewModel.updateCurrentAndNext()
+                        }
+                    }
                 }
                 Spacer()
             }
