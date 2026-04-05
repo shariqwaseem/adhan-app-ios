@@ -168,6 +168,7 @@ struct AdhanApp: App {
 
     /// Called every time the app comes to foreground — recalculates and reschedules everything.
     private func onBecameActive() {
+        guard hasCompletedOnboarding else { return }
         isActivating = true
         AppLogger.lifecycle.info("onBecameActive: started")
         #if canImport(FirebaseCrashlytics)

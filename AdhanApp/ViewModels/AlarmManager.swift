@@ -393,7 +393,7 @@ final class AdhanAlarmManager {
     /// Cancel all scheduled adhan alarms.
     func cancelAll() {
         #if canImport(AlarmKit)
-        if #available(iOS 26, *) {
+        if #available(iOS 26, *), isAuthorized {
             do {
                 let alarms = try _manager.alarms
                 AppLogger.alarm.info("cancelAll: found \(alarms.count) alarms to cancel")
