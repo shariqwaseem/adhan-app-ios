@@ -104,7 +104,7 @@ struct PrayerCalculationService: PrayerCalculationServiceProtocol {
         if abs(latitude) < 50 && ishaHour >= 0 && ishaHour < 3 {
             AppLogger.calculation.error("ANOMALY: Isha at \(tf.string(from: prayerTimes.isha)) — unexpected for latitude \(latitude)")
             #if canImport(FirebaseCrashlytics)
-            let anomalyError = NSError(domain: "com.shariq.adhanapp.anomaly", code: 1, userInfo: [
+            let anomalyError = NSError(domain: "com.shariqw.adhanpro.anomaly", code: 1, userInfo: [
                 "prayer": "Isha",
                 "time": tf.string(from: prayerTimes.isha),
                 "latitude": latitude,

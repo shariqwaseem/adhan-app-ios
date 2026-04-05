@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Adhan alarm app.ipa</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>arm64</string>
+			</array>
+			<key>buildNumber</key>
+			<string>1</string>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>CF6B63620F64C6CA6874E42987EC7C0DC3396FAC</string>
+				<key>dateExpires</key>
+				<string>25/02/2027</string>
+				<key>type</key>
+				<string>Apple Development</string>
+			</dict>
+			<key>embeddedBinaries</key>
+			<array>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>CF6B63620F64C6CA6874E42987EC7C0DC3396FAC</string>
+						<key>dateExpires</key>
+						<string>25/02/2027</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>FirebaseAnalytics.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>5SMQ9QJ75S</string>
+						<key>name</key>
+						<string>Shariq Waseem</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>12.11.0</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>3.4.0</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>CF6B63620F64C6CA6874E42987EC7C0DC3396FAC</string>
+						<key>dateExpires</key>
+						<string>25/02/2027</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>GoogleAdsOnDeviceConversion.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>5SMQ9QJ75S</string>
+						<key>name</key>
+						<string>Shariq Waseem</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>3.4.0</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>CF6B63620F64C6CA6874E42987EC7C0DC3396FAC</string>
+						<key>dateExpires</key>
+						<string>25/02/2027</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>GoogleAppMeasurement.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>5SMQ9QJ75S</string>
+						<key>name</key>
+						<string>Shariq Waseem</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>12.11.0</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>CF6B63620F64C6CA6874E42987EC7C0DC3396FAC</string>
+						<key>dateExpires</key>
+						<string>25/02/2027</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>GoogleAppMeasurementIdentitySupport.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>5SMQ9QJ75S</string>
+						<key>name</key>
+						<string>Shariq Waseem</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>12.11.0</string>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>1</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>CF6B63620F64C6CA6874E42987EC7C0DC3396FAC</string>
+						<key>dateExpires</key>
+						<string>25/02/2027</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>entitlements</key>
+					<dict>
+						<key>application-identifier</key>
+						<string>5SMQ9QJ75S.com.shariqw.adhanpro.widgets</string>
+						<key>com.apple.developer.team-identifier</key>
+						<string>5SMQ9QJ75S</string>
+						<key>com.apple.security.application-groups</key>
+						<array>
+							<string>group.shariq.adhanapp.com</string>
+						</array>
+						<key>get-task-allow</key>
+						<true/>
+					</dict>
+					<key>name</key>
+					<string>AdhanWidgets.appex</string>
+					<key>profile</key>
+					<dict>
+						<key>UUID</key>
+						<string>e6d88e09-e490-4ef6-9619-377884ca72f1</string>
+						<key>dateExpires</key>
+						<string>03/04/2027</string>
+						<key>name</key>
+						<string>iOS Team Provisioning Profile: com.shariqw.adhanpro.widgets</string>
+					</dict>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>5SMQ9QJ75S</string>
+						<key>name</key>
+						<string>Shariq Waseem</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>1.0.0</string>
+				</dict>
+			</array>
+			<key>entitlements</key>
+			<dict>
+				<key>application-identifier</key>
+				<string>5SMQ9QJ75S.com.shariqw.adhanpro</string>
+				<key>com.apple.developer.team-identifier</key>
+				<string>5SMQ9QJ75S</string>
+				<key>com.apple.security.application-groups</key>
+				<array>
+					<string>group.shariq.adhanapp.com</string>
+				</array>
+				<key>get-task-allow</key>
+				<true/>
+			</dict>
+			<key>name</key>
+			<string>Adhan alarm app.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>906c5da2-e012-4330-bdd2-d14862b02068</string>
+				<key>dateExpires</key>
+				<string>03/04/2027</string>
+				<key>name</key>
+				<string>iOS Team Provisioning Profile: com.shariqw.adhanpro</string>
+			</dict>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>5SMQ9QJ75S</string>
+				<key>name</key>
+				<string>Shariq Waseem</string>
+			</dict>
+			<key>versionNumber</key>
+			<string>1.0.0</string>
+		</dict>
+	</array>
+</dict>
+</plist>

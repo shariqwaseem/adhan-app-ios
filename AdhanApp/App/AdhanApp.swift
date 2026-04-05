@@ -5,6 +5,9 @@ import UserNotifications
 #if canImport(FirebaseCore)
 import FirebaseCore
 #endif
+#if canImport(FirebaseCrashlytics)
+import FirebaseCrashlytics
+#endif
 
 // Show notifications even when app is in foreground
 class AppDelegate: NSObject, UIApplicationDelegate {
@@ -12,7 +15,9 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         #if canImport(FirebaseCore)
-        FirebaseApp.configure()
+        if Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist") != nil {
+            FirebaseApp.configure()
+        }
         #endif
 
         UNUserNotificationCenter.current().delegate = notificationDelegate
@@ -27,6 +32,12 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         if UserDefaults.standard.bool(forKey: "hasCompletedOnboarding") {
             Task { await GeofenceMonitorService.shared.startMonitoring() }
         }
+
+        AppLogger.lifecycle.info("didFinishLaunchingWithOptions: completed")
+        #if canImport(FirebaseCrashlytics)
+        Crashlytics.crashlytics().log("didFinishLaunchingWithOptions: completed")
+        Crashlytics.crashlytics().setCustomValue("launched", forKey: "app_state")
+        #endif
 
         return true
     }
@@ -92,6 +103,8 @@ struct AdhanApp: App {
     @State private var notificationScheduler = NotificationScheduler()
     @State private var downloadManager = AdhanAudioDownloadManager()
     @State private var selectedTab = "prayer"
+    @State private var isActivating = false
+    @State private var lastForegroundSchedule: Date?
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
 
     var sharedModelContainer: ModelContainer = {
@@ -155,6 +168,13 @@ struct AdhanApp: App {
 
     /// Called every time the app comes to foreground — recalculates and reschedules everything.
     private func onBecameActive() {
+        isActivating = true
+        AppLogger.lifecycle.info("onBecameActive: started")
+        #if canImport(FirebaseCrashlytics)
+        Crashlytics.crashlytics().log("onBecameActive: started")
+        Crashlytics.crashlytics().setCustomValue("active", forKey: "app_state")
+        #endif
+
         // If the background location manager persisted a new location while we were
         // suspended, sync it into the view model so prayer times are immediately correct.
         if let saved = SharedDataManager.loadLocation(),
@@ -187,12 +207,34 @@ struct AdhanApp: App {
             }
         }
 
-        Task { @MainActor in
-            await notificationScheduler.rescheduleAll(
-                prayerEntries: prayerTimesViewModel.multiDayTimes(),
-                preferences: fetchPreferences(),
-                customAlarms: fetchCustomAlarms()
-            )
+        // Only reschedule on foreground if last schedule was > 5 min ago
+        let shouldSchedule: Bool
+        if let last = lastForegroundSchedule {
+            shouldSchedule = Date().timeIntervalSince(last) > 300
+        } else {
+            shouldSchedule = true
+        }
+
+        if shouldSchedule {
+            Task { @MainActor in
+                await notificationScheduler.rescheduleAll(
+                    prayerEntries: prayerTimesViewModel.multiDayTimes(),
+                    preferences: fetchPreferences(),
+                    customAlarms: fetchCustomAlarms()
+                )
+                lastForegroundSchedule = Date()
+                isActivating = false
+                AppLogger.lifecycle.info("onBecameActive: completed (rescheduled)")
+                #if canImport(FirebaseCrashlytics)
+                Crashlytics.crashlytics().log("onBecameActive: completed (rescheduled)")
+                #endif
+            }
+        } else {
+            isActivating = false
+            AppLogger.lifecycle.info("onBecameActive: completed (skipped reschedule)")
+            #if canImport(FirebaseCrashlytics)
+            Crashlytics.crashlytics().log("onBecameActive: completed (skipped reschedule)")
+            #endif
         }
 
         // Request a fresh location only if stale (>30 min) — avoids unnecessary
@@ -222,6 +264,8 @@ struct AdhanApp: App {
             countryCode: locationManager.countryCode,
             autoSetCalculationMethod: isManual
         )
+        // Skip rescheduling if onBecameActive() is already handling it
+        guard !isActivating else { return }
         Task { @MainActor in
             await notificationScheduler.rescheduleAll(
                 prayerEntries: prayerTimesViewModel.multiDayTimes(),

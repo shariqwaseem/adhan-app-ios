@@ -19,7 +19,7 @@ struct BackgroundTaskService {
     static func registerBackgroundTasks() {
         BGTaskScheduler.shared.register(
             forTaskWithIdentifier: Constants.backgroundRefreshIdentifier,
-            using: nil
+            using: .main
         ) { task in
             guard let refreshTask = task as? BGAppRefreshTask else { return }
             handleAppRefresh(task: refreshTask)
@@ -27,7 +27,7 @@ struct BackgroundTaskService {
 
         BGTaskScheduler.shared.register(
             forTaskWithIdentifier: Constants.processingTaskIdentifier,
-            using: nil
+            using: .main
         ) { task in
             guard let processingTask = task as? BGProcessingTask else { return }
             handleProcessingTask(task: processingTask)
@@ -68,27 +68,57 @@ struct BackgroundTaskService {
     // MARK: - Task Handlers
 
     private static func handleAppRefresh(task: BGAppRefreshTask) {
+        AppLogger.background.info("handleAppRefresh: started")
+        #if canImport(FirebaseCrashlytics)
+        Crashlytics.crashlytics().log("handleAppRefresh: started")
+        Crashlytics.crashlytics().setCustomValue("appRefresh", forKey: "last_bg_task_type")
+        Crashlytics.crashlytics().setCustomValue(Date().timeIntervalSince1970, forKey: "last_bg_task_time")
+        #endif
+
         scheduleBackgroundRefresh()
 
         task.expirationHandler = {
+            AppLogger.background.warning("handleAppRefresh: expired by system")
+            #if canImport(FirebaseCrashlytics)
+            Crashlytics.crashlytics().log("handleAppRefresh: expired by system")
+            #endif
             task.setTaskCompleted(success: false)
         }
 
         Task { @MainActor in
             await performFullRefresh()
+            AppLogger.background.info("handleAppRefresh: completed")
+            #if canImport(FirebaseCrashlytics)
+            Crashlytics.crashlytics().log("handleAppRefresh: completed")
+            #endif
             task.setTaskCompleted(success: true)
         }
     }
 
     private static func handleProcessingTask(task: BGProcessingTask) {
+        AppLogger.background.info("handleProcessingTask: started")
+        #if canImport(FirebaseCrashlytics)
+        Crashlytics.crashlytics().log("handleProcessingTask: started")
+        Crashlytics.crashlytics().setCustomValue("processing", forKey: "last_bg_task_type")
+        Crashlytics.crashlytics().setCustomValue(Date().timeIntervalSince1970, forKey: "last_bg_task_time")
+        #endif
+
         scheduleProcessingTask()
 
         task.expirationHandler = {
+            AppLogger.background.warning("handleProcessingTask: expired by system")
+            #if canImport(FirebaseCrashlytics)
+            Crashlytics.crashlytics().log("handleProcessingTask: expired by system")
+            #endif
             task.setTaskCompleted(success: false)
         }
 
         Task { @MainActor in
             await performFullRefresh()
+            AppLogger.background.info("handleProcessingTask: completed")
+            #if canImport(FirebaseCrashlytics)
+            Crashlytics.crashlytics().log("handleProcessingTask: completed")
+            #endif
             task.setTaskCompleted(success: true)
         }
     }
@@ -102,9 +132,10 @@ struct BackgroundTaskService {
         newLatitude: Double? = nil,
         newLongitude: Double? = nil
     ) async {
+        let refreshStart = Date()
         AppLogger.background.info("performFullRefresh: started (newCoords=\(newLatitude != nil))")
         #if canImport(FirebaseCrashlytics)
-        Crashlytics.crashlytics().log("performFullRefresh: started")
+        Crashlytics.crashlytics().log("performFullRefresh: started (newCoords=\(newLatitude != nil))")
         #endif
 
         // Don't reschedule if an alarm was due within the last 10 minutes —
@@ -238,7 +269,12 @@ struct BackgroundTaskService {
             preferences: prefs,
             customAlarms: customAlarms
         )
-        AppLogger.background.info("performFullRefresh: completed")
+        let refreshDuration = Date().timeIntervalSince(refreshStart)
+        AppLogger.background.info("performFullRefresh: scheduling completed in \(String(format: "%.2f", refreshDuration))s")
+        #if canImport(FirebaseCrashlytics)
+        Crashlytics.crashlytics().log("performFullRefresh: scheduling completed in \(String(format: "%.2f", refreshDuration))s")
+        Crashlytics.crashlytics().setCustomValue(refreshDuration, forKey: "last_refresh_duration_sec")
+        #endif
 
         // 6. Update widget data with today's times
         if let todayEntries = multiDayEntries.first {

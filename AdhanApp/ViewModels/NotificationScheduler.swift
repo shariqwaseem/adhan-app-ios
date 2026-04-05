@@ -14,7 +14,7 @@ import FirebaseAnalytics
 @MainActor
 final class NotificationScheduler {
     var isPermissionGranted: Bool = false
-    private var isScheduling: Bool = false
+    private var schedulingTask: Task<Void, Never>?
     var nextScheduledAlarmTime: Date? = nil
     var nextScheduledIsAlarm: Bool = false
     var nextScheduledName: String? = nil
@@ -46,10 +46,8 @@ final class NotificationScheduler {
         preferences: UserPreferences?,
         customAlarms: [CustomAlarm] = []
     ) async {
-        guard !isScheduling else {
-            AppLogger.scheduling.warning("rescheduleAll: skipped — already scheduling")
-            return
-        }
+        // Wait for any in-flight scheduling to finish before starting a new one
+        await schedulingTask?.value
 
         // Don't reschedule if an alarm fired (or was due) within the last 10 minutes —
         // cancelAll() would silence a currently-ringing alarm.
@@ -60,6 +58,9 @@ final class NotificationScheduler {
         }
         if recentlyFired {
             AppLogger.scheduling.info("rescheduleAll: skipped — in-memory cooldown active")
+            #if canImport(FirebaseCrashlytics)
+            Crashlytics.crashlytics().log("rescheduleAll: skipped — in-memory cooldown active")
+            #endif
             return
         }
 
@@ -68,24 +69,51 @@ final class NotificationScheduler {
             let elapsed = now.timeIntervalSince(fireTime)
             if elapsed >= 0 && elapsed < Self.alarmCooldown {
                 AppLogger.scheduling.info("rescheduleAll: skipped — persisted cooldown active (fireTime=\(fireTime.formatted()))")
+                #if canImport(FirebaseCrashlytics)
+                Crashlytics.crashlytics().log("rescheduleAll: skipped — persisted cooldown active")
+                #endif
                 return
             }
         }
 
         let totalEntries = prayerEntries.flatMap { $0 }.count
+        let scheduleStart = Date()
         AppLogger.scheduling.info("rescheduleAll: starting with \(totalEntries) entries across \(prayerEntries.count) days")
         #if canImport(FirebaseCrashlytics)
         Crashlytics.crashlytics().log("rescheduleAll: starting with \(totalEntries) entries")
         #endif
 
-        isScheduling = true
-        defer { isScheduling = false }
+        schedulingTask = Task { @MainActor in
+            await self.performScheduling(
+                prayerEntries: prayerEntries,
+                preferences: preferences,
+                customAlarms: customAlarms
+            )
+        }
+        await schedulingTask?.value
+        schedulingTask = nil
 
+        let scheduleDuration = Date().timeIntervalSince(scheduleStart)
+        AppLogger.scheduling.info("rescheduleAll: finished in \(String(format: "%.2f", scheduleDuration))s")
+        #if canImport(FirebaseCrashlytics)
+        Crashlytics.crashlytics().log("rescheduleAll: finished in \(String(format: "%.2f", scheduleDuration))s")
+        Crashlytics.crashlytics().setCustomValue(scheduleDuration, forKey: "last_reschedule_duration_sec")
+        #endif
+    }
+
+    private func performScheduling(
+        prayerEntries: [[PrayerTimeEntry]],
+        preferences: UserPreferences?,
+        customAlarms: [CustomAlarm]
+    ) async {
         // Nuclear clear: remove all pending notifications and alarms
         let center = UNUserNotificationCenter.current()
         center.removeAllPendingNotificationRequests()
         alarmManager.cancelAll()
         scheduledAlarmTimes.removeAll()
+
+        // Give iOS time to clean up cancelled notifications/alarms
+        try? await Task.sleep(for: .milliseconds(100))
 
         var scheduledCount = 0
         let maxNotifications = Constants.NotificationBudget.maxPendingNotifications
