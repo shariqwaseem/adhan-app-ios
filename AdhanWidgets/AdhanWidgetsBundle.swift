@@ -82,12 +82,13 @@ struct PrayerTimelineProvider: TimelineProvider {
 
         var entries: [PrayerWidgetEntry] = [baseEntry]
 
-        // Create a transition entry at each upcoming prayer time so the widget refreshes
+        // Create a transition entry at each upcoming prayer time so the widget refreshes.
+        // Each transition removes the just-passed prayer so .prefix(3) stays correct.
         for (idx, prayer) in baseEntry.upcoming.enumerated() where prayer.time > now {
-            // Shift isNext to the next prayer in the upcoming list
-            var updatedUpcoming = baseEntry.upcoming.map { ($0.name, $0.time, false) }
-            if idx + 1 < updatedUpcoming.count {
-                updatedUpcoming[idx + 1].2 = true
+            let remaining = Array(baseEntry.upcoming.suffix(from: idx + 1))
+            var updatedUpcoming = remaining.map { ($0.name, $0.time, false) }
+            if !updatedUpcoming.isEmpty {
+                updatedUpcoming[0].2 = true
             }
             entries.append(PrayerWidgetEntry(
                 date: prayer.time,
