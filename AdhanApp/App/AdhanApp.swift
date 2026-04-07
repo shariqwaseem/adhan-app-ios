@@ -104,6 +104,7 @@ struct AdhanApp: App {
     @State private var downloadManager = AdhanAudioDownloadManager()
     @State private var selectedTab = "prayer"
     @State private var isActivating = false
+    @State private var locationChangedDuringActivation = false
     @State private var lastForegroundSchedule: Date?
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
 
@@ -170,6 +171,7 @@ struct AdhanApp: App {
     private func onBecameActive() {
         guard hasCompletedOnboarding else { return }
         isActivating = true
+        locationChangedDuringActivation = false
         AppLogger.lifecycle.info("onBecameActive: started")
         #if canImport(FirebaseCrashlytics)
         Crashlytics.crashlytics().log("onBecameActive: started")
@@ -229,6 +231,18 @@ struct AdhanApp: App {
                 #if canImport(FirebaseCrashlytics)
                 Crashlytics.crashlytics().log("onBecameActive: completed (rescheduled)")
                 #endif
+
+                // If a GPS location update arrived while we were scheduling with
+                // the stale/saved location, reschedule now with the fresh coords.
+                if locationChangedDuringActivation {
+                    locationChangedDuringActivation = false
+                    await notificationScheduler.rescheduleAll(
+                        prayerEntries: prayerTimesViewModel.multiDayTimes(),
+                        preferences: fetchPreferences(),
+                        customAlarms: fetchCustomAlarms()
+                    )
+                    AppLogger.lifecycle.info("onBecameActive: re-scheduled after deferred location change")
+                }
             }
         } else {
             isActivating = false
@@ -265,8 +279,12 @@ struct AdhanApp: App {
             countryCode: locationManager.countryCode,
             autoSetCalculationMethod: isManual
         )
-        // Skip rescheduling if onBecameActive() is already handling it
-        guard !isActivating else { return }
+        // If onBecameActive() is mid-scheduling with stale coordinates, defer
+        // so that we reschedule with fresh GPS coordinates once it finishes.
+        guard !isActivating else {
+            locationChangedDuringActivation = true
+            return
+        }
         Task { @MainActor in
             await notificationScheduler.rescheduleAll(
                 prayerEntries: prayerTimesViewModel.multiDayTimes(),
