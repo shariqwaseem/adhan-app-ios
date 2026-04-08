@@ -29,6 +29,17 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSSupportsLiveActivities</key>
+	<true/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>adhanpro</string>
+			</array>
+		</dict>
+	</array>
 	<key>NSAlarmKitUsageDescription</key>
 	<string>Adhan uses alarms to alert you for prayer times, even when your phone is on silent or in Focus mode.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>

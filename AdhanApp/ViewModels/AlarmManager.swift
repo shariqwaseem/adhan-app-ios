@@ -92,7 +92,7 @@ final class AdhanAlarmManager {
             let stopButton = AlarmButton(
                 text: LocalizedStringResource(stringLiteral: stopText),
                 textColor: .white,
-                systemImageName: "stop.fill"
+                systemImageName: "xmark"
             )
 
             let alert = AlarmPresentation.Alert(
@@ -175,7 +175,7 @@ final class AdhanAlarmManager {
             let stopButton = AlarmButton(
                 text: LocalizedStringResource(stringLiteral: stopText),
                 textColor: .white,
-                systemImageName: "stop.fill"
+                systemImageName: "xmark"
             )
 
             let alert = AlarmPresentation.Alert(
@@ -255,7 +255,7 @@ final class AdhanAlarmManager {
             let stopButton = AlarmButton(
                 text: LocalizedStringResource(stringLiteral: stopText),
                 textColor: .white,
-                systemImageName: "stop.fill"
+                systemImageName: "xmark"
             )
 
             let alert = AlarmPresentation.Alert(
@@ -329,7 +329,7 @@ final class AdhanAlarmManager {
             let stopButton = AlarmButton(
                 text: LocalizedStringResource(stringLiteral: stopText),
                 textColor: .white,
-                systemImageName: "stop.fill"
+                systemImageName: "xmark"
             )
 
             let alert = AlarmPresentation.Alert(

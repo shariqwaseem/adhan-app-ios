@@ -32,6 +32,24 @@ struct SharedDataManager: Sendable {
         defaults.set(rawValue, forKey: "calculationMethod")
     }
 
+    static func saveAsrMethod(_ rawValue: String) {
+        guard let defaults = Constants.sharedDefaults else { return }
+        defaults.set(rawValue, forKey: Constants.Keys.asrMethod)
+    }
+
+    static func saveHighLatitudeRule(_ rawValue: String) {
+        guard let defaults = Constants.sharedDefaults else { return }
+        defaults.set(rawValue, forKey: Constants.Keys.highLatitudeRule)
+    }
+
+    static func saveManualAdjustments(_ adjustments: [PrayerName: Int]) {
+        guard let defaults = Constants.sharedDefaults else { return }
+        let stringKeyed = Dictionary(uniqueKeysWithValues: adjustments.map { ($0.key.rawValue, $0.value) })
+        if let data = try? JSONEncoder().encode(stringKeyed) {
+            defaults.set(data, forKey: Constants.Keys.manualAdjustments)
+        }
+    }
+
     static func saveLanguage(_ languageCode: String) {
         guard let defaults = Constants.sharedDefaults else { return }
         defaults.set(languageCode, forKey: "appLanguage")

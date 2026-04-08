@@ -1,3499 +1,3519 @@
 {
-  "sourceLanguage": "en",
-  "strings": {
-    "%@ in %lld min": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ بعد %lld دقيقة"
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%@ in %lld min" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ بعد %lld دقيقة"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ dalam %lld menit"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ dalam %lld menit"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ %lld dk içinde"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ %lld dk içinde"
           }
         }
       }
     },
-    "%@ in %lld minutes": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ بعد %lld دقيقة"
+    "%@ in %lld minutes" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ بعد %lld دقيقة"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ dalam %lld menit"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ dalam %lld menit"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ %lld dakika içinde"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ %lld dakika içinde"
           }
         }
       }
     },
-    "%@ Prayer": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "صلاة %@"
+    "%@ Prayer" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "صلاة %@"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ Prayer"
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ Prayer"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sholat %@"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sholat %@"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ Namazı"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ Namazı"
           }
         }
       }
     },
-    "%lld hours": {
-      "localizations": {
-        "ar": {
-          "variations": {
-            "plural": {
-              "few": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "%lld ساعات"
+    "%lld hours" : {
+      "localizations" : {
+        "ar" : {
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld ساعات"
                 }
               },
-              "many": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "%lld ساعة"
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld ساعة"
                 }
               },
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "ساعة واحدة"
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "ساعة واحدة"
                 }
               },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "%lld ساعة"
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld ساعة"
                 }
               },
-              "two": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "ساعتان"
+              "two" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "ساعتان"
                 }
               },
-              "zero": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "٠ ساعة"
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "٠ ساعة"
                 }
               }
             }
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld jam"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld jam"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld saat"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld saat"
           }
         }
       }
     },
-    "%lld minutes": {
-      "localizations": {
-        "ar": {
-          "variations": {
-            "plural": {
-              "few": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "%lld دقائق"
+    "%lld minutes" : {
+      "localizations" : {
+        "ar" : {
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld دقائق"
                 }
               },
-              "many": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "%lld دقيقة"
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld دقيقة"
                 }
               },
-              "one": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "دقيقة واحدة"
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "دقيقة واحدة"
                 }
               },
-              "other": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "%lld دقيقة"
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld دقيقة"
                 }
               },
-              "two": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "دقيقتان"
+              "two" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "دقيقتان"
                 }
               },
-              "zero": {
-                "stringUnit": {
-                  "state": "translated",
-                  "value": "٠ دقيقة"
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "٠ دقيقة"
                 }
               }
             }
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld menit"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld menit"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld dakika"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld dakika"
           }
         }
       }
     },
-    "%lldh %lldm": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld س %lld د"
+    "%lldh %lldm" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld س %lld د"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld j %lld m"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld j %lld m"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld sa %lld dk"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld sa %lld dk"
           }
         }
       }
     },
-    "%lldh %lldm %llds": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld س %lld د %lld ث"
+    "%lldh %lldm %llds" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld س %lld د %lld ث"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld j %lld m %lld d"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld j %lld m %lld d"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld sa %lld dk %lld sn"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld sa %lld dk %lld sn"
           }
         }
       }
     },
-    "%lldm %llds": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld د %lld ث"
+    "%lldm %llds" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld د %lld ث"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld m %lld d"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld m %lld d"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld dk %lld sn"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld dk %lld sn"
           }
         }
       }
     },
-    "1 hour": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ساعة واحدة"
+    "1 hour" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ساعة واحدة"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1 jam"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 jam"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1 saat"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 saat"
           }
         }
       }
     },
-    "About": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "حول"
+    "About" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حول"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tentang"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tentang"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hakkında"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hakkında"
           }
         }
       }
     },
-    "Adhan Sounds": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "أصوات الأذان"
+    "Adhan Sounds" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أصوات الأذان"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Suara Adzan"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suara Adzan"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ezan Sesleri"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ezan Sesleri"
           }
         }
       }
     },
-    "Alarm": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "تنبيه"
+    "Alarm" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تنبيه"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Alarm"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Alarm"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm"
           }
         }
       }
     },
-    "Alarm mode plays the full adhan sound and bypasses Silent Mode.": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "وضع التنبيه يشغل صوت الأذان الكامل ويتجاوز الوضع الصامت."
+    "Alarm mode plays the full adhan sound and bypasses Silent Mode." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "وضع التنبيه يشغل صوت الأذان الكامل ويتجاوز الوضع الصامت."
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mode alarm memutar suara adzan penuh dan mengabaikan Mode Senyap."
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode alarm memutar suara adzan penuh dan mengabaikan Mode Senyap."
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Alarm modu tam ezan sesini çalar ve Sessiz Modu devre dışı bırakır."
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm modu tam ezan sesini çalar ve Sessiz Modu devre dışı bırakır."
           }
         }
       }
     },
-    "Alarm mode plays the full adhan sound and bypasses Silent Mode. Requires Alarm permission.": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "وضع التنبيه يشغل صوت الأذان الكامل ويتجاوز الوضع الصامت. يتطلب إذن التنبيه."
+    "Alarm mode plays the full adhan sound and bypasses Silent Mode. Requires Alarm permission." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "وضع التنبيه يشغل صوت الأذان الكامل ويتجاوز الوضع الصامت. يتطلب إذن التنبيه."
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mode alarm memutar suara adzan penuh dan mengabaikan Mode Senyap. Memerlukan izin Alarm."
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode alarm memutar suara adzan penuh dan mengabaikan Mode Senyap. Memerlukan izin Alarm."
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Alarm modu tam ezan sesini çalar ve Sessiz Modu devre dışı bırakır. Alarm izni gerektirir."
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm modu tam ezan sesini çalar ve Sessiz Modu devre dışı bırakır. Alarm izni gerektirir."
           }
         }
       }
     },
-    "Alarm mode requires iOS 26 or later. Please update your device to use this feature.": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "وضع التنبيه يتطلب iOS 26 أو أحدث. يرجى تحديث جهازك لاستخدام هذه الميزة."
+    "Alarm mode requires iOS 26 or later. Please update your device to use this feature." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "وضع التنبيه يتطلب iOS 26 أو أحدث. يرجى تحديث جهازك لاستخدام هذه الميزة."
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mode alarm memerlukan iOS 26 atau lebih baru. Silakan perbarui perangkat Anda untuk menggunakan fitur ini."
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode alarm memerlukan iOS 26 atau lebih baru. Silakan perbarui perangkat Anda untuk menggunakan fitur ini."
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Alarm modu iOS 26 veya üstünü gerektirir. Bu özelliği kullanmak için cihazınızı güncelleyin."
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm modu iOS 26 veya üstünü gerektirir. Bu özelliği kullanmak için cihazınızı güncelleyin."
           }
         }
       }
     },
-    "Alarm mode requires permission. ": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "وضع التنبيه يتطلب إذنًا. "
+    "Alarm mode requires permission. " : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "وضع التنبيه يتطلب إذنًا. "
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mode alarm memerlukan izin. "
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode alarm memerlukan izin. "
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Alarm modu izin gerektirir. "
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm modu izin gerektirir. "
           }
         }
       }
     },
-    "Alarm name": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "اسم التنبيه"
+    "Alarm name" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اسم التنبيه"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nama alarm"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nama alarm"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Alarm adı"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm adı"
           }
         }
       }
     },
-    "Alarm Sound": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "صوت التنبيه"
+    "Alarm Sound" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "صوت التنبيه"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Suara Alarm"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suara Alarm"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Alarm Sesi"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm Sesi"
           }
         }
       }
     },
-    "Aligned with Qibla": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "متجه نحو القبلة"
+    "Aligned with Qibla" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "متجه نحو القبلة"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sejajar dengan Kiblat"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sejajar dengan Kiblat"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kıbleye yönelik"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kıbleye yönelik"
           }
         }
       }
     },
-    "Allow Alarms": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "السماح بالتنبيهات"
+    "Allow Alarms" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "السماح بالتنبيهات"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Izinkan Alarm"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izinkan Alarm"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Alarmlara İzin Ver"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarmlara İzin Ver"
           }
         }
       }
     },
-    "Allow Background Location": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "السماح بالموقع في الخلفية"
+    "Allow Background Location" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "السماح بالموقع في الخلفية"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Izinkan Lokasi Latar Belakang"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izinkan Lokasi Latar Belakang"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Arka Plan Konumuna İzin Ver"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arka Plan Konumuna İzin Ver"
           }
         }
       }
     },
-    "Allow background location so your prayer times update automatically when you move to a new city. Your location never leaves your device.": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "اسمح بالموقع في الخلفية لتحديث أوقات الصلاة تلقائيًا عند انتقالك إلى مدينة جديدة. موقعك لا يغادر جهازك أبدًا."
+    "Allow background location so your prayer times update automatically when you move to a new city. Your location never leaves your device." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اسمح بالموقع في الخلفية لتحديث أوقات الصلاة تلقائيًا عند انتقالك إلى مدينة جديدة. موقعك لا يغادر جهازك أبدًا."
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Izinkan lokasi latar belakang agar waktu sholat diperbarui otomatis saat Anda pindah ke kota baru. Lokasi Anda tidak pernah meninggalkan perangkat."
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izinkan lokasi latar belakang agar waktu sholat diperbarui otomatis saat Anda pindah ke kota baru. Lokasi Anda tidak pernah meninggalkan perangkat."
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Yeni bir şehre taşındığınızda namaz vakitlerinin otomatik güncellenmesi için arka plan konumuna izin verin. Konumunuz cihazınızdan asla çıkmaz."
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni bir şehre taşındığınızda namaz vakitlerinin otomatik güncellenmesi için arka plan konumuna izin verin. Konumunuz cihazınızdan asla çıkmaz."
           }
         }
       }
     },
-    "Allow Location": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "السماح بالموقع"
+    "Allow Location" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "السماح بالموقع"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Izinkan Lokasi"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izinkan Lokasi"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Konuma İzin Ver"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konuma İzin Ver"
           }
         }
       }
     },
-    "Allow Location Permission": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "السماح بإذن الموقع"
+    "Allow Location Permission" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "السماح بإذن الموقع"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Izinkan Akses Lokasi"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izinkan Akses Lokasi"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Konum İznine İzin Ver"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konum İznine İzin Ver"
           }
         }
       }
     },
-    "Allow Notifications": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "السماح بالإشعارات"
+    "Allow Notifications" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "السماح بالإشعارات"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Izinkan Notifikasi"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izinkan Notifikasi"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bildirimlere İzin Ver"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildirimlere İzin Ver"
           }
         }
       }
     },
-    "Asr": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "العصر"
+    "Asr" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "العصر"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ashar"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ashar"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "İkindi"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İkindi"
           }
         }
       }
     },
-    "Asr Calculation": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "حساب العصر"
+    "Asr Calculation" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حساب العصر"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Perhitungan Ashar"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Perhitungan Ashar"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "İkindi Hesabı"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İkindi Hesabı"
           }
         }
       }
     },
-    "Assalamu Alaikum": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "السلام عليكم"
+    "Assalamu Alaikum" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "السلام عليكم"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Assalamu Alaikum"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Assalamu Alaikum"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Selamün Aleyküm"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selamün Aleyküm"
           }
         }
       }
     },
-    "Bahasa Indonesia": {},
-    "Cancel": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "إلغاء"
+    "Bahasa Indonesia" : {
+
+    },
+    "Cancel" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إلغاء"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Batal"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Batal"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "İptal"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İptal"
           }
         }
       }
     },
-    "Cannot Send Email": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "تعذر إرسال البريد الإلكتروني"
+    "Cancel Alarm Snooze" : {
+
+    },
+    "Cannot Send Email" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تعذر إرسال البريد الإلكتروني"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tidak Dapat Mengirim Email"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tidak Dapat Mengirim Email"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "E-posta Gönderilemiyor"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-posta Gönderilemiyor"
           }
         }
       }
     },
-    "City": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "المدينة"
+    "City" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المدينة"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kota"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kota"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Şehir"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şehir"
           }
         }
       }
     },
-    "Currently set to %@": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الموقع الحالي: %@"
+    "Currently set to %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الموقع الحالي: %@"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Saat ini diatur ke %@"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saat ini diatur ke %@"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Şu anda %@ olarak ayarlı"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şu anda %@ olarak ayarlı"
           }
         }
       }
     },
-    "Custom alarm: %@": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "تنبيه مخصص: %@"
+    "Custom alarm: %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تنبيه مخصص: %@"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Alarm kustom: %@"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm kustom: %@"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Özel alarm: %@"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Özel alarm: %@"
           }
         }
       }
     },
-    "Default": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "افتراضي"
+    "Default" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "افتراضي"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bawaan"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bawaan"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Varsayılan"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varsayılan"
           }
         }
       }
     },
-    "Delete Alarm": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "حذف التنبيه"
+    "Delete Alarm" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حذف التنبيه"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hapus Alarm"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hapus Alarm"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Alarmı Sil"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarmı Sil"
           }
         }
       }
     },
-    "Delete Notification": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "حذف الإشعار"
+    "Delete Notification" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حذف الإشعار"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hapus Notifikasi"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hapus Notifikasi"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bildirimi Sil"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildirimi Sil"
           }
         }
       }
     },
-    "Delivery Mode": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "نمط التسليم"
+    "Delivery Mode" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نمط التسليم"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mode Pengiriman"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode Pengiriman"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bildirim Modu"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildirim Modu"
           }
         }
       }
+    },
+    "Developer" : {
+
     },
-    "Dhuhr": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الظهر"
+    "Dhuhr" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الظهر"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dzuhur"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dzuhur"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Öğle"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öğle"
           }
         }
       }
     },
-    "Display": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "العرض"
+    "Display" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "العرض"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tampilan"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tampilan"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Görünüm"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görünüm"
           }
         }
       }
     },
-    "Diyanet İşleri Başkanlığı, Turkey": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "رئاسة الشؤون الدينية، تركيا"
+    "Diyanet İşleri Başkanlığı, Turkey" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "رئاسة الشؤون الدينية، تركيا"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Diyanet İşleri Başkanlığı, Turki"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diyanet İşleri Başkanlığı, Turki"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Diyanet İşleri Başkanlığı"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diyanet İşleri Başkanlığı"
           }
         }
       }
     },
-    "Dubai": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "دبي"
+    "Dubai" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "دبي"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dubai"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dubai"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dubai"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dubai"
           }
         }
       }
     },
-    "Edit Alarm": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "تعديل التنبيه"
+    "Edit Alarm" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تعديل التنبيه"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Edit Alarm"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit Alarm"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Alarmı Düzenle"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarmı Düzenle"
           }
         }
       }
     },
-    "Edit Notification": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "تعديل الإشعار"
+    "Edit Notification" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تعديل الإشعار"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Edit Notifikasi"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit Notifikasi"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bildirimi Düzenle"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildirimi Düzenle"
           }
         }
       }
     },
-    "Egyptian General Authority": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الهيئة المصرية العامة للمساحة"
+    "Egyptian General Authority" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الهيئة المصرية العامة للمساحة"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Otoritas Umum Mesir"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otoritas Umum Mesir"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mısır Genel Kurumu"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mısır Genel Kurumu"
           }
         }
       }
     },
-    "English": {},
-    "Fajr": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الفجر"
+    "English" : {
+
+    },
+    "Fajr" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الفجر"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Subuh"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subuh"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "İmsak"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İmsak"
           }
         }
       }
     },
-    "Feedback & Bug Report": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ملاحظات والإبلاغ عن خطأ"
+    "Feedback & Bug Report" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ملاحظات والإبلاغ عن خطأ"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Umpan Balik & Laporan Bug"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umpan Balik & Laporan Bug"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Geri Bildirim ve Hata Raporu"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geri Bildirim ve Hata Raporu"
           }
         }
       }
     },
-    "Fire in 5 seconds": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الإطلاق بعد ٥ ثوانٍ"
+    "Fire in 5 seconds" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الإطلاق بعد ٥ ثوانٍ"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aktifkan dalam 5 detik"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktifkan dalam 5 detik"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "5 saniye içinde tetikle"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "5 saniye içinde tetikle"
           }
         }
       }
+    },
+    "Fire Test Alarm in 5s" : {
+
     },
-    "Full Adhan Alarms": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "تنبيهات الأذان الكاملة"
+    "Full Adhan Alarms" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تنبيهات الأذان الكاملة"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Alarm Adzan Penuh"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm Adzan Penuh"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tam Ezan Alarmları"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tam Ezan Alarmları"
           }
         }
       }
     },
-    "Full alarm, bypasses Silent and Focus Modes": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "تنبيه كامل، يتجاوز الوضع الصامت ووضع التركيز"
+    "Full alarm, bypasses Silent and Focus Modes" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تنبيه كامل، يتجاوز الوضع الصامت ووضع التركيز"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Alarm penuh, mengabaikan Mode Senyap dan Mode Fokus"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm penuh, mengabaikan Mode Senyap dan Mode Fokus"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tam alarm, Sessiz ve Odaklanma Modlarını devre dışı bırakır"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tam alarm, Sessiz ve Odaklanma Modlarını devre dışı bırakır"
           }
         }
       }
     },
-    "Get notified when it's time to pray so you can stay on track throughout the day.": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "احصل على إشعار عند حلول وقت الصلاة لتبقى على المسار طوال اليوم."
+    "Get notified when it's time to pray so you can stay on track throughout the day." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "احصل على إشعار عند حلول وقت الصلاة لتبقى على المسار طوال اليوم."
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dapatkan notifikasi saat waktu sholat tiba agar Anda tetap tepat waktu sepanjang hari."
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dapatkan notifikasi saat waktu sholat tiba agar Anda tetap tepat waktu sepanjang hari."
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Namaz vakti geldiğinde bildirim alın, gün boyunca takipte kalın."
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Namaz vakti geldiğinde bildirim alın, gün boyunca takipte kalın."
           }
         }
       }
     },
-    "Get Started": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ابدأ"
+    "Get Started" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ابدأ"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mulai"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mulai"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Başla"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Başla"
           }
         }
       }
     },
-    "Hanafi": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "حنفي"
+    "Hanafi" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حنفي"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hanafi"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hanafi"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hanefi"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hanefi"
           }
         }
       }
     },
-    "High Latitude": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "خطوط العرض العالية"
+    "High Latitude" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "خطوط العرض العالية"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lintang Tinggi"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lintang Tinggi"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Yüksek Enlem"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yüksek Enlem"
           }
         }
       }
     },
-    "Home": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الرئيسية"
+    "Home" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الرئيسية"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Beranda"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beranda"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ana Sayfa"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ana Sayfa"
           }
         }
       }
     },
-    "Iftar": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الإفطار"
+    "Iftar" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الإفطار"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Buka puasa"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buka puasa"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "İftar"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İftar"
           }
         }
       }
     },
-    "Iftar in %@": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الإفطار بعد %@"
+    "Iftar in %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الإفطار بعد %@"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Buka puasa dalam %@"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buka puasa dalam %@"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "İftara %@"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İftara %@"
           }
         }
       }
     },
-    "Isha": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "العشاء"
+    "Isha" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "العشاء"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Isya"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Isya"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Yatsı"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yatsı"
           }
         }
       }
     },
-    "ISNA (North America)": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ISNA (أمريكا الشمالية)"
+    "ISNA (North America)" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISNA (أمريكا الشمالية)"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ISNA (Amerika Utara)"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISNA (Amerika Utara)"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ISNA (Kuzey Amerika)"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ISNA (Kuzey Amerika)"
           }
         }
       }
     },
-    "It's time for %@ prayer": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "حان وقت صلاة %@"
+    "It's time for %@ prayer" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حان وقت صلاة %@"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Waktu sholat %@ telah tiba"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waktu sholat %@ telah tiba"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ namazı vakti girdi"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ namazı vakti girdi"
           }
         }
       }
     },
-    "Kuwait": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الكويت"
+    "Kuwait" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الكويت"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kuwait"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kuwait"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kuveyt"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kuveyt"
           }
         }
       }
     },
-    "Language": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "اللغة"
+    "Language" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اللغة"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bahasa"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bahasa"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dil"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dil"
           }
         }
       }
     },
-    "Location": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الموقع"
+    "Location" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الموقع"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lokasi"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lokasi"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Konum"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konum"
           }
         }
       }
     },
-    "Location accurate prayer times, full-length adhan alarms, reminders and Qibla direction — all in one place.": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "أوقات صلاة دقيقة حسب الموقع، تنبيهات أذان كاملة، تذكيرات واتجاه القبلة — الكل في مكان واحد."
+    "Location accurate prayer times, full-length adhan alarms, reminders and Qibla direction — all in one place." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أوقات صلاة دقيقة حسب الموقع، تنبيهات أذان كاملة، تذكيرات واتجاه القبلة — الكل في مكان واحد."
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Waktu sholat akurat berdasarkan lokasi, alarm adzan penuh, pengingat dan arah kiblat — semua dalam satu tempat."
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waktu sholat akurat berdasarkan lokasi, alarm adzan penuh, pengingat dan arah kiblat — semua dalam satu tempat."
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Konuma dayalı doğru namaz vakitleri, tam ezan alarmları, hatırlatıcılar ve kıble yönü — hepsi tek bir yerde."
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konuma dayalı doğru namaz vakitleri, tam ezan alarmları, hatırlatıcılar ve kıble yönü — hepsi tek bir yerde."
           }
         }
       }
     },
-    "Made by Shariq Waseem": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "صنع بواسطة شارق وسيم"
+    "Made by Shariq Waseem" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "صنع بواسطة شارق وسيم"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Made by Shariq Waseem"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Made by Shariq Waseem"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Made by Shariq Waseem"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Made by Shariq Waseem"
           }
         }
       }
     },
-    "Maghrib": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "المغرب"
+    "Maghrib" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المغرب"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Maghrib"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maghrib"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Akşam"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Akşam"
           }
         }
       }
     },
-    "Method": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الطريقة"
+    "Method" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الطريقة"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Metode"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Metode"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Yöntem"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yöntem"
           }
         }
       }
     },
-    "Middle of the Night": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "منتصف الليل"
+    "Middle of the Night" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "منتصف الليل"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tengah Malam"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tengah Malam"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gecenin Ortası"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gecenin Ortası"
           }
         }
       }
     },
-    "Moonsighting Committee": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "لجنة رؤية الهلال"
+    "Moonsighting Committee" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لجنة رؤية الهلال"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Komite Pengamatan Bulan"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Komite Pengamatan Bulan"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hilal Gözlem Komitesi"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hilal Gözlem Komitesi"
           }
         }
       }
     },
-    "Muslim World League": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "رابطة العالم الإسلامي"
+    "Muslim World League" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "رابطة العالم الإسلامي"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Liga Muslim Dunia"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liga Muslim Dunia"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dünya İslam Birliği"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dünya İslam Birliği"
           }
         }
       }
     },
-    "Name": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الاسم"
+    "Name" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الاسم"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nama"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nama"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ad"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ad"
           }
         }
       }
     },
-    "Never Miss a Prayer": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "لا تفوّت صلاة أبدًا"
+    "Never Miss a Prayer" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا تفوّت صلاة أبدًا"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Jangan Pernah Lewatkan Sholat"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jangan Pernah Lewatkan Sholat"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hiçbir Namazı Kaçırmayın"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiçbir Namazı Kaçırmayın"
           }
         }
       }
     },
-    "New Alarm": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "تنبيه جديد"
+    "New Alarm" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تنبيه جديد"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Alarm Baru"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm Baru"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Yeni Alarm"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni Alarm"
           }
         }
       }
     },
-    "New Notification": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "إشعار جديد"
+    "New Notification" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إشعار جديد"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notifikasi Baru"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifikasi Baru"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Yeni Bildirim"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni Bildirim"
           }
         }
       }
     },
-    "Next alarm": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "التنبيه التالي"
+    "Next alarm" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "التنبيه التالي"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Alarm berikutnya"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm berikutnya"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sonraki alarm"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sonraki alarm"
           }
         }
       }
     },
-    "Next notification": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الإشعار التالي"
+    "Next notification" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الإشعار التالي"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notifikasi berikutnya"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifikasi berikutnya"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sonraki bildirim"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sonraki bildirim"
           }
         }
       }
     },
-    "No custom adhan audio selected. Set a prayer to Alarm mode and choose an adhan sound to test it here.": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "لم يتم تحديد صوت أذان مخصص. اضبط صلاة على وضع التنبيه واختر صوت أذان لاختباره هنا."
+    "No custom adhan audio selected. Set a prayer to Alarm mode and choose an adhan sound to test it here." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لم يتم تحديد صوت أذان مخصص. اضبط صلاة على وضع التنبيه واختر صوت أذان لاختباره هنا."
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tidak ada audio adzan kustom yang dipilih. Atur sholat ke mode Alarm dan pilih suara adzan untuk mengujinya di sini."
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tidak ada audio adzan kustom yang dipilih. Atur sholat ke mode Alarm dan pilih suara adzan untuk mengujinya di sini."
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Özel ezan sesi seçilmedi. Bir namazı Alarm moduna ayarlayın ve burada test etmek için bir ezan sesi seçin."
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Özel ezan sesi seçilmedi. Bir namazı Alarm moduna ayarlayın ve burada test etmek için bir ezan sesi seçin."
           }
         }
       }
     },
-    "No notification": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "بدون إشعار"
+    "No notification" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بدون إشعار"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tanpa notifikasi"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tanpa notifikasi"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bildirim yok"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildirim yok"
           }
         }
       }
     },
-    "Not Set": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "غير محدد"
+    "Not Set" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "غير محدد"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Belum Diatur"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belum Diatur"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ayarlanmadı"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarlanmadı"
           }
         }
       }
     },
-    "Notification": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "إشعار"
+    "Notification" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إشعار"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notifikasi"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifikasi"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bildirim"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildirim"
           }
         }
       }
     },
-    "Notification and alarm modes require permission. ": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "وضعا الإشعار والتنبيه يتطلبان إذنًا. "
+    "Notification and alarm modes require permission. " : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "وضعا الإشعار والتنبيه يتطلبان إذنًا. "
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mode notifikasi dan alarm memerlukan izin. "
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode notifikasi dan alarm memerlukan izin. "
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bildirim ve alarm modları izin gerektirir. "
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildirim ve alarm modları izin gerektirir. "
           }
         }
       }
     },
-    "Notification Mode": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "نمط الإشعارات"
+    "Notification Mode" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نمط الإشعارات"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mode Notifikasi"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode Notifikasi"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bildirim Modu"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildirim Modu"
           }
         }
       }
     },
-    "Notification mode requires permission. ": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "وضع الإشعار يتطلب إذنًا. "
+    "Notification mode requires permission. " : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "وضع الإشعار يتطلب إذنًا. "
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mode notifikasi memerlukan izin. "
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode notifikasi memerlukan izin. "
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bildirim modu izin gerektirir. "
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildirim modu izin gerektirir. "
           }
         }
       }
     },
-    "Notification name": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "اسم الإشعار"
+    "Notification name" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اسم الإشعار"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nama notifikasi"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nama notifikasi"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bildirim adı"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildirim adı"
           }
         }
       }
     },
-    "now": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الآن"
+    "now" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الآن"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "sekarang"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sekarang"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "şimdi"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "şimdi"
           }
         }
       }
     },
-    "Now": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الآن"
+    "Now" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الآن"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sekarang"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sekarang"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Şimdi"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şimdi"
           }
         }
       }
     },
-    "OK": {},
-    "Open Settings": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "فتح الإعدادات"
+    "OK" : {
+
+    },
+    "Open Settings" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "فتح الإعدادات"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Buka Pengaturan"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buka Pengaturan"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ayarları Aç"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarları Aç"
           }
         }
       }
     },
-    "Other": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "أخرى"
+    "Other" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أخرى"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lainnya"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lainnya"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Diğer"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diğer"
           }
         }
       }
     },
-    "Please configure a mail account in Settings, or email shariqwaseem41@gmail.com directly.": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "يرجى إعداد حساب بريد إلكتروني في الإعدادات، أو أرسل بريدًا إلى shariqwaseem41@gmail.com مباشرة."
+    "Please configure a mail account in Settings, or email shariqwaseem41@gmail.com directly." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يرجى إعداد حساب بريد إلكتروني في الإعدادات، أو أرسل بريدًا إلى shariqwaseem41@gmail.com مباشرة."
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Silakan atur akun email di Pengaturan, atau kirim email ke shariqwaseem41@gmail.com secara langsung."
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Silakan atur akun email di Pengaturan, atau kirim email ke shariqwaseem41@gmail.com secara langsung."
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lütfen Ayarlar'da bir e-posta hesabı yapılandırın veya doğrudan shariqwaseem41@gmail.com adresine e-posta gönderin."
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lütfen Ayarlar'da bir e-posta hesabı yapılandırın veya doğrudan shariqwaseem41@gmail.com adresine e-posta gönderin."
           }
         }
       }
     },
-    "Prayer": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الصلاة"
+    "Prayer" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الصلاة"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sholat"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sholat"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Namaz"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Namaz"
           }
         }
       }
     },
-    "Prayer Calculation": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "حساب الصلاة"
+    "Prayer Calculation" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حساب الصلاة"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Perhitungan Sholat"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Perhitungan Sholat"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Namaz Hesaplama"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Namaz Hesaplama"
           }
         }
       }
     },
-    "Pre": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "قبل"
+    "Pre" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "قبل"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pra"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pra"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ön"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ön"
           }
         }
       }
     },
-    "Pre-Alarm": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "تنبيه مسبق"
+    "Pre-Alarm" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تنبيه مسبق"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pra-Alarm"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pra-Alarm"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ön Alarm"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ön Alarm"
           }
         }
       }
     },
-    "Pre-Notification": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "إشعار مسبق"
+    "Pre-Notification" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إشعار مسبق"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pra-Notifikasi"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pra-Notifikasi"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ön Bildirim"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ön Bildirim"
           }
         }
       }
     },
-    "Prepare for %@": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "استعد لـ %@"
+    "Prepare for %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "استعد لـ %@"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bersiap untuk %@"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bersiap untuk %@"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ için hazırlan"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ için hazırlan"
           }
         }
       }
     },
-    "Prepare for %@ prayer": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "استعد لصلاة %@"
+    "Prepare for %@ prayer" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "استعد لصلاة %@"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bersiap untuk sholat %@"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bersiap untuk sholat %@"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ namazına hazırlanın"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ namazına hazırlanın"
           }
         }
       }
     },
-    "Qatar": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "قطر"
+    "Qatar" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "قطر"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Qatar"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qatar"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Katar"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Katar"
           }
         }
       }
     },
-    "Qibla": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "القبلة"
+    "Qibla" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "القبلة"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kiblat"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kiblat"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kıble"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kıble"
           }
         }
       }
     },
-    "Qibla Direction": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "اتجاه القبلة"
+    "Qibla Direction" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اتجاه القبلة"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Arah Kiblat"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arah Kiblat"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kıble Yönü"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kıble Yönü"
           }
         }
       }
     },
-    "Qibla direction requires location access to work accurately.": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "تحديد اتجاه القبلة يتطلب إذن الوصول إلى الموقع للعمل بدقة."
+    "Qibla direction requires location access to work accurately." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تحديد اتجاه القبلة يتطلب إذن الوصول إلى الموقع للعمل بدقة."
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Arah kiblat memerlukan akses lokasi agar berfungsi dengan akurat."
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arah kiblat memerlukan akses lokasi agar berfungsi dengan akurat."
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kıble yönü, doğru çalışması için konum erişimi gerektirir."
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kıble yönü, doğru çalışması için konum erişimi gerektirir."
           }
         }
       }
     },
-    "Ramadan": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "رمضان"
+    "Ramadan" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "رمضان"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ramadan"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ramadan"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ramazan"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ramazan"
           }
         }
       }
     },
-    "Ramadan Day %lld": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "رمضان اليوم %lld"
+    "Ramadan Day %lld" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "رمضان اليوم %lld"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ramadan Hari ke-%lld"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ramadan Hari ke-%lld"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ramazan %lld. Gün"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ramazan %lld. Gün"
           }
         }
       }
     },
-    "Requires alarm permission in Settings": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "يتطلب إذن التنبيه في الإعدادات"
+    "Requires alarm permission in Settings" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يتطلب إذن التنبيه في الإعدادات"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Memerlukan izin alarm di Pengaturan"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memerlukan izin alarm di Pengaturan"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ayarlar'da alarm izni gerektirir"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarlar'da alarm izni gerektirir"
           }
         }
       }
     },
-    "Requires iOS 26": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "يتطلب iOS 26"
+    "Requires iOS 26" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يتطلب iOS 26"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Memerlukan iOS 26"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memerlukan iOS 26"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iOS 26 gerektirir"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iOS 26 gerektirir"
           }
         }
       }
     },
-    "Requires notification permission in Settings": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "يتطلب إذن الإشعارات في الإعدادات"
+    "Requires notification permission in Settings" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يتطلب إذن الإشعارات في الإعدادات"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Memerlukan izin notifikasi di Pengaturan"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memerlukan izin notifikasi di Pengaturan"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ayarlar'da bildirim izni gerektirir"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarlar'da bildirim izni gerektirir"
           }
         }
       }
     },
-    "Result": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "النتيجة"
+    "Result" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "النتيجة"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hasil"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hasil"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sonuç"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sonuç"
           }
         }
       }
     },
-    "Rings before %@ using the same delivery mode and sound.": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "يرن قبل %@ باستخدام نفس نمط التسليم والصوت."
+    "Rings before %@ using the same delivery mode and sound." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يرن قبل %@ باستخدام نفس نمط التسليم والصوت."
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Berbunyi sebelum %@ menggunakan mode pengiriman dan suara yang sama."
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Berbunyi sebelum %@ menggunakan mode pengiriman dan suara yang sama."
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ öncesinde aynı bildirim modu ve sesle çalar."
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ öncesinde aynı bildirim modu ve sesle çalar."
           }
         }
       }
     },
-    "Rings before %@ using the same delivery mode with the default sound.": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "يرن قبل %@ باستخدام نفس نمط التسليم مع الصوت الافتراضي."
+    "Rings before %@ using the same delivery mode with the default sound." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يرن قبل %@ باستخدام نفس نمط التسليم مع الصوت الافتراضي."
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Berbunyi sebelum %@ menggunakan mode pengiriman yang sama dengan suara bawaan."
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Berbunyi sebelum %@ menggunakan mode pengiriman yang sama dengan suara bawaan."
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ öncesinde aynı bildirim modu ve varsayılan sesle çalar."
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ öncesinde aynı bildirim modu ve varsayılan sesle çalar."
           }
         }
       }
     },
-    "Rings before this alarm using the same delivery mode with the default sound.": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "يرن قبل هذا التنبيه باستخدام نفس نمط التسليم مع الصوت الافتراضي."
+    "Rings before this alarm using the same delivery mode with the default sound." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يرن قبل هذا التنبيه باستخدام نفس نمط التسليم مع الصوت الافتراضي."
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Berbunyi sebelum alarm ini menggunakan mode pengiriman yang sama dengan suara bawaan."
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Berbunyi sebelum alarm ini menggunakan mode pengiriman yang sama dengan suara bawaan."
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bu alarm öncesinde aynı bildirim modu ve varsayılan sesle çalar."
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu alarm öncesinde aynı bildirim modu ve varsayılan sesle çalar."
           }
         }
       }
     },
-    "Rings before this notification using the same delivery mode with the default sound.": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "يرن قبل هذا الإشعار باستخدام نفس نمط التسليم مع الصوت الافتراضي."
+    "Rings before this notification using the same delivery mode with the default sound." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يرن قبل هذا الإشعار باستخدام نفس نمط التسليم مع الصوت الافتراضي."
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Berbunyi sebelum notifikasi ini menggunakan mode pengiriman yang sama dengan suara bawaan."
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Berbunyi sebelum notifikasi ini menggunakan mode pengiriman yang sama dengan suara bawaan."
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bu bildirim öncesinde aynı bildirim modu ve varsayılan sesle çalar."
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu bildirim öncesinde aynı bildirim modu ve varsayılan sesle çalar."
           }
         }
       }
     },
-    "Save": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "حفظ"
+    "Save" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حفظ"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Simpan"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simpan"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kaydet"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaydet"
           }
         }
       }
     },
-    "Search City": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "بحث عن مدينة"
+    "Search City" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بحث عن مدينة"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cari Kota"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cari Kota"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Şehir Ara"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şehir Ara"
           }
         }
       }
     },
-    "Settings": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الإعدادات"
+    "Settings" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الإعدادات"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pengaturan"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pengaturan"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ayarlar"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarlar"
           }
         }
       }
     },
-    "Seventh of the Night": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "سُبع الليل"
+    "Seventh of the Night" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سُبع الليل"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sepertujuh Malam"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sepertujuh Malam"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gecenin Yedide Biri"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gecenin Yedide Biri"
           }
         }
       }
     },
-    "Shia": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "شيعة"
+    "Shia" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "شيعة"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Syiah"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Syiah"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Şii"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şii"
           }
         }
       }
     },
-    "Shia (Jafari)": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الشيعة (الجعفري)"
+    "Shia (Jafari)" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الشيعة (الجعفري)"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Syiah (Jafari)"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Syiah (Jafari)"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Şii (Caferi)"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şii (Caferi)"
           }
         }
       }
     },
-    "Silent": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "صامت"
+    "Silent" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "صامت"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Senyap"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Senyap"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sessiz"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sessiz"
           }
         }
       }
     },
-    "Singapore": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "سنغافورة"
+    "Singapore" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سنغافورة"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Singapura"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Singapura"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Singapur"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Singapur"
           }
         }
       }
     },
-    "Snooze": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "غفوة"
+    "Snooze" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "غفوة"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tunda"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tunda"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ertele"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ertele"
           }
         }
       }
     },
-    "Snooze (5 min)": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "تأجيل (5 دقائق)"
+    "Snooze (5 min)" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تأجيل (5 دقائق)"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tunda (5 menit)"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tunda (5 menit)"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ertele (5 dk)"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ertele (5 dk)"
           }
         }
       }
     },
-    "Snoozing — %@": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "تأجيل — %@"
+    "Snoozing — %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تأجيل — %@"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ditunda — %@"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ditunda — %@"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Erteleniyor — %@"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erteleniyor — %@"
           }
         }
       }
     },
-    "Snoozing — %@ Prayer": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "تأجيل — صلاة %@"
+    "Snoozing — %@ Prayer" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تأجيل — صلاة %@"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ditunda — Shalat %@"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ditunda — Shalat %@"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Erteleniyor — %@ Namazı"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erteleniyor — %@ Namazı"
           }
         }
       }
     },
-    "Snoozing — %@ pre-alarm": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "تأجيل — تنبيه مسبق %@"
+    "Snoozing — %@ pre-alarm" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تأجيل — تنبيه مسبق %@"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ditunda — Pra-alarm %@"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ditunda — Pra-alarm %@"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Erteleniyor — %@ ön alarm"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erteleniyor — %@ ön alarm"
           }
         }
       }
     },
-    "Sound": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "صوت"
+    "Sound" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "صوت"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Suara"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suara"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ses"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ses"
           }
         }
       }
     },
-    "Standard (Shafi'i, Maliki, Hanbali)": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "معياري (شافعي، مالكي، حنبلي)"
+    "Standard (Shafi'i, Maliki, Hanbali)" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "معياري (شافعي، مالكي، حنبلي)"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Standar (Syafi'i, Maliki, Hanbali)"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standar (Syafi'i, Maliki, Hanbali)"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Standart (Şafii, Maliki, Hanbeli)"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standart (Şafii, Maliki, Hanbeli)"
           }
         }
       }
     },
-    "Standard notification with sound": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "إشعار عادي مع صوت"
+    "Standard notification with sound" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إشعار عادي مع صوت"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notifikasi standar dengan suara"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifikasi standar dengan suara"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sesli standart bildirim"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sesli standart bildirim"
           }
         }
       }
     },
-    "Stop": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "إيقاف"
+    "Stop" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إيقاف"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Berhenti"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Berhenti"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Durdur"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durdur"
           }
         }
       }
     },
-    "Suhoor": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "السحور"
+    "Suhoor" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "السحور"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sahur"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sahur"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sahur"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sahur"
           }
         }
       }
     },
-    "Suhoor in %@": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "السحور بعد %@"
+    "Suhoor in %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "السحور بعد %@"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sahur dalam %@"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sahur dalam %@"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sahura %@"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sahura %@"
           }
         }
       }
     },
-    "Sunni": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "سنّي"
+    "Sunni" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سنّي"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sunni"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sunni"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sünni"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sünni"
           }
         }
       }
     },
-    "Sunrise": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الشروق"
+    "Sunrise" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الشروق"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Terbit"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terbit"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Güneş"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Güneş"
           }
         }
       }
     },
-    "System Default": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "افتراضي النظام"
+    "System Default" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "افتراضي النظام"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bawaan Sistem"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bawaan Sistem"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sistem Varsayılanı"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistem Varsayılanı"
           }
         }
       }
     },
-    "Tahajjud": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "التهجد"
+    "Tahajjud" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "التهجد"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tahajud"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tahajud"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Teheccüd"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teheccüd"
           }
         }
       }
     },
-    "Test": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "اختبار"
+    "Test" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اختبار"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tes"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tes"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Test"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Test"
           }
         }
       }
     },
-    "Test Alarm (Default Sound)": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "اختبار التنبيه (الصوت الافتراضي)"
+    "Test Alarm (Default Sound)" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اختبار التنبيه (الصوت الافتراضي)"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tes Alarm (Suara Bawaan)"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tes Alarm (Suara Bawaan)"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Test Alarmı (Varsayılan Ses)"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Test Alarmı (Varsayılan Ses)"
           }
         }
       }
     },
-    "Test Alarm with Adhan Audio": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "اختبار التنبيه بصوت الأذان"
+    "Test Alarm with Adhan Audio" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اختبار التنبيه بصوت الأذان"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tes Alarm dengan Audio Adzan"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tes Alarm dengan Audio Adzan"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ezan Sesiyle Alarm Testi"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ezan Sesiyle Alarm Testi"
           }
         }
       }
     },
-    "Test Notification": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "اختبار الإشعار"
+    "Test Notification" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اختبار الإشعار"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tes Notifikasi"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tes Notifikasi"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bildirim Testi"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildirim Testi"
           }
         }
       }
     },
-    "Test Prayer": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "اختبار الصلاة"
+    "Test Prayer" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اختبار الصلاة"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tes Sholat"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tes Sholat"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Test Namazı"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Test Namazı"
           }
         }
       }
     },
-    "This app supports full-length alarms and adhan sounds that play even when your phone is on silent or in Focus mode.": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "يدعم هذا التطبيق تنبيهات كاملة وأصوات أذان تعمل حتى عندما يكون هاتفك على الوضع الصامت أو في وضع التركيز."
+    "This app supports full-length alarms and adhan sounds that play even when your phone is on silent or in Focus mode." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يدعم هذا التطبيق تنبيهات كاملة وأصوات أذان تعمل حتى عندما يكون هاتفك على الوضع الصامت أو في وضع التركيز."
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aplikasi ini mendukung alarm dan suara adzan penuh yang berbunyi bahkan saat ponsel Anda dalam mode senyap atau mode Fokus."
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aplikasi ini mendukung alarm dan suara adzan penuh yang berbunyi bahkan saat ponsel Anda dalam mode senyap atau mode Fokus."
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bu uygulama, telefonunuz sessiz modda veya Odaklanma modunda olsa bile çalan tam uzunlukta alarm ve ezan seslerini destekler."
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu uygulama, telefonunuz sessiz modda veya Odaklanma modunda olsa bile çalan tam uzunlukta alarm ve ezan seslerini destekler."
           }
         }
       }
     },
-    "This is a test notification with sound": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "هذا إشعار تجريبي مع صوت"
+    "This is a test notification with sound" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "هذا إشعار تجريبي مع صوت"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ini adalah notifikasi uji dengan suara"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ini adalah notifikasi uji dengan suara"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bu sesli bir test bildirimidir"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu sesli bir test bildirimidir"
           }
         }
       }
     },
-    "till %@": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "حتى %@"
+    "till %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حتى %@"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "menuju %@"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "menuju %@"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ kala"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ kala"
           }
         }
       }
     },
-    "Time": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الوقت"
+    "Time" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الوقت"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Waktu"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waktu"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Zaman"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaman"
           }
         }
       }
     },
-    "Time Before": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الوقت قبل"
+    "Time Before" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الوقت قبل"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Waktu Sebelum"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waktu Sebelum"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Öncesi Süre"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öncesi Süre"
           }
         }
       }
     },
-    "Traveling?": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "مسافر؟"
+    "Traveling?" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مسافر؟"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sedang Bepergian?"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sedang Bepergian?"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Seyahatte misiniz?"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seyahatte misiniz?"
           }
         }
       }
     },
-    "Triggers a test notification or alarm that fires 5 seconds from now.": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "يطلق إشعار تجريبي أو تنبيه بعد ٥ ثوانٍ من الآن."
+    "Triggers a test notification or alarm that fires 5 seconds from now." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يطلق إشعار تجريبي أو تنبيه بعد ٥ ثوانٍ من الآن."
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Memicu notifikasi uji atau alarm yang aktif 5 detik dari sekarang."
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memicu notifikasi uji atau alarm yang aktif 5 detik dari sekarang."
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "5 saniye sonra test bildirimi veya alarm gönderir."
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "5 saniye sonra test bildirimi veya alarm gönderir."
           }
         }
       }
+    },
+    "Türkçe" : {
+
     },
-    "Türkçe": {},
-    "Twilight Angle": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "زاوية الشفق"
+    "Twilight Angle" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "زاوية الشفق"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sudut Senja"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sudut Senja"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Alacakaranlık Açısı"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alacakaranlık Açısı"
           }
         }
       }
     },
-    "Type a city name...": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "اكتب اسم مدينة..."
+    "Type a city name..." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اكتب اسم مدينة..."
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ketik nama kota..."
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ketik nama kota..."
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bir şehir adı yazın..."
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir şehir adı yazın..."
           }
         }
       }
     },
-    "Umm Al-Qura University, Makkah": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "جامعة أم القرى، مكة"
+    "Umm Al-Qura University, Makkah" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "جامعة أم القرى، مكة"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Universitas Umm Al-Qura, Mekkah"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Universitas Umm Al-Qura, Mekkah"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ümmü'l-Kura Üniversitesi, Mekke"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ümmü'l-Kura Üniversitesi, Mekke"
           }
         }
       }
     },
-    "University of Islamic Sciences, Karachi": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "جامعة العلوم الإسلامية، كراتشي"
+    "University of Islamic Sciences, Karachi" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "جامعة العلوم الإسلامية، كراتشي"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Universitas Ilmu Islam, Karachi"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Universitas Ilmu Islam, Karachi"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "İslami İlimler Üniversitesi, Karaçi"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İslami İlimler Üniversitesi, Karaçi"
           }
         }
       }
     },
-    "Use Current Location": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "استخدام الموقع الحالي"
+    "Use Current Location" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "استخدام الموقع الحالي"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gunakan Lokasi Saat Ini"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gunakan Lokasi Saat Ini"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mevcut Konumu Kullan"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mevcut Konumu Kullan"
           }
         }
       }
     },
-    "Version": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الإصدار"
+    "Version" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الإصدار"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Versi"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Versi"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sürüm"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sürüm"
           }
         }
       }
     },
-    "Vibrate": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "اهتزاز"
+    "Vibrate" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اهتزاز"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Getar"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Getar"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Titreşim"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Titreşim"
           }
         }
       }
     },
-    "We need your location to calculate accurate prayer times for your area.": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "نحتاج إلى موقعك لحساب أوقات الصلاة الدقيقة لمنطقتك."
+    "We need your location to calculate accurate prayer times for your area." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نحتاج إلى موقعك لحساب أوقات الصلاة الدقيقة لمنطقتك."
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kami memerlukan lokasi Anda untuk menghitung waktu sholat yang akurat untuk wilayah Anda."
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kami memerlukan lokasi Anda untuk menghitung waktu sholat yang akurat untuk wilayah Anda."
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bölgeniz için doğru namaz vakitlerini hesaplamak için konumunuza ihtiyacımız var."
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bölgeniz için doğru namaz vakitlerini hesaplamak için konumunuza ihtiyacımız var."
           }
         }
       }
     },
-    "Your Location": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "موقعك"
+    "Your Location" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "موقعك"
           }
         },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lokasi Anda"
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lokasi Anda"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Konumunuz"
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konumunuz"
           }
         }
       }
     },
-    "العربية": {}
+    "العربية" : {
+
+    }
   },
-  "version": "1.0"
+  "version" : "1.0"
 }

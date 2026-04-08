@@ -142,7 +142,7 @@ struct BackgroundTaskService {
         // cancelAll() inside rescheduleAll would silence a currently-ringing alarm.
         if let fireTime = Constants.sharedDefaults?.object(forKey: Constants.Keys.nextAlarmFireTime) as? Date {
             let elapsed = Date().timeIntervalSince(fireTime)
-            if elapsed >= 0 && elapsed < 600 {
+            if elapsed >= -60 && elapsed < 600 {
                 AppLogger.background.info("performFullRefresh: skipped — cooldown active (fireTime=\(fireTime.formatted()))")
                 return
             }

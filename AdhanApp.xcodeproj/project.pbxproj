@@ -35,6 +35,11 @@
 		7D24534F388F9EA21177DADF /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A59A57E924F4811B02FE447 /* HomeView.swift */; };
 		8D9CE0C5CA7F2BA12A3055AB /* Adhan in Frameworks */ = {isa = PBXBuildFile; productRef = 17B10984E3CFD148FC4F329F /* Adhan */; };
 		9E836436F02462BB160D3480 /* AdhanAlarmAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BCC5F38A7A0B6C53346BA7D /* AdhanAlarmAttributes.swift */; };
+		DD44EE55FF66001122BB33CC /* AdhanAlarmAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BCC5F38A7A0B6C53346BA7D /* AdhanAlarmAttributes.swift */; };
+		EE55FF66001122BB33CC4455 /* CancelSnoozeIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelSnoozeIntent.swift; sourceTree = "<group>"; };
+		FF660011223344556677AABB /* CancelSnoozeIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE55FF66001122BB33CC4455 /* CancelSnoozeIntent.swift */; };
+		0011223344556677AABBCCDD /* CancelSnoozeIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE55FF66001122BB33CC4455 /* CancelSnoozeIntent.swift */; };
+
 		9EDD775AF0FF861CE007A819 /* CustomAlarmSoundSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B0C19D2730847644F7BD62 /* CustomAlarmSoundSelectionView.swift */; };
 		A17EB2359A4F49B08EA3DC3E /* UserPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 998C13B40966B1F1D7E5A657 /* UserPreferences.swift */; };
 		A1AE10AD46A5FDC32B15E2C8 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90DBCCEDEE4D24C88D4B53BB /* OnboardingView.swift */; };
@@ -120,6 +125,7 @@
 		2FE2561F73C12D3F5688C7B4 /* AdhanAudioSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdhanAudioSelectionView.swift; sourceTree = "<group>"; };
 		331993B85EDD1C1AA8EA1CA8 /* LanguageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
 		3BCC5F38A7A0B6C53346BA7D /* AdhanAlarmAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdhanAlarmAttributes.swift; sourceTree = "<group>"; };
+
 		3FBC88F3C32B1765563F3806 /* QiblaViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QiblaViewModel.swift; sourceTree = "<group>"; };
 		407BC349F59799DE6DAF45F5 /* DownloadProgressButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProgressButton.swift; sourceTree = "<group>"; };
 		4262DFC37B01B6765C07659D /* AdhanWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AdhanWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -400,6 +406,7 @@
 			children = (
 				3BCC5F38A7A0B6C53346BA7D /* AdhanAlarmAttributes.swift */,
 				E6F428D792497229FB8FDC77 /* AdhanAudio.swift */,
+				EE55FF66001122BB33CC4455 /* CancelSnoozeIntent.swift */,
 				C3D7E52640933BFFFE985213 /* CalculationMethodInfo.swift */,
 				B7FBEF5CCF94FDA6F126C0CA /* CustomAlarm.swift */,
 				8B7844EECE7D69EF9C27DB71 /* PrayerTimeEntry.swift */,
@@ -590,6 +597,7 @@
 				"$(DWARF_DSYM_FOLDER_PATH)/$(DWARF_DSYM_FILE_NAME)/Contents/Resources/DWARF/$(PRODUCT_NAME)",
 				"$(DWARF_DSYM_FOLDER_PATH)/$(DWARF_DSYM_FILE_NAME)/Contents/Info.plist",
 				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
+				"$(SRCROOT)/AdhanApp/GoogleService-Info.plist",
 			);
 			name = "Run Script";
 			outputFileListPaths = (
@@ -658,6 +666,7 @@
 				2088F8CA1E2269AE4FE99E44 /* RamadanDetectionService.swift in Sources */,
 				C4F552F58B62EAD8041EB0A0 /* SettingsView.swift in Sources */,
 				A5DA4A6A1BEB86858F3FD490 /* SharedDataManager.swift in Sources */,
+				FF660011223344556677AABB /* CancelSnoozeIntent.swift in Sources */,
 				6B89B5A64BD2281ED321354B /* SyncManager.swift in Sources */,
 				7BD900964F8DCE0AB368CE8A /* TestView.swift in Sources */,
 				E9ED2B76756FAE3C78A4E1AE /* TimeOfDayBackground.swift in Sources */,
@@ -669,7 +678,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DD44EE55FF66001122BB33CC /* AdhanAlarmAttributes.swift in Sources */,
 				5E96A61D4DBB21FE2F594255 /* AdhanWidgetsBundle.swift in Sources */,
+				0011223344556677AABBCCDD /* CancelSnoozeIntent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

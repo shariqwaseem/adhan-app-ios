@@ -1,6 +1,11 @@
 import SwiftUI
 import SwiftData
 import UserNotifications
+import ActivityKit
+
+#if canImport(AlarmKit)
+import AlarmKit
+#endif
 
 #if canImport(FirebaseCore)
 import FirebaseCore
@@ -45,20 +50,13 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
 
-    static let snoozeActionIdentifier = "SNOOZE_ACTION"
-
-    /// Register notification categories with a snooze action for all alarm types.
+    /// Register notification categories for all alarm types.
     static func registerCategories() {
-        let snoozeAction = UNNotificationAction(
-            identifier: snoozeActionIdentifier,
-            title: String(localized: "Snooze (5 min)", bundle: LanguageManager.shared.bundle),
-            options: []
-        )
         let categoryIDs = ["PRAYER_TIME", "PRAYER_PRE_ALARM", "CUSTOM_ALARM", "CUSTOM_PRE_ALARM"]
         let categories: Set<UNNotificationCategory> = Set(categoryIDs.map { id in
             UNNotificationCategory(
                 identifier: id,
-                actions: [snoozeAction],
+                actions: [],
                 intentIdentifiers: []
             )
         })
@@ -69,27 +67,7 @@ class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
-        [.banner, .sound, .badge]
-    }
-
-    func userNotificationCenter(
-        _ center: UNUserNotificationCenter,
-        didReceive response: UNNotificationResponse
-    ) async {
-        guard response.actionIdentifier == Self.snoozeActionIdentifier else { return }
-
-        let original = response.notification.request.content
-        let content = UNMutableNotificationContent()
-        content.title = original.title
-        content.body = original.body
-        content.categoryIdentifier = original.categoryIdentifier
-        content.sound = original.sound ?? .default
-
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5 * 60, repeats: false)
-        let identifier = "snooze_\(response.notification.request.identifier)_\(Date().timeIntervalSince1970)"
-        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
-
-        try? await center.add(request)
+        return [.banner, .sound, .badge]
     }
 }
 
@@ -140,6 +118,27 @@ struct AdhanApp: App {
                         onBecameActive()
                     }
                 }
+                .onOpenURL { url in
+                    guard url.scheme == "adhanpro" else { return }
+
+                    switch url.host {
+                    case "cancel-alarm":
+                        // Cancel all active AlarmKit alarms (stops the snooze countdown)
+                        #if canImport(AlarmKit)
+                        if #available(iOS 26, *) {
+                            let mgr = AlarmKit.AlarmManager.shared
+                            if let alarms = try? mgr.alarms {
+                                for alarm in alarms {
+                                    try? mgr.cancel(id: alarm.id)
+                                }
+                            }
+                        }
+                        #endif
+
+                    default:
+                        break
+                    }
+                }
                 .onReceive(NotificationCenter.default.publisher(for: .NSSystemTimeZoneDidChange)) { _ in
                     prayerTimesViewModel.recalculate()
                     Task { @MainActor in
@@ -168,6 +167,20 @@ struct AdhanApp: App {
 
     /// Called every time the app comes to foreground — recalculates and reschedules everything.
     private func onBecameActive() {
+        // Clean up any stale AlarmKit Live Activities (alarm + snooze window expired while app was in background)
+        #if canImport(AlarmKit)
+        if #available(iOS 26, *) {
+            Task {
+                for activity in Activity<AlarmAttributes<AdhanAlarmMetadata>>.activities {
+                    if let prayerTime = activity.attributes.metadata?.prayerTime,
+                       prayerTime.addingTimeInterval(5 * 60) <= Date() {
+                        await activity.end(nil, dismissalPolicy: .immediate)
+                    }
+                }
+            }
+        }
+        #endif
+
         guard hasCompletedOnboarding else { return }
         isActivating = true
         AppLogger.lifecycle.info("onBecameActive: started")

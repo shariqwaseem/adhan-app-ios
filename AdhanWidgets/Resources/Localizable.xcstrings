@@ -172,6 +172,9 @@
         }
       }
     },
+    "Paused" : {
+
+    },
     "Prayer Times" : {
       "extractionState" : "stale",
       "localizations" : {
