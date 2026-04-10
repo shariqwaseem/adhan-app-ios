@@ -62,6 +62,43 @@ final class AdhanAlarmManager {
         isAuthorized = false
     }
 
+    // MARK: - Presentation Helper
+
+    #if canImport(AlarmKit)
+    @available(iOS 26, *)
+    private nonisolated func makePresentation(
+        alertTitle: String,
+        snoozeCountdownTitle: String
+    ) -> AlarmPresentation {
+        let bundle = LanguageManager.shared.bundle
+        let stopText = String(localized: "Stop", bundle: bundle)
+        let snoozeText = String(localized: "Snooze", bundle: bundle)
+
+        let stopButton = AlarmButton(
+            text: LocalizedStringResource(stringLiteral: stopText),
+            textColor: .white,
+            systemImageName: "xmark"
+        )
+
+        let alert = AlarmPresentation.Alert(
+            title: LocalizedStringResource(stringLiteral: alertTitle),
+            stopButton: stopButton,
+            secondaryButton: AlarmButton(
+                text: LocalizedStringResource(stringLiteral: snoozeText),
+                textColor: .white,
+                systemImageName: "moon.zzz"
+            ),
+            secondaryButtonBehavior: .countdown
+        )
+
+        let countdown = AlarmPresentation.Countdown(
+            title: LocalizedStringResource(stringLiteral: snoozeCountdownTitle)
+        )
+
+        return AlarmPresentation(alert: alert, countdown: countdown)
+    }
+    #endif
+
     /// Schedule an alarm for a prayer at the given date.
     func scheduleAlarm(
         for prayer: PrayerName,
@@ -82,38 +119,13 @@ final class AdhanAlarmManager {
             }
 
             let alarmID = UUID()
-
             let bundle = LanguageManager.shared.bundle
             let prayerTitle = String(localized: "\(prayer.localizedName) Prayer", bundle: bundle)
-            let stopText = String(localized: "Stop", bundle: bundle)
-            let snoozeText = String(localized: "Snooze", bundle: bundle)
             let snoozeCountdownTitle = String(localized: "Snoozing — \(prayer.localizedName) Prayer", bundle: bundle)
 
-            let stopButton = AlarmButton(
-                text: LocalizedStringResource(stringLiteral: stopText),
-                textColor: .white,
-                systemImageName: "xmark"
-            )
-
-            let alert = AlarmPresentation.Alert(
-                title: LocalizedStringResource(stringLiteral: prayerTitle),
-                stopButton: stopButton,
-                secondaryButton: AlarmButton(
-                    text: LocalizedStringResource(stringLiteral: snoozeText),
-                    textColor: .white,
-                    systemImageName: "moon.zzz"
-                ),
-                secondaryButtonBehavior: .countdown
-            )
-
-            let countdown = AlarmPresentation.Countdown(
-                title: LocalizedStringResource(stringLiteral: snoozeCountdownTitle),
-                pauseButton: stopButton
-            )
-
-            let presentation = AlarmPresentation(
-                alert: alert,
-                countdown: countdown
+            let presentation = makePresentation(
+                alertTitle: prayerTitle,
+                snoozeCountdownTitle: snoozeCountdownTitle
             )
 
             let attributes = AlarmAttributes<AdhanAlarmMetadata>(
@@ -166,37 +178,12 @@ final class AdhanAlarmManager {
             }
 
             let alarmID = UUID()
-
             let bundle = LanguageManager.shared.bundle
-            let stopText = String(localized: "Stop", bundle: bundle)
-            let snoozeText = String(localized: "Snooze", bundle: bundle)
             let snoozeCountdownTitle = String(localized: "Snoozing — \(title)", bundle: bundle)
 
-            let stopButton = AlarmButton(
-                text: LocalizedStringResource(stringLiteral: stopText),
-                textColor: .white,
-                systemImageName: "xmark"
-            )
-
-            let alert = AlarmPresentation.Alert(
-                title: LocalizedStringResource(stringLiteral: title),
-                stopButton: stopButton,
-                secondaryButton: AlarmButton(
-                    text: LocalizedStringResource(stringLiteral: snoozeText),
-                    textColor: .white,
-                    systemImageName: "moon.zzz"
-                ),
-                secondaryButtonBehavior: .countdown
-            )
-
-            let countdown = AlarmPresentation.Countdown(
-                title: LocalizedStringResource(stringLiteral: snoozeCountdownTitle),
-                pauseButton: stopButton
-            )
-
-            let presentation = AlarmPresentation(
-                alert: alert,
-                countdown: countdown
+            let presentation = makePresentation(
+                alertTitle: title,
+                snoozeCountdownTitle: snoozeCountdownTitle
             )
 
             let attributes = AlarmAttributes<AdhanAlarmMetadata>(
@@ -245,38 +232,13 @@ final class AdhanAlarmManager {
             }
 
             let alarmID = UUID()
-
             let bundle = LanguageManager.shared.bundle
             let title = String(localized: "\(prayer.localizedName) in \(minutesBefore) min", bundle: bundle)
-            let stopText = String(localized: "Stop", bundle: bundle)
-            let snoozeText = String(localized: "Snooze", bundle: bundle)
             let snoozeCountdownTitle = String(localized: "Snoozing — \(prayer.localizedName) pre-alarm", bundle: bundle)
 
-            let stopButton = AlarmButton(
-                text: LocalizedStringResource(stringLiteral: stopText),
-                textColor: .white,
-                systemImageName: "xmark"
-            )
-
-            let alert = AlarmPresentation.Alert(
-                title: LocalizedStringResource(stringLiteral: title),
-                stopButton: stopButton,
-                secondaryButton: AlarmButton(
-                    text: LocalizedStringResource(stringLiteral: snoozeText),
-                    textColor: .white,
-                    systemImageName: "moon.zzz"
-                ),
-                secondaryButtonBehavior: .countdown
-            )
-
-            let countdown = AlarmPresentation.Countdown(
-                title: LocalizedStringResource(stringLiteral: snoozeCountdownTitle),
-                pauseButton: stopButton
-            )
-
-            let presentation = AlarmPresentation(
-                alert: alert,
-                countdown: countdown
+            let presentation = makePresentation(
+                alertTitle: title,
+                snoozeCountdownTitle: snoozeCountdownTitle
             )
 
             let attributes = AlarmAttributes<AdhanAlarmMetadata>(
@@ -319,38 +281,13 @@ final class AdhanAlarmManager {
             }
 
             let alarmID = UUID()
-
             let bundle = LanguageManager.shared.bundle
             let alertTitle = String(localized: "\(title) in \(minutesBefore) min", bundle: bundle)
-            let stopText = String(localized: "Stop", bundle: bundle)
-            let snoozeText = String(localized: "Snooze", bundle: bundle)
             let snoozeCountdownTitle = String(localized: "Snoozing — \(title) pre-alarm", bundle: bundle)
 
-            let stopButton = AlarmButton(
-                text: LocalizedStringResource(stringLiteral: stopText),
-                textColor: .white,
-                systemImageName: "xmark"
-            )
-
-            let alert = AlarmPresentation.Alert(
-                title: LocalizedStringResource(stringLiteral: alertTitle),
-                stopButton: stopButton,
-                secondaryButton: AlarmButton(
-                    text: LocalizedStringResource(stringLiteral: snoozeText),
-                    textColor: .white,
-                    systemImageName: "moon.zzz"
-                ),
-                secondaryButtonBehavior: .countdown
-            )
-
-            let countdown = AlarmPresentation.Countdown(
-                title: LocalizedStringResource(stringLiteral: snoozeCountdownTitle),
-                pauseButton: stopButton
-            )
-
-            let presentation = AlarmPresentation(
-                alert: alert,
-                countdown: countdown
+            let presentation = makePresentation(
+                alertTitle: alertTitle,
+                snoozeCountdownTitle: snoozeCountdownTitle
             )
 
             let attributes = AlarmAttributes<AdhanAlarmMetadata>(

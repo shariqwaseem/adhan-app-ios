@@ -1,6 +1,5 @@
 import WidgetKit
 import SwiftUI
-import ActivityKit
 import AppIntents
 @preconcurrency import Adhan
 
@@ -509,28 +508,34 @@ struct PrayerWidgetEntryView: View {
     }
 }
 
-// MARK: - Snooze Timer Helper
-
-/// Returns a countdown Text clamped to 0:00 so it never counts past zero.
-private func clampedCountdownText(to targetDate: Date) -> Text {
-    Text(timerInterval: .now...max(.now, targetDate), countsDown: true)
-}
-
-// MARK: - AlarmKit Alarm Live Activity Widget
+// MARK: - AlarmKit Snooze Countdown Live Activity
 
 #if canImport(AlarmKit)
 @available(iOS 26, *)
-private struct AlarmLiveActivityContent: View {
-    let mode: AlarmPresentationState.Mode
-    let prayerName: String
-    let fontSize: CGFloat
+private struct AlarmCountdownView: View {
+    let context: ActivityViewContext<AlarmAttributes<AdhanAlarmMetadata>>
+
+    private var prayerName: String {
+        guard let raw = context.attributes.metadata?.prayerName else {
+            return WidgetLanguage.localized("Prayer")
+        }
+        // Strip prefixes for display (e.g. "custom_UUID", "fajr_prealarm")
+        if raw.hasPrefix("custom_") {
+            return WidgetLanguage.localized("Custom Alarm")
+        }
+        if raw.hasSuffix("_prealarm") {
+            let base = String(raw.dropLast("_prealarm".count))
+            return WidgetLanguage.localized(base.capitalized)
+        }
+        return WidgetLanguage.localized(raw.capitalized)
+    }
 
     var body: some View {
-        switch mode {
+        switch context.state.mode {
         case .countdown(let countdown):
             HStack {
-                clampedCountdownText(to: countdown.fireDate)
-                    .font(.system(size: fontSize, weight: .bold, design: .rounded))
+                Text(timerInterval: .now...max(.now, countdown.fireDate), countsDown: true)
+                    .font(.system(size: 48, weight: .bold, design: .rounded))
                     .monospacedDigit()
                     .foregroundStyle(.white)
 
@@ -545,30 +550,25 @@ private struct AlarmLiveActivityContent: View {
                 }
                 .buttonStyle(.plain)
             }
+
         case .alert:
             HStack {
-                Text(prayerName)
-                    .font(.system(size: fontSize, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(prayerName)
+                        .font(.system(size: 24, weight: .bold, design: .rounded))
+                        .foregroundStyle(.white)
+                    Text(WidgetLanguage.localized("Alarm Ringing"))
+                        .font(.subheadline)
+                        .foregroundStyle(.white.opacity(0.7))
+                }
                 Spacer()
-                Image(systemName: "alarm.fill")
-                    .font(.system(size: 24))
+                Image(systemName: "alarm.waves.left.and.right.fill")
+                    .font(.system(size: 32))
                     .foregroundStyle(.white)
             }
-        case .paused:
-            HStack {
-                Text(prayerName)
-                    .font(.system(size: fontSize, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white.opacity(0.6))
-                Spacer()
-                Text("Paused")
-                    .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.6))
-            }
+
         @unknown default:
-            Text(prayerName)
-                .font(.system(size: fontSize, weight: .bold, design: .rounded))
-                .foregroundStyle(.white)
+            EmptyView()
         }
     }
 }
@@ -577,26 +577,19 @@ private struct AlarmLiveActivityContent: View {
 struct AlarmSnoozeActivityWidget: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: AlarmAttributes<AdhanAlarmMetadata>.self) { context in
-            AlarmLiveActivityContent(
-                mode: context.state.mode,
-                prayerName: context.attributes.metadata?.prayerName ?? "",
-                fontSize: 48
-            )
-            .padding(.horizontal, 20)
-            .padding(.vertical, 16)
-            .activityBackgroundTint(.black)
+            AlarmCountdownView(context: context)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 16)
+                .activityBackgroundTint(.black)
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.center) {
-                    AlarmLiveActivityContent(
-                        mode: context.state.mode,
-                        prayerName: context.attributes.metadata?.prayerName ?? "",
-                        fontSize: 44
-                    )
+                    AlarmCountdownView(context: context)
+                        .padding(.horizontal)
                 }
             } compactLeading: {
                 if case .countdown(let countdown) = context.state.mode {
-                    clampedCountdownText(to: countdown.fireDate)
+                    Text(timerInterval: .now...max(.now, countdown.fireDate), countsDown: true)
                         .monospacedDigit()
                         .font(.system(.body, design: .rounded, weight: .bold))
                         .frame(width: 44)

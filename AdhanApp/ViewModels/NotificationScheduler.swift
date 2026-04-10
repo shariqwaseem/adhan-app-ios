@@ -2,7 +2,11 @@ import Foundation
 import UserNotifications
 import Observation
 import os.log
+import ActivityKit
 
+#if canImport(AlarmKit)
+import AlarmKit
+#endif
 #if canImport(FirebaseCrashlytics)
 import FirebaseCrashlytics
 #endif
@@ -48,6 +52,23 @@ final class NotificationScheduler {
     ) async {
         // Wait for any in-flight scheduling to finish before starting a new one
         await schedulingTask?.value
+
+        // Never reschedule while an alarm is actively ringing or snoozing —
+        // cancelAll() inside performScheduling would kill the live activity and alarm.
+        #if canImport(AlarmKit)
+        if #available(iOS 26, *) {
+            let hasActiveAlarmActivity = Activity<AlarmAttributes<AdhanAlarmMetadata>>.activities.contains {
+                $0.activityState == .active
+            }
+            if hasActiveAlarmActivity {
+                AppLogger.scheduling.info("rescheduleAll: skipped — active alarm live activity detected")
+                #if canImport(FirebaseCrashlytics)
+                Crashlytics.crashlytics().log("rescheduleAll: skipped — active alarm live activity")
+                #endif
+                return
+            }
+        }
+        #endif
 
         // Don't reschedule if an alarm fired (or was due) within the last 10 minutes —
         // cancelAll() would silence a currently-ringing alarm.

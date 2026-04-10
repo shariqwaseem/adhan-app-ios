@@ -62,6 +62,13 @@ struct HomeView: View {
                     preferences: prefs
                 )
             }
+            .onChange(of: viewModel.prayerEntries.map(\.time)) { _, _ in
+                scheduler.refreshNextAlarmTime(
+                    prayerEntries: viewModel.multiDayTimes().flatMap { $0 },
+                    customAlarms: customAlarms,
+                    preferences: prefs
+                )
+            }
         }
         .environment(\.colorScheme, currentPhase.prefersDarkAppearance ? .dark : .light)
     }

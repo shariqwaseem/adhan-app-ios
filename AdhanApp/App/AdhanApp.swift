@@ -82,6 +82,7 @@ struct AdhanApp: App {
     @State private var downloadManager = AdhanAudioDownloadManager()
     @State private var selectedTab = "prayer"
     @State private var isActivating = false
+    @State private var locationChangedDuringActivation = false
     @State private var lastForegroundSchedule: Date?
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
 
@@ -123,7 +124,6 @@ struct AdhanApp: App {
 
                     switch url.host {
                     case "cancel-alarm":
-                        // Cancel all active AlarmKit alarms (stops the snooze countdown)
                         #if canImport(AlarmKit)
                         if #available(iOS 26, *) {
                             let mgr = AlarmKit.AlarmManager.shared
@@ -167,13 +167,13 @@ struct AdhanApp: App {
 
     /// Called every time the app comes to foreground — recalculates and reschedules everything.
     private func onBecameActive() {
-        // Clean up any stale AlarmKit Live Activities (alarm + snooze window expired while app was in background)
+        // Clean up only stale AlarmKit Live Activities — never kill active/snoozing ones
         #if canImport(AlarmKit)
         if #available(iOS 26, *) {
             Task {
                 for activity in Activity<AlarmAttributes<AdhanAlarmMetadata>>.activities {
-                    if let prayerTime = activity.attributes.metadata?.prayerTime,
-                       prayerTime.addingTimeInterval(5 * 60) <= Date() {
+                    if activity.activityState == .stale {
+                        AppLogger.lifecycle.info("onBecameActive: ending stale alarm activity")
                         await activity.end(nil, dismissalPolicy: .immediate)
                     }
                 }
@@ -238,6 +238,18 @@ struct AdhanApp: App {
                 )
                 lastForegroundSchedule = Date()
                 isActivating = false
+
+                // Location changed while scheduling — redo with fresh coordinates
+                if locationChangedDuringActivation {
+                    locationChangedDuringActivation = false
+                    await notificationScheduler.rescheduleAll(
+                        prayerEntries: prayerTimesViewModel.multiDayTimes(),
+                        preferences: fetchPreferences(),
+                        customAlarms: fetchCustomAlarms()
+                    )
+                    lastForegroundSchedule = Date()
+                }
+
                 AppLogger.lifecycle.info("onBecameActive: completed (rescheduled)")
                 #if canImport(FirebaseCrashlytics)
                 Crashlytics.crashlytics().log("onBecameActive: completed (rescheduled)")
@@ -278,8 +290,12 @@ struct AdhanApp: App {
             countryCode: locationManager.countryCode,
             autoSetCalculationMethod: isManual
         )
-        // Skip rescheduling if onBecameActive() is already handling it
-        guard !isActivating else { return }
+        // Defer rescheduling if onBecameActive() is in progress — it will
+        // redo with fresh data once it finishes.
+        if isActivating {
+            locationChangedDuringActivation = true
+            return
+        }
         Task { @MainActor in
             await notificationScheduler.rescheduleAll(
                 prayerEntries: prayerTimesViewModel.multiDayTimes(),
