@@ -142,7 +142,7 @@ struct BackgroundTaskService {
         // cancelAll() inside rescheduleAll would silence a currently-ringing alarm.
         if let fireTime = Constants.sharedDefaults?.object(forKey: Constants.Keys.nextAlarmFireTime) as? Date {
             let elapsed = Date().timeIntervalSince(fireTime)
-            if elapsed >= 0 && elapsed < 600 {
+            if elapsed >= -60 && elapsed < 600 {
                 AppLogger.background.info("performFullRefresh: skipped — cooldown active (fireTime=\(fireTime.formatted()))")
                 return
             }
@@ -241,7 +241,7 @@ struct BackgroundTaskService {
             method: calculationMethod,
             asrMethod: asrMethod,
             highLatitudeRule: highLatitudeRule,
-            adjustments: [:]
+            adjustments: SharedDataManager.loadManualAdjustments()
         )
 
         // Log today's Isha specifically (the prayer we're debugging)
@@ -264,6 +264,9 @@ struct BackgroundTaskService {
 
         // 5. Reschedule all notifications/alarms
         let scheduler = NotificationScheduler()
+        if AdhanAlarmManager.isAlarmSupported {
+            await scheduler.alarmManager.requestAuthorization()
+        }
         await scheduler.rescheduleAll(
             prayerEntries: multiDayEntries,
             preferences: prefs,

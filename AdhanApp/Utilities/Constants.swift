@@ -17,6 +17,9 @@ enum Constants {
         static let lastCountryCode = "lastCountryCode"
         static let lastBackgroundRefreshDate = "lastBackgroundRefreshDate"
         static let nextAlarmFireTime = "nextAlarmFireTime"
+        static let asrMethod = "asrMethod"
+        static let highLatitudeRule = "highLatitudeRule"
+        static let manualAdjustments = "manualAdjustments"
     }
 
     enum NotificationBudget {

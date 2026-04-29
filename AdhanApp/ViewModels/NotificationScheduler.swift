@@ -54,7 +54,7 @@ final class NotificationScheduler {
         let now = Date()
         let recentlyFired = scheduledAlarmTimes.values.flatMap { $0 }.contains { fireTime in
             let elapsed = now.timeIntervalSince(fireTime)
-            return elapsed >= 0 && elapsed < Self.alarmCooldown
+            return elapsed >= -60 && elapsed < Self.alarmCooldown
         }
         if recentlyFired {
             AppLogger.scheduling.info("rescheduleAll: skipped — in-memory cooldown active")
@@ -67,7 +67,7 @@ final class NotificationScheduler {
         // Also check the persisted fire time (covers fresh instances, e.g. background tasks)
         if let fireTime = Constants.sharedDefaults?.object(forKey: Constants.Keys.nextAlarmFireTime) as? Date {
             let elapsed = now.timeIntervalSince(fireTime)
-            if elapsed >= 0 && elapsed < Self.alarmCooldown {
+            if elapsed >= -60 && elapsed < Self.alarmCooldown {
                 AppLogger.scheduling.info("rescheduleAll: skipped — persisted cooldown active (fireTime=\(fireTime.formatted()))")
                 #if canImport(FirebaseCrashlytics)
                 Crashlytics.crashlytics().log("rescheduleAll: skipped — persisted cooldown active")

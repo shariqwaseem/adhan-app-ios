@@ -24,10 +24,16 @@ final class PrayerTimesViewModel {
         }
     }
     var asrMethod: AsrJuristicMethod = .standard {
-        didSet { UserDefaults.standard.set(asrMethod.rawValue, forKey: "asrMethod") }
+        didSet {
+            UserDefaults.standard.set(asrMethod.rawValue, forKey: "asrMethod")
+            SharedDataManager.saveAsrMethod(asrMethod.rawValue)
+        }
     }
     var highLatitudeRule: HighLatitudeRuleOption = .middleOfTheNight {
-        didSet { UserDefaults.standard.set(highLatitudeRule.rawValue, forKey: "highLatitudeRule") }
+        didSet {
+            UserDefaults.standard.set(highLatitudeRule.rawValue, forKey: "highLatitudeRule")
+            SharedDataManager.saveHighLatitudeRule(highLatitudeRule.rawValue)
+        }
     }
 
     var manualAdjustments: [PrayerName: Int] = [:]
@@ -55,10 +61,12 @@ final class PrayerTimesViewModel {
            let method = AsrJuristicMethod(rawValue: raw) {
             self.asrMethod = method
         }
+        SharedDataManager.saveAsrMethod(asrMethod.rawValue)
         if let raw = defaults.string(forKey: "highLatitudeRule"),
            let rule = HighLatitudeRuleOption(rawValue: raw) {
             self.highLatitudeRule = rule
         }
+        SharedDataManager.saveHighLatitudeRule(highLatitudeRule.rawValue)
 
         // Restore last saved location
         if let saved = SharedDataManager.loadLocation() {
@@ -90,6 +98,7 @@ final class PrayerTimesViewModel {
         let daily = DailyPrayerTimes(date: now, entries: prayerEntries, cityName: cityName, hijriDate: hijriDate)
         SharedDataManager.savePrayerTimes(daily)
         SharedDataManager.saveLocation(latitude: latitude, longitude: longitude, cityName: cityName, countryCode: countryCode)
+        SharedDataManager.saveManualAdjustments(manualAdjustments)
         SharedDataManager.reloadWidgets()
     }
 

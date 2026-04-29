@@ -4,6 +4,7 @@ import SwiftUI
 
 @main
 struct AdhanWidgetsBundle: WidgetBundle {
+    @WidgetBundleBuilder
     var body: some Widget {
         PrayerTimesWidget()
     }
@@ -60,6 +61,10 @@ struct PrayerWidgetEntry: TimelineEntry {
     let upcoming: [(name: String, time: Date, isNext: Bool)]
     /// Full day of prayers (6 entries, current or next day) — used by large widget
     let allPrayers: [(name: String, time: Date, isNext: Bool)]
+    /// Tomorrow's full day of prayers — used by timeline transitions after today's last prayer
+    let tomorrowAllPrayers: [(name: String, time: Date, isNext: Bool)]
+    /// How many entries at the start of `upcoming` belong to today (rest are tomorrow)
+    let todayUpcomingCount: Int
     let cityName: String
 }
 
@@ -79,6 +84,7 @@ struct PrayerTimelineProvider: TimelineProvider {
     func getTimeline(in context: Context, completion: @escaping (Timeline<PrayerWidgetEntry>) -> Void) {
         let baseEntry = createEntry() ?? sampleEntry()
         let now = Date()
+        let cal = Calendar.current
 
         var entries: [PrayerWidgetEntry] = [baseEntry]
 
@@ -90,18 +96,33 @@ struct PrayerTimelineProvider: TimelineProvider {
             if !updatedUpcoming.isEmpty {
                 updatedUpcoming[0].2 = true
             }
+
+            let transitionTime = prayer.time
+
+            // Once all of today's prayers have passed, switch to tomorrow's full day for the large widget
+            let pastTodaysPrayers = baseEntry.todayUpcomingCount > 0 && idx >= baseEntry.todayUpcomingCount - 1
+            let baseList = pastTodaysPrayers && !baseEntry.tomorrowAllPrayers.isEmpty
+                ? baseEntry.tomorrowAllPrayers
+                : baseEntry.allPrayers
+
+            var updatedAllPrayers = baseList.map { ($0.name, $0.time, false) }
+            if let nextIdx = updatedAllPrayers.firstIndex(where: { $0.1 > transitionTime }) {
+                updatedAllPrayers[nextIdx].2 = true
+            }
+
             entries.append(PrayerWidgetEntry(
                 date: prayer.time,
                 upcoming: updatedUpcoming,
-                allPrayers: baseEntry.allPrayers,
+                allPrayers: updatedAllPrayers,
+                tomorrowAllPrayers: baseEntry.tomorrowAllPrayers,
+                todayUpcomingCount: max(0, baseEntry.todayUpcomingCount - idx - 1),
                 cityName: baseEntry.cityName
             ))
         }
 
-        // Refresh after the last upcoming prayer, or in 1 minute if none
-        let lastUpcomingTime = baseEntry.upcoming.last(where: { $0.time > now })?.time
-        let refreshDate = lastUpcomingTime?.addingTimeInterval(60) ?? now.addingTimeInterval(60)
-        let timeline = Timeline(entries: entries, policy: .after(refreshDate))
+        // Refresh at midnight so the widget recalculates for the new day
+        let midnight = cal.startOfDay(for: cal.date(byAdding: .day, value: 1, to: now)!)
+        let timeline = Timeline(entries: entries, policy: .after(midnight))
         completion(timeline)
     }
 
@@ -136,10 +157,36 @@ struct PrayerTimelineProvider: TimelineProvider {
             case "Qatar": return .qatar
             case "Singapore": return .singapore
             case "Diyanet İşleri Başkanlığı, Turkey": return .turkey
+            case "Shia (Jafari)": return .tehran
             default: return .muslimWorldLeague
             }
         }()
-        let params = calcMethod.params
+        var params = calcMethod.params
+
+        // Apply Asr method (Madhab)
+        let savedAsr = defaults.string(forKey: "asrMethod")
+        if savedAsr == "Hanafi" {
+            params.madhab = .hanafi
+        } else {
+            params.madhab = .shafi
+        }
+
+        // Apply high latitude rule
+        let savedHighLat = defaults.string(forKey: "highLatitudeRule")
+        switch savedHighLat {
+        case "Seventh of the Night": params.highLatitudeRule = .seventhOfTheNight
+        case "Twilight Angle": params.highLatitudeRule = .twilightAngle
+        default: params.highLatitudeRule = .middleOfTheNight
+        }
+
+        // Read manual adjustments
+        let manualAdjustments: [String: Int] = {
+            guard let data = defaults.data(forKey: "manualAdjustments"),
+                  let decoded = try? JSONDecoder().decode([String: Int].self, from: data) else {
+                return [:]
+            }
+            return decoded
+        }()
 
         guard let prayerTimes = PrayerTimes(coordinates: coordinates, date: dateComponents, calculationParameters: params) else {
             return nil
@@ -160,7 +207,11 @@ struct PrayerTimelineProvider: TimelineProvider {
         }()
 
         let names = ["Tahajjud", "Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"]
-        let times = [tahajjudTime, prayerTimes.fajr, prayerTimes.dhuhr, prayerTimes.asr, prayerTimes.maghrib, prayerTimes.isha]
+        let baseTimes = [tahajjudTime, prayerTimes.fajr, prayerTimes.dhuhr, prayerTimes.asr, prayerTimes.maghrib, prayerTimes.isha]
+        let times = zip(names, baseTimes).map { name, time -> Date in
+            let adj = manualAdjustments[name] ?? 0
+            return adj != 0 ? (cal.date(byAdding: .minute, value: adj, to: time) ?? time) : time
+        }
 
         // Build today's full list
         var todayPrayers: [(name: String, time: Date, isNext: Bool)] = []
@@ -183,7 +234,11 @@ struct PrayerTimelineProvider: TimelineProvider {
                 let nightDuration = tPrayerTimes.fajr.timeIntervalSince(prayerTimes.isha)
                 return prayerTimes.isha.addingTimeInterval(nightDuration * 2.0 / 3.0)
             }()
-            let tTimes = [tTahajjud, tPrayerTimes.fajr, tPrayerTimes.dhuhr, tPrayerTimes.asr, tPrayerTimes.maghrib, tPrayerTimes.isha]
+            let tBaseTimes = [tTahajjud, tPrayerTimes.fajr, tPrayerTimes.dhuhr, tPrayerTimes.asr, tPrayerTimes.maghrib, tPrayerTimes.isha]
+            let tTimes = zip(names, tBaseTimes).map { name, time -> Date in
+                let adj = manualAdjustments[name] ?? 0
+                return adj != 0 ? (cal.date(byAdding: .minute, value: adj, to: time) ?? time) : time
+            }
             var tFoundNext = false
             for i in 0..<names.count {
                 let isNext = !foundNext && !tFoundNext && tTimes[i] > now
@@ -203,6 +258,8 @@ struct PrayerTimelineProvider: TimelineProvider {
             date: now,
             upcoming: upcoming,
             allPrayers: allPrayers,
+            tomorrowAllPrayers: tomorrowPrayers,
+            todayUpcomingCount: todayUpcoming.count,
             cityName: cityName
         )
     }
@@ -223,6 +280,8 @@ struct PrayerTimelineProvider: TimelineProvider {
             date: now,
             upcoming: upcoming.isEmpty ? all : upcoming,
             allPrayers: all,
+            tomorrowAllPrayers: all,
+            todayUpcomingCount: upcoming.isEmpty ? 0 : upcoming.count,
             cityName: "Mecca"
         )
     }
@@ -368,8 +427,10 @@ struct PrayerWidgetEntryView: View {
                         .font(.body)
                         .monospacedDigit()
                 }
-                .padding(.vertical, 2)
-                .background(prayer.isNext ? Color.accentColor.opacity(0.1) : .clear)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 6)
+                .background(prayer.isNext ? Color.accentColor.opacity(0.15) : .clear)
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             }
         }
         .containerBackground(.fill.tertiary, for: .widget)

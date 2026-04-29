@@ -71,11 +71,23 @@ struct SettingsView: View {
                     }
                 } header: {
                     Text("About")
+                }
+
+                #if DEBUG
+                Section("Developer") {
+                    Button("Fire Test Alarm in 5s") {
+                        scheduleTestAlarm()
+                    }
+                }
+                #endif
+
+                Section {
                 } footer: {
                     Text(String(localized: "Made by Shariq Waseem", bundle: LanguageManager.shared.bundle))
                         .font(.caption)
                         .frame(maxWidth: .infinity, alignment: .center)
-                        .padding(.top, 8)
+                        .padding(.top, 4)
+                        .padding(.bottom, 4)
                 }
             }
             .navigationTitle("Settings")
@@ -125,6 +137,18 @@ struct SettingsView: View {
         ---
         """
     }
+
+    #if DEBUG
+    private func scheduleTestAlarm() {
+        Task {
+            let alarmManager = AdhanAlarmManager()
+            await alarmManager.requestAuthorization()
+            let fireTime = Date().addingTimeInterval(5)
+            try? await alarmManager.scheduleAlarm(for: .fajr, at: fireTime)
+        }
+    }
+
+    #endif
 
     private func reschedule() {
         Task {

@@ -17,6 +17,10 @@ final class AdhanAlarmManager {
     var isAuthorized: Bool = false
     var authError: String? = nil
     var scheduledAlarmIDs: [String: [UUID]] = [:]  // prayerName -> alarm UUIDs (one per scheduled day)
+    @ObservationIgnored private var autoStopObserverTask: Task<Void, Never>?
+    @ObservationIgnored private var autoStopTasks: [UUID: Task<Void, Never>] = [:]
+
+    nonisolated private static let maxAlertDurationSeconds: TimeInterval = 5 * 60
 
     nonisolated static var isAlarmSupported: Bool {
         if #available(iOS 26, *) {
@@ -31,6 +35,14 @@ final class AdhanAlarmManager {
         AlarmKit.AlarmManager.shared
     }
     #endif
+
+    init() {
+        #if canImport(AlarmKit)
+        if #available(iOS 26, *) {
+            startObservingAlarmState()
+        }
+        #endif
+    }
 
     func requestAuthorization() async {
         #if canImport(AlarmKit)
@@ -86,34 +98,11 @@ final class AdhanAlarmManager {
             let bundle = LanguageManager.shared.bundle
             let prayerTitle = String(localized: "\(prayer.localizedName) Prayer", bundle: bundle)
             let stopText = String(localized: "Stop", bundle: bundle)
-            let snoozeText = String(localized: "Snooze", bundle: bundle)
-            let snoozeCountdownTitle = String(localized: "Snoozing — \(prayer.localizedName) Prayer", bundle: bundle)
 
-            let stopButton = AlarmButton(
-                text: LocalizedStringResource(stringLiteral: stopText),
-                textColor: .white,
-                systemImageName: "stop.fill"
-            )
-
-            let alert = AlarmPresentation.Alert(
-                title: LocalizedStringResource(stringLiteral: prayerTitle),
-                stopButton: stopButton,
-                secondaryButton: AlarmButton(
-                    text: LocalizedStringResource(stringLiteral: snoozeText),
-                    textColor: .white,
-                    systemImageName: "moon.zzz"
-                ),
-                secondaryButtonBehavior: .countdown
-            )
-
-            let countdown = AlarmPresentation.Countdown(
-                title: LocalizedStringResource(stringLiteral: snoozeCountdownTitle),
-                pauseButton: stopButton
-            )
+            let alert = makeAlert(title: prayerTitle, stopText: stopText)
 
             let presentation = AlarmPresentation(
-                alert: alert,
-                countdown: countdown
+                alert: alert
             )
 
             let attributes = AlarmAttributes<AdhanAlarmMetadata>(
@@ -129,9 +118,7 @@ final class AdhanAlarmManager {
                 sound = .default
             }
 
-            let snoozeDuration: TimeInterval = 5 * 60  // 5 minutes
             let configuration = AlarmKit.AlarmManager.AlarmConfiguration(
-                countdownDuration: Alarm.CountdownDuration(preAlert: nil, postAlert: snoozeDuration),
                 schedule: .fixed(prayerTime),
                 attributes: attributes,
                 sound: sound
@@ -169,34 +156,11 @@ final class AdhanAlarmManager {
 
             let bundle = LanguageManager.shared.bundle
             let stopText = String(localized: "Stop", bundle: bundle)
-            let snoozeText = String(localized: "Snooze", bundle: bundle)
-            let snoozeCountdownTitle = String(localized: "Snoozing — \(title)", bundle: bundle)
 
-            let stopButton = AlarmButton(
-                text: LocalizedStringResource(stringLiteral: stopText),
-                textColor: .white,
-                systemImageName: "stop.fill"
-            )
-
-            let alert = AlarmPresentation.Alert(
-                title: LocalizedStringResource(stringLiteral: title),
-                stopButton: stopButton,
-                secondaryButton: AlarmButton(
-                    text: LocalizedStringResource(stringLiteral: snoozeText),
-                    textColor: .white,
-                    systemImageName: "moon.zzz"
-                ),
-                secondaryButtonBehavior: .countdown
-            )
-
-            let countdown = AlarmPresentation.Countdown(
-                title: LocalizedStringResource(stringLiteral: snoozeCountdownTitle),
-                pauseButton: stopButton
-            )
+            let alert = makeAlert(title: title, stopText: stopText)
 
             let presentation = AlarmPresentation(
-                alert: alert,
-                countdown: countdown
+                alert: alert
             )
 
             let attributes = AlarmAttributes<AdhanAlarmMetadata>(
@@ -212,9 +176,7 @@ final class AdhanAlarmManager {
                 sound = .default
             }
 
-            let snoozeDuration: TimeInterval = 5 * 60  // 5 minutes
             let configuration = AlarmKit.AlarmManager.AlarmConfiguration(
-                countdownDuration: Alarm.CountdownDuration(preAlert: nil, postAlert: snoozeDuration),
                 schedule: .fixed(alarmTime),
                 attributes: attributes,
                 sound: sound
@@ -229,7 +191,7 @@ final class AdhanAlarmManager {
         throw AlarmScheduleError.notAuthorized("Alarm mode requires iOS 26 or later.")
     }
 
-    /// Schedule a pre-alarm that fires before a prayer, with 5-minute snooze support.
+    /// Schedule a pre-alarm that fires before a prayer.
     func schedulePreAlarm(
         for prayer: PrayerName,
         at preAlarmTime: Date,
@@ -249,34 +211,11 @@ final class AdhanAlarmManager {
             let bundle = LanguageManager.shared.bundle
             let title = String(localized: "\(prayer.localizedName) in \(minutesBefore) min", bundle: bundle)
             let stopText = String(localized: "Stop", bundle: bundle)
-            let snoozeText = String(localized: "Snooze", bundle: bundle)
-            let snoozeCountdownTitle = String(localized: "Snoozing — \(prayer.localizedName) pre-alarm", bundle: bundle)
 
-            let stopButton = AlarmButton(
-                text: LocalizedStringResource(stringLiteral: stopText),
-                textColor: .white,
-                systemImageName: "stop.fill"
-            )
-
-            let alert = AlarmPresentation.Alert(
-                title: LocalizedStringResource(stringLiteral: title),
-                stopButton: stopButton,
-                secondaryButton: AlarmButton(
-                    text: LocalizedStringResource(stringLiteral: snoozeText),
-                    textColor: .white,
-                    systemImageName: "moon.zzz"
-                ),
-                secondaryButtonBehavior: .countdown
-            )
-
-            let countdown = AlarmPresentation.Countdown(
-                title: LocalizedStringResource(stringLiteral: snoozeCountdownTitle),
-                pauseButton: stopButton
-            )
+            let alert = makeAlert(title: title, stopText: stopText)
 
             let presentation = AlarmPresentation(
-                alert: alert,
-                countdown: countdown
+                alert: alert
             )
 
             let attributes = AlarmAttributes<AdhanAlarmMetadata>(
@@ -285,9 +224,7 @@ final class AdhanAlarmManager {
                 tintColor: .orange
             )
 
-            let snoozeDuration: TimeInterval = 5 * 60  // 5 minutes
             let configuration = AlarmKit.AlarmManager.AlarmConfiguration(
-                countdownDuration: Alarm.CountdownDuration(preAlert: nil, postAlert: snoozeDuration),
                 schedule: .fixed(preAlarmTime),
                 attributes: attributes,
                 sound: .default
@@ -302,7 +239,7 @@ final class AdhanAlarmManager {
         throw AlarmScheduleError.notAuthorized("Alarm mode requires iOS 26 or later.")
     }
 
-    /// Schedule a pre-alarm for a custom alarm, with 5-minute snooze support.
+    /// Schedule a pre-alarm for a custom alarm.
     func scheduleCustomPreAlarm(
         id: UUID,
         title: String,
@@ -323,34 +260,11 @@ final class AdhanAlarmManager {
             let bundle = LanguageManager.shared.bundle
             let alertTitle = String(localized: "\(title) in \(minutesBefore) min", bundle: bundle)
             let stopText = String(localized: "Stop", bundle: bundle)
-            let snoozeText = String(localized: "Snooze", bundle: bundle)
-            let snoozeCountdownTitle = String(localized: "Snoozing — \(title) pre-alarm", bundle: bundle)
 
-            let stopButton = AlarmButton(
-                text: LocalizedStringResource(stringLiteral: stopText),
-                textColor: .white,
-                systemImageName: "stop.fill"
-            )
-
-            let alert = AlarmPresentation.Alert(
-                title: LocalizedStringResource(stringLiteral: alertTitle),
-                stopButton: stopButton,
-                secondaryButton: AlarmButton(
-                    text: LocalizedStringResource(stringLiteral: snoozeText),
-                    textColor: .white,
-                    systemImageName: "moon.zzz"
-                ),
-                secondaryButtonBehavior: .countdown
-            )
-
-            let countdown = AlarmPresentation.Countdown(
-                title: LocalizedStringResource(stringLiteral: snoozeCountdownTitle),
-                pauseButton: stopButton
-            )
+            let alert = makeAlert(title: alertTitle, stopText: stopText)
 
             let presentation = AlarmPresentation(
-                alert: alert,
-                countdown: countdown
+                alert: alert
             )
 
             let attributes = AlarmAttributes<AdhanAlarmMetadata>(
@@ -359,9 +273,7 @@ final class AdhanAlarmManager {
                 tintColor: .orange
             )
 
-            let snoozeDuration: TimeInterval = 5 * 60  // 5 minutes
             let configuration = AlarmKit.AlarmManager.AlarmConfiguration(
-                countdownDuration: Alarm.CountdownDuration(preAlert: nil, postAlert: snoozeDuration),
                 schedule: .fixed(preAlarmTime),
                 attributes: attributes,
                 sound: .default
@@ -393,15 +305,15 @@ final class AdhanAlarmManager {
     /// Cancel all scheduled adhan alarms.
     func cancelAll() {
         #if canImport(AlarmKit)
-        if #available(iOS 26, *), isAuthorized {
+        if #available(iOS 26, *) {
             do {
                 let alarms = try _manager.alarms
                 AppLogger.alarm.info("cancelAll: found \(alarms.count) alarms to cancel")
                 for alarm in alarms {
                     do {
-                        try _manager.cancel(id: alarm.id)
+                        try dismiss(alarm)
                     } catch {
-                        AppLogger.alarm.error("cancelAll: failed to cancel alarm \(alarm.id): \(error.localizedDescription)")
+                        AppLogger.alarm.error("cancelAll: failed to dismiss alarm \(alarm.id): \(error.localizedDescription)")
                         #if canImport(FirebaseCrashlytics)
                         Crashlytics.crashlytics().record(error: error, userInfo: ["context": "cancelAll_individual", "alarmId": alarm.id.uuidString])
                         #endif
@@ -418,6 +330,152 @@ final class AdhanAlarmManager {
         scheduledAlarmIDs.removeAll()
     }
 }
+
+#if canImport(AlarmKit)
+@available(iOS 26, *)
+private extension AdhanAlarmManager {
+    func makeAlert(title: String, stopText: String) -> AlarmPresentation.Alert {
+        let titleResource = LocalizedStringResource(stringLiteral: title)
+        if #available(iOS 26.1, *) {
+            return AlarmPresentation.Alert(title: titleResource)
+        }
+
+        let stopButton = AlarmButton(
+            text: LocalizedStringResource(stringLiteral: stopText),
+            textColor: .white,
+            systemImageName: "xmark"
+        )
+
+        return AlarmPresentation.Alert(
+            title: titleResource,
+            stopButton: stopButton
+        )
+    }
+
+    func startObservingAlarmState() {
+        guard autoStopObserverTask == nil else { return }
+
+        autoStopObserverTask = Task { [weak self] in
+            guard let self else { return }
+
+            if let alarms = try? _manager.alarms {
+                await handleAlarmUpdates(alarms)
+            }
+
+            for await alarms in _manager.alarmUpdates {
+                await handleAlarmUpdates(alarms)
+            }
+        }
+    }
+
+    func handleAlarmUpdates(_ alarms: [AlarmKit.Alarm]) {
+        let incomingIDs = Set(alarms.map(\.id))
+
+        for alarmID in autoStopTasks.keys where !incomingIDs.contains(alarmID) {
+            cancelAutoStop(for: alarmID)
+        }
+
+        for alarm in alarms {
+            if alarm.state == .alerting {
+                scheduleAutoStopIfNeeded(for: alarm)
+            } else {
+                cancelAutoStop(for: alarm.id)
+            }
+        }
+    }
+
+    func scheduleAutoStopIfNeeded(for alarm: AlarmKit.Alarm) {
+        let alarmID = alarm.id
+        guard autoStopTasks[alarmID] == nil else { return }
+
+        let delay = remainingAutoStopDelay(for: alarm)
+        autoStopTasks[alarmID] = Task { [weak self] in
+            if delay > 0 {
+                do {
+                    try await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+                } catch {
+                    return
+                }
+            }
+
+            await self?.stopIfStillAlerting(alarmID)
+        }
+    }
+
+    func stopIfStillAlerting(_ alarmID: UUID) async {
+        defer { cancelAutoStop(for: alarmID) }
+
+        do {
+            guard let liveAlarm = try _manager.alarms.first(where: { $0.id == alarmID }) else {
+                return
+            }
+            guard liveAlarm.state == .alerting else {
+                return
+            }
+
+            try _manager.stop(id: alarmID)
+            AppLogger.alarm.info("auto-stop: stopped alarm \(alarmID.uuidString, privacy: .public) after 5 minutes")
+        } catch {
+            AppLogger.alarm.error("auto-stop: failed to stop alarm \(alarmID.uuidString, privacy: .public): \(error.localizedDescription, privacy: .public)")
+            #if canImport(FirebaseCrashlytics)
+            Crashlytics.crashlytics().record(error: error, userInfo: ["context": "auto_stop_alarm", "alarmId": alarmID.uuidString])
+            #endif
+        }
+    }
+
+    func cancelAutoStop(for alarmID: UUID) {
+        autoStopTasks.removeValue(forKey: alarmID)?.cancel()
+    }
+
+    func dismiss(_ alarm: AlarmKit.Alarm) throws {
+        switch alarm.state {
+        case .alerting:
+            try _manager.stop(id: alarm.id)
+        case .scheduled, .countdown, .paused:
+            try _manager.cancel(id: alarm.id)
+        @unknown default:
+            try _manager.cancel(id: alarm.id)
+        }
+        cancelAutoStop(for: alarm.id)
+    }
+
+    func remainingAutoStopDelay(for alarm: AlarmKit.Alarm) -> TimeInterval {
+        guard let fireDate = fireDate(for: alarm) else {
+            return Self.maxAlertDurationSeconds
+        }
+
+        let elapsed = Date().timeIntervalSince(fireDate)
+        return max(0, Self.maxAlertDurationSeconds - elapsed)
+    }
+
+    func fireDate(for alarm: AlarmKit.Alarm) -> Date? {
+        switch alarm.schedule {
+        case .fixed(let date):
+            return date
+        case .relative(let schedule):
+            let calendar = Calendar.current
+            let now = Date()
+            var components = calendar.dateComponents([.year, .month, .day], from: now)
+            components.hour = schedule.time.hour
+            components.minute = schedule.time.minute
+            components.second = 0
+
+            guard var date = calendar.date(from: components) else {
+                return nil
+            }
+
+            if date > now {
+                date = calendar.date(byAdding: .day, value: -1, to: date) ?? date
+            }
+            return date
+        case nil:
+            return nil
+        @unknown default:
+            return nil
+        }
+    }
+}
+#endif
 
 enum AlarmScheduleError: LocalizedError {
     case notAuthorized(String)

@@ -45,20 +45,13 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
 
-    static let snoozeActionIdentifier = "SNOOZE_ACTION"
-
-    /// Register notification categories with a snooze action for all alarm types.
+    /// Register notification categories for all alarm types.
     static func registerCategories() {
-        let snoozeAction = UNNotificationAction(
-            identifier: snoozeActionIdentifier,
-            title: String(localized: "Snooze (5 min)", bundle: LanguageManager.shared.bundle),
-            options: []
-        )
         let categoryIDs = ["PRAYER_TIME", "PRAYER_PRE_ALARM", "CUSTOM_ALARM", "CUSTOM_PRE_ALARM"]
         let categories: Set<UNNotificationCategory> = Set(categoryIDs.map { id in
             UNNotificationCategory(
                 identifier: id,
-                actions: [snoozeAction],
+                actions: [],
                 intentIdentifiers: []
             )
         })
@@ -70,26 +63,6 @@ class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
         willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
         [.banner, .sound, .badge]
-    }
-
-    func userNotificationCenter(
-        _ center: UNUserNotificationCenter,
-        didReceive response: UNNotificationResponse
-    ) async {
-        guard response.actionIdentifier == Self.snoozeActionIdentifier else { return }
-
-        let original = response.notification.request.content
-        let content = UNMutableNotificationContent()
-        content.title = original.title
-        content.body = original.body
-        content.categoryIdentifier = original.categoryIdentifier
-        content.sound = original.sound ?? .default
-
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5 * 60, repeats: false)
-        let identifier = "snooze_\(response.notification.request.identifier)_\(Date().timeIntervalSince1970)"
-        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
-
-        try? await center.add(request)
     }
 }
 
