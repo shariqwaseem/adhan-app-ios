@@ -1,12 +1,22 @@
 import WidgetKit
 import SwiftUI
+import AppIntents
 @preconcurrency import Adhan
+
+#if canImport(AlarmKit)
+import AlarmKit
+#endif
 
 @main
 struct AdhanWidgetsBundle: WidgetBundle {
     @WidgetBundleBuilder
     var body: some Widget {
         PrayerTimesWidget()
+        #if canImport(AlarmKit)
+        if #available(iOS 26, *) {
+            AlarmSnoozeActivityWidget()
+        }
+        #endif
     }
 }
 
@@ -498,3 +508,105 @@ struct PrayerWidgetEntryView: View {
         }
     }
 }
+
+// MARK: - AlarmKit Snooze Countdown Live Activity
+
+#if canImport(AlarmKit)
+@available(iOS 26, *)
+private struct AlarmCountdownView: View {
+    let context: ActivityViewContext<AlarmAttributes<AdhanAlarmMetadata>>
+
+    private var prayerName: String {
+        guard let raw = context.attributes.metadata?.prayerName else {
+            return WidgetLanguage.localized("Prayer")
+        }
+        // Strip prefixes for display (e.g. "custom_UUID", "fajr_prealarm")
+        if raw.hasPrefix("custom_") {
+            return WidgetLanguage.localized("Custom Alarm")
+        }
+        if raw.hasSuffix("_prealarm") {
+            let base = String(raw.dropLast("_prealarm".count))
+            return WidgetLanguage.localized(base.capitalized)
+        }
+        return WidgetLanguage.localized(raw.capitalized)
+    }
+
+    var body: some View {
+        switch context.state.mode {
+        case .countdown(let countdown):
+            HStack {
+                Text(timerInterval: .now...max(.now, countdown.fireDate), countsDown: true)
+                    .font(.system(size: 48, weight: .bold, design: .rounded))
+                    .monospacedDigit()
+                    .foregroundStyle(.white)
+
+                Spacer()
+
+                Button(intent: CancelAlarmSnoozeIntent()) {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 20, weight: .bold))
+                        .foregroundStyle(.white)
+                        .frame(width: 52, height: 52)
+                        .background(.white.opacity(0.2), in: Circle())
+                }
+                .buttonStyle(.plain)
+            }
+
+        case .alert:
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(prayerName)
+                        .font(.system(size: 24, weight: .bold, design: .rounded))
+                        .foregroundStyle(.white)
+                    Text(WidgetLanguage.localized("Alarm Ringing"))
+                        .font(.subheadline)
+                        .foregroundStyle(.white.opacity(0.7))
+                }
+                Spacer()
+                Image(systemName: "alarm.waves.left.and.right.fill")
+                    .font(.system(size: 32))
+                    .foregroundStyle(.white)
+            }
+
+        @unknown default:
+            EmptyView()
+        }
+    }
+}
+
+@available(iOS 26, *)
+struct AlarmSnoozeActivityWidget: Widget {
+    var body: some WidgetConfiguration {
+        ActivityConfiguration(for: AlarmAttributes<AdhanAlarmMetadata>.self) { context in
+            AlarmCountdownView(context: context)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 16)
+                .activityBackgroundTint(.black)
+        } dynamicIsland: { context in
+            DynamicIsland {
+                DynamicIslandExpandedRegion(.center) {
+                    AlarmCountdownView(context: context)
+                        .padding(.horizontal)
+                }
+            } compactLeading: {
+                if case .countdown(let countdown) = context.state.mode {
+                    Text(timerInterval: .now...max(.now, countdown.fireDate), countsDown: true)
+                        .monospacedDigit()
+                        .font(.system(.body, design: .rounded, weight: .bold))
+                        .frame(width: 44)
+                } else {
+                    Image(systemName: "alarm.fill")
+                        .imageScale(.medium)
+                }
+            } compactTrailing: {
+                Image(systemName: "alarm.fill")
+                    .imageScale(.medium)
+            } minimal: {
+                Image(systemName: "alarm.fill")
+                    .imageScale(.small)
+            }
+        }
+    }
+}
+#endif
+

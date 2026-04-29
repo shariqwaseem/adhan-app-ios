@@ -50,6 +50,7 @@ struct SharedDataManager: Sendable {
         }
     }
 
+<<<<<<< HEAD
     static func loadManualAdjustments() -> [PrayerName: Int] {
         guard let defaults = Constants.sharedDefaults,
               let data = defaults.data(forKey: Constants.Keys.manualAdjustments),
@@ -62,6 +63,8 @@ struct SharedDataManager: Sendable {
         })
     }
 
+=======
+>>>>>>> shariqwaseem/main
     static func saveLanguage(_ languageCode: String) {
         guard let defaults = Constants.sharedDefaults else { return }
         defaults.set(languageCode, forKey: "appLanguage")

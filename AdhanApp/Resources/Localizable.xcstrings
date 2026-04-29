@@ -727,6 +727,12 @@
         }
       }
     },
+<<<<<<< HEAD
+=======
+    "Cancel Alarm Snooze" : {
+
+    },
+>>>>>>> shariqwaseem/main
     "Cannot Send Email" : {
       "localizations" : {
         "ar" : {
@@ -2703,7 +2709,10 @@
       }
     },
     "Snooze" : {
+<<<<<<< HEAD
       "extractionState" : "stale",
+=======
+>>>>>>> shariqwaseem/main
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -2749,7 +2758,10 @@
       }
     },
     "Snoozing — %@" : {
+<<<<<<< HEAD
       "extractionState" : "stale",
+=======
+>>>>>>> shariqwaseem/main
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -2772,7 +2784,10 @@
       }
     },
     "Snoozing — %@ Prayer" : {
+<<<<<<< HEAD
       "extractionState" : "stale",
+=======
+>>>>>>> shariqwaseem/main
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -2795,7 +2810,10 @@
       }
     },
     "Snoozing — %@ pre-alarm" : {
+<<<<<<< HEAD
       "extractionState" : "stale",
+=======
+>>>>>>> shariqwaseem/main
       "localizations" : {
         "ar" : {
           "stringUnit" : {

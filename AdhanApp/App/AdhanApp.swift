@@ -1,6 +1,11 @@
 import SwiftUI
 import SwiftData
 import UserNotifications
+import ActivityKit
+
+#if canImport(AlarmKit)
+import AlarmKit
+#endif
 
 #if canImport(FirebaseCore)
 import FirebaseCore
@@ -62,7 +67,11 @@ class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
+<<<<<<< HEAD
         [.banner, .sound, .badge]
+=======
+        return [.banner, .sound, .badge]
+>>>>>>> shariqwaseem/main
     }
 }
 
@@ -77,6 +86,7 @@ struct AdhanApp: App {
     @State private var downloadManager = AdhanAudioDownloadManager()
     @State private var selectedTab = "prayer"
     @State private var isActivating = false
+    @State private var locationChangedDuringActivation = false
     @State private var lastForegroundSchedule: Date?
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
 
@@ -113,6 +123,26 @@ struct AdhanApp: App {
                         onBecameActive()
                     }
                 }
+                .onOpenURL { url in
+                    guard url.scheme == "adhanpro" else { return }
+
+                    switch url.host {
+                    case "cancel-alarm":
+                        #if canImport(AlarmKit)
+                        if #available(iOS 26, *) {
+                            let mgr = AlarmKit.AlarmManager.shared
+                            if let alarms = try? mgr.alarms {
+                                for alarm in alarms {
+                                    try? mgr.cancel(id: alarm.id)
+                                }
+                            }
+                        }
+                        #endif
+
+                    default:
+                        break
+                    }
+                }
                 .onReceive(NotificationCenter.default.publisher(for: .NSSystemTimeZoneDidChange)) { _ in
                     prayerTimesViewModel.recalculate()
                     Task { @MainActor in
@@ -141,6 +171,20 @@ struct AdhanApp: App {
 
     /// Called every time the app comes to foreground — recalculates and reschedules everything.
     private func onBecameActive() {
+        // Clean up only stale AlarmKit Live Activities — never kill active/snoozing ones
+        #if canImport(AlarmKit)
+        if #available(iOS 26, *) {
+            Task {
+                for activity in Activity<AlarmAttributes<AdhanAlarmMetadata>>.activities {
+                    if activity.activityState == .stale {
+                        AppLogger.lifecycle.info("onBecameActive: ending stale alarm activity")
+                        await activity.end(nil, dismissalPolicy: .immediate)
+                    }
+                }
+            }
+        }
+        #endif
+
         guard hasCompletedOnboarding else { return }
         isActivating = true
         AppLogger.lifecycle.info("onBecameActive: started")
@@ -198,6 +242,18 @@ struct AdhanApp: App {
                 )
                 lastForegroundSchedule = Date()
                 isActivating = false
+
+                // Location changed while scheduling — redo with fresh coordinates
+                if locationChangedDuringActivation {
+                    locationChangedDuringActivation = false
+                    await notificationScheduler.rescheduleAll(
+                        prayerEntries: prayerTimesViewModel.multiDayTimes(),
+                        preferences: fetchPreferences(),
+                        customAlarms: fetchCustomAlarms()
+                    )
+                    lastForegroundSchedule = Date()
+                }
+
                 AppLogger.lifecycle.info("onBecameActive: completed (rescheduled)")
                 #if canImport(FirebaseCrashlytics)
                 Crashlytics.crashlytics().log("onBecameActive: completed (rescheduled)")
@@ -238,8 +294,12 @@ struct AdhanApp: App {
             countryCode: locationManager.countryCode,
             autoSetCalculationMethod: isManual
         )
-        // Skip rescheduling if onBecameActive() is already handling it
-        guard !isActivating else { return }
+        // Defer rescheduling if onBecameActive() is in progress — it will
+        // redo with fresh data once it finishes.
+        if isActivating {
+            locationChangedDuringActivation = true
+            return
+        }
         Task { @MainActor in
             await notificationScheduler.rescheduleAll(
                 prayerEntries: prayerTimesViewModel.multiDayTimes(),
