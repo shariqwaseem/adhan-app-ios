@@ -67,11 +67,7 @@ class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification
     ) async -> UNNotificationPresentationOptions {
-<<<<<<< HEAD
-        [.banner, .sound, .badge]
-=======
         return [.banner, .sound, .badge]
->>>>>>> shariqwaseem/main
     }
 }
 
@@ -136,6 +132,9 @@ struct AdhanApp: App {
                                     try? mgr.cancel(id: alarm.id)
                                 }
                             }
+                            Task {
+                                await AlarmLiveActivityCleanup.endAllActivities()
+                            }
                         }
                         #endif
 
@@ -171,16 +170,11 @@ struct AdhanApp: App {
 
     /// Called every time the app comes to foreground — recalculates and reschedules everything.
     private func onBecameActive() {
-        // Clean up only stale AlarmKit Live Activities — never kill active/snoozing ones
+        // Clean up orphaned AlarmKit Live Activities without stopping active/snoozing alarms.
         #if canImport(AlarmKit)
         if #available(iOS 26, *) {
             Task {
-                for activity in Activity<AlarmAttributes<AdhanAlarmMetadata>>.activities {
-                    if activity.activityState == .stale {
-                        AppLogger.lifecycle.info("onBecameActive: ending stale alarm activity")
-                        await activity.end(nil, dismissalPolicy: .immediate)
-                    }
-                }
+                await AlarmLiveActivityCleanup.endActivitiesWithoutCurrentAlarm()
             }
         }
         #endif

@@ -133,20 +133,11 @@ final class AdhanAlarmManager {
             let alarmID = UUID()
             let bundle = LanguageManager.shared.bundle
             let prayerTitle = String(localized: "\(prayer.localizedName) Prayer", bundle: bundle)
-<<<<<<< HEAD
-            let stopText = String(localized: "Stop", bundle: bundle)
-
-            let alert = makeAlert(title: prayerTitle, stopText: stopText)
-
-            let presentation = AlarmPresentation(
-                alert: alert
-=======
             let snoozeCountdownTitle = String(localized: "Snoozing — \(prayer.localizedName) Prayer", bundle: bundle)
 
             let presentation = makePresentation(
                 alertTitle: prayerTitle,
                 snoozeCountdownTitle: snoozeCountdownTitle
->>>>>>> shariqwaseem/main
             )
 
             let attributes = AlarmAttributes<AdhanAlarmMetadata>(
@@ -163,8 +154,10 @@ final class AdhanAlarmManager {
             }
 
             let configuration = AlarmKit.AlarmManager.AlarmConfiguration(
+                countdownDuration: Alarm.CountdownDuration(preAlert: nil, postAlert: Self.maxAlertDurationSeconds),
                 schedule: .fixed(prayerTime),
                 attributes: attributes,
+                stopIntent: StopAdhanAlarmIntent(alarmID: alarmID.uuidString),
                 sound: sound
             )
 
@@ -198,20 +191,11 @@ final class AdhanAlarmManager {
 
             let alarmID = UUID()
             let bundle = LanguageManager.shared.bundle
-<<<<<<< HEAD
-            let stopText = String(localized: "Stop", bundle: bundle)
-
-            let alert = makeAlert(title: title, stopText: stopText)
-
-            let presentation = AlarmPresentation(
-                alert: alert
-=======
             let snoozeCountdownTitle = String(localized: "Snoozing — \(title)", bundle: bundle)
 
             let presentation = makePresentation(
                 alertTitle: title,
                 snoozeCountdownTitle: snoozeCountdownTitle
->>>>>>> shariqwaseem/main
             )
 
             let attributes = AlarmAttributes<AdhanAlarmMetadata>(
@@ -228,8 +212,10 @@ final class AdhanAlarmManager {
             }
 
             let configuration = AlarmKit.AlarmManager.AlarmConfiguration(
+                countdownDuration: Alarm.CountdownDuration(preAlert: nil, postAlert: Self.maxAlertDurationSeconds),
                 schedule: .fixed(alarmTime),
                 attributes: attributes,
+                stopIntent: StopAdhanAlarmIntent(alarmID: alarmID.uuidString),
                 sound: sound
             )
 
@@ -260,20 +246,11 @@ final class AdhanAlarmManager {
             let alarmID = UUID()
             let bundle = LanguageManager.shared.bundle
             let title = String(localized: "\(prayer.localizedName) in \(minutesBefore) min", bundle: bundle)
-<<<<<<< HEAD
-            let stopText = String(localized: "Stop", bundle: bundle)
-
-            let alert = makeAlert(title: title, stopText: stopText)
-
-            let presentation = AlarmPresentation(
-                alert: alert
-=======
             let snoozeCountdownTitle = String(localized: "Snoozing — \(prayer.localizedName) pre-alarm", bundle: bundle)
 
             let presentation = makePresentation(
                 alertTitle: title,
                 snoozeCountdownTitle: snoozeCountdownTitle
->>>>>>> shariqwaseem/main
             )
 
             let attributes = AlarmAttributes<AdhanAlarmMetadata>(
@@ -283,8 +260,10 @@ final class AdhanAlarmManager {
             )
 
             let configuration = AlarmKit.AlarmManager.AlarmConfiguration(
+                countdownDuration: Alarm.CountdownDuration(preAlert: nil, postAlert: Self.maxAlertDurationSeconds),
                 schedule: .fixed(preAlarmTime),
                 attributes: attributes,
+                stopIntent: StopAdhanAlarmIntent(alarmID: alarmID.uuidString),
                 sound: .default
             )
 
@@ -316,20 +295,11 @@ final class AdhanAlarmManager {
             let alarmID = UUID()
             let bundle = LanguageManager.shared.bundle
             let alertTitle = String(localized: "\(title) in \(minutesBefore) min", bundle: bundle)
-<<<<<<< HEAD
-            let stopText = String(localized: "Stop", bundle: bundle)
-
-            let alert = makeAlert(title: alertTitle, stopText: stopText)
-
-            let presentation = AlarmPresentation(
-                alert: alert
-=======
             let snoozeCountdownTitle = String(localized: "Snoozing — \(title) pre-alarm", bundle: bundle)
 
             let presentation = makePresentation(
                 alertTitle: alertTitle,
                 snoozeCountdownTitle: snoozeCountdownTitle
->>>>>>> shariqwaseem/main
             )
 
             let attributes = AlarmAttributes<AdhanAlarmMetadata>(
@@ -339,8 +309,10 @@ final class AdhanAlarmManager {
             )
 
             let configuration = AlarmKit.AlarmManager.AlarmConfiguration(
+                countdownDuration: Alarm.CountdownDuration(preAlert: nil, postAlert: Self.maxAlertDurationSeconds),
                 schedule: .fixed(preAlarmTime),
                 attributes: attributes,
+                stopIntent: StopAdhanAlarmIntent(alarmID: alarmID.uuidString),
                 sound: .default
             )
 
@@ -440,6 +412,10 @@ private extension AdhanAlarmManager {
             cancelAutoStop(for: alarmID)
         }
 
+        Task {
+            await AlarmLiveActivityCleanup.endActivitiesWithoutCurrentAlarm(in: alarms)
+        }
+
         for alarm in alarms {
             if alarm.state == .alerting {
                 scheduleAutoStopIfNeeded(for: alarm)
@@ -480,6 +456,9 @@ private extension AdhanAlarmManager {
 
             try _manager.stop(id: alarmID)
             AppLogger.alarm.info("auto-stop: stopped alarm \(alarmID.uuidString, privacy: .public) after 5 minutes")
+            Task {
+                await AlarmLiveActivityCleanup.endActivities(for: [alarmID])
+            }
         } catch {
             AppLogger.alarm.error("auto-stop: failed to stop alarm \(alarmID.uuidString, privacy: .public): \(error.localizedDescription, privacy: .public)")
             #if canImport(FirebaseCrashlytics)
@@ -502,6 +481,9 @@ private extension AdhanAlarmManager {
             try _manager.cancel(id: alarm.id)
         }
         cancelAutoStop(for: alarm.id)
+        Task {
+            await AlarmLiveActivityCleanup.endActivities(for: [alarm.id])
+        }
     }
 
     func remainingAutoStopDelay(for alarm: AlarmKit.Alarm) -> TimeInterval {

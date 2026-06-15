@@ -27,7 +27,6 @@
 		545872A387F6573BCB177D5B /* Adhan in Frameworks */ = {isa = PBXBuildFile; productRef = C02E3492A3D2E5D4FB1DC959 /* Adhan */; };
 		591819A5E7CA4E53CA939008 /* AdhanAudioSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE2561F73C12D3F5688C7B4 /* AdhanAudioSelectionView.swift */; };
 		5E96A61D4DBB21FE2F594255 /* AdhanWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A43415A2AEE8127C9947D6B /* AdhanWidgetsBundle.swift */; };
-		5F8C2A1D4AA1B89A4B11D0E3 /* AdhanAlarmAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BCC5F38A7A0B6C53346BA7D /* AdhanAlarmAttributes.swift */; };
 		6B89B5A64BD2281ED321354B /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7599B0628E2E92E1A4DF20E6 /* SyncManager.swift */; };
 		70AA54EEB73DAA41F77AEA80 /* PrayerDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F02E914992E012303CDBE69 /* PrayerDetailView.swift */; };
 		74E797AA5D777F599C53B25F /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331993B85EDD1C1AA8EA1CA8 /* LanguageManager.swift */; };
@@ -676,11 +675,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-<<<<<<< HEAD
-				5F8C2A1D4AA1B89A4B11D0E3 /* AdhanAlarmAttributes.swift in Sources */,
-=======
 				DD44EE55FF66001122BB33CC /* AdhanAlarmAttributes.swift in Sources */,
->>>>>>> shariqwaseem/main
 				5E96A61D4DBB21FE2F594255 /* AdhanWidgetsBundle.swift in Sources */,
 				0011223344556677AABBCCDD /* CancelSnoozeIntent.swift in Sources */,
 			);

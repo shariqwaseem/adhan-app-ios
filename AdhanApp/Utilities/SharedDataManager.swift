@@ -29,7 +29,14 @@ struct SharedDataManager: Sendable {
 
     static func saveCalculationMethod(_ rawValue: String) {
         guard let defaults = Constants.sharedDefaults else { return }
-        defaults.set(rawValue, forKey: "calculationMethod")
+        defaults.set(rawValue, forKey: Constants.Keys.calculationMethod)
+    }
+
+    static func loadCalculationMethod() -> CalculationMethodInfo? {
+        guard let rawValue = Constants.sharedDefaults?.string(forKey: Constants.Keys.calculationMethod) else {
+            return nil
+        }
+        return CalculationMethodInfo(rawValue: rawValue)
     }
 
     static func saveAsrMethod(_ rawValue: String) {
@@ -37,9 +44,23 @@ struct SharedDataManager: Sendable {
         defaults.set(rawValue, forKey: Constants.Keys.asrMethod)
     }
 
+    static func loadAsrMethod() -> AsrJuristicMethod? {
+        guard let rawValue = Constants.sharedDefaults?.string(forKey: Constants.Keys.asrMethod) else {
+            return nil
+        }
+        return AsrJuristicMethod(rawValue: rawValue)
+    }
+
     static func saveHighLatitudeRule(_ rawValue: String) {
         guard let defaults = Constants.sharedDefaults else { return }
         defaults.set(rawValue, forKey: Constants.Keys.highLatitudeRule)
+    }
+
+    static func loadHighLatitudeRule() -> HighLatitudeRuleOption? {
+        guard let rawValue = Constants.sharedDefaults?.string(forKey: Constants.Keys.highLatitudeRule) else {
+            return nil
+        }
+        return HighLatitudeRuleOption(rawValue: rawValue)
     }
 
     static func saveManualAdjustments(_ adjustments: [PrayerName: Int]) {
@@ -50,7 +71,6 @@ struct SharedDataManager: Sendable {
         }
     }
 
-<<<<<<< HEAD
     static func loadManualAdjustments() -> [PrayerName: Int] {
         guard let defaults = Constants.sharedDefaults,
               let data = defaults.data(forKey: Constants.Keys.manualAdjustments),
@@ -63,8 +83,6 @@ struct SharedDataManager: Sendable {
         })
     }
 
-=======
->>>>>>> shariqwaseem/main
     static func saveLanguage(_ languageCode: String) {
         guard let defaults = Constants.sharedDefaults else { return }
         defaults.set(languageCode, forKey: "appLanguage")

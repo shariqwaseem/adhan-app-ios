@@ -209,6 +209,9 @@ struct BackgroundTaskService {
                let method = CalculationMethodInfo(rawValue: prefs.calculationMethodRawValue) {
                 return method
             }
+            if let method = SharedDataManager.loadCalculationMethod() {
+                return method
+            }
             if let code = countryCode {
                 return CalculationMethodInfo.recommendedMethod(forCountryCode: code)
             }
@@ -219,11 +222,17 @@ struct BackgroundTaskService {
             if let prefs, let method = AsrJuristicMethod(rawValue: prefs.asrJuristicMethodRawValue) {
                 return method
             }
+            if let method = SharedDataManager.loadAsrMethod() {
+                return method
+            }
             return .standard
         }()
 
         let highLatitudeRule: HighLatitudeRuleOption = {
             if let prefs, let rule = HighLatitudeRuleOption(rawValue: prefs.highLatitudeRuleRawValue) {
+                return rule
+            }
+            if let rule = SharedDataManager.loadHighLatitudeRule() {
                 return rule
             }
             return .middleOfTheNight

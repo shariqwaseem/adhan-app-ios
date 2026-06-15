@@ -302,6 +302,9 @@
         }
       }
     },
+    "Add Alarm" : {
+
+    },
     "Adhan Sounds" : {
       "localizations" : {
         "ar" : {
@@ -345,6 +348,9 @@
           }
         }
       }
+    },
+    "Alarm ID" : {
+
     },
     "Alarm mode plays the full adhan sound and bypasses Silent Mode." : {
       "extractionState" : "stale",
@@ -727,12 +733,9 @@
         }
       }
     },
-<<<<<<< HEAD
-=======
     "Cancel Alarm Snooze" : {
 
     },
->>>>>>> shariqwaseem/main
     "Cannot Send Email" : {
       "localizations" : {
         "ar" : {
@@ -908,9 +911,6 @@
           }
         }
       }
-    },
-    "Developer" : {
-
     },
     "Dhuhr" : {
       "extractionState" : "stale",
@@ -1139,9 +1139,6 @@
           }
         }
       }
-    },
-    "Fire Test Alarm in 5s" : {
-
     },
     "Full Adhan Alarms" : {
       "localizations" : {
@@ -1591,6 +1588,9 @@
         }
       }
     },
+    "Mixed" : {
+
+    },
     "Moonsighting Committee" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -2016,6 +2016,9 @@
           }
         }
       }
+    },
+    "Options" : {
+
     },
     "Other" : {
       "extractionState" : "stale",
@@ -2572,6 +2575,9 @@
         }
       }
     },
+    "Set for all" : {
+
+    },
     "Settings" : {
       "localizations" : {
         "ar" : {
@@ -2709,10 +2715,6 @@
       }
     },
     "Snooze" : {
-<<<<<<< HEAD
-      "extractionState" : "stale",
-=======
->>>>>>> shariqwaseem/main
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -2758,10 +2760,6 @@
       }
     },
     "Snoozing — %@" : {
-<<<<<<< HEAD
-      "extractionState" : "stale",
-=======
->>>>>>> shariqwaseem/main
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -2784,10 +2782,6 @@
       }
     },
     "Snoozing — %@ Prayer" : {
-<<<<<<< HEAD
-      "extractionState" : "stale",
-=======
->>>>>>> shariqwaseem/main
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -2810,10 +2804,6 @@
       }
     },
     "Snoozing — %@ pre-alarm" : {
-<<<<<<< HEAD
-      "extractionState" : "stale",
-=======
->>>>>>> shariqwaseem/main
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -2924,6 +2914,12 @@
           }
         }
       }
+    },
+    "Stop Alarm" : {
+
+    },
+    "Stop an Adhan alarm" : {
+
     },
     "Suhoor" : {
       "localizations" : {

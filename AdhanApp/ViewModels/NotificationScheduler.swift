@@ -18,7 +18,7 @@ import FirebaseAnalytics
 @MainActor
 final class NotificationScheduler {
     var isPermissionGranted: Bool = false
-    private var schedulingTask: Task<Void, Never>?
+    private static var schedulingTask: (id: UUID, task: Task<Void, Never>)?
     var nextScheduledAlarmTime: Date? = nil
     var nextScheduledIsAlarm: Bool = false
     var nextScheduledName: String? = nil
@@ -50,9 +50,31 @@ final class NotificationScheduler {
         preferences: UserPreferences?,
         customAlarms: [CustomAlarm] = []
     ) async {
-        // Wait for any in-flight scheduling to finish before starting a new one
-        await schedulingTask?.value
+        // Location, time-zone, and foreground events can each create their own scheduler.
+        // Queue every pass process-wide so cancel-and-rebuild operations cannot interleave.
+        let previousTask = Self.schedulingTask?.task
+        let taskID = UUID()
+        let task = Task { @MainActor in
+            await previousTask?.value
+            await self.performRescheduleAll(
+                prayerEntries: prayerEntries,
+                preferences: preferences,
+                customAlarms: customAlarms
+            )
+        }
+        Self.schedulingTask = (taskID, task)
+        await task.value
 
+        if Self.schedulingTask?.id == taskID {
+            Self.schedulingTask = nil
+        }
+    }
+
+    private func performRescheduleAll(
+        prayerEntries: [[PrayerTimeEntry]],
+        preferences: UserPreferences?,
+        customAlarms: [CustomAlarm]
+    ) async {
         // Never reschedule while an alarm is actively ringing or snoozing —
         // cancelAll() inside performScheduling would kill the live activity and alarm.
         #if canImport(AlarmKit)
@@ -104,15 +126,11 @@ final class NotificationScheduler {
         Crashlytics.crashlytics().log("rescheduleAll: starting with \(totalEntries) entries")
         #endif
 
-        schedulingTask = Task { @MainActor in
-            await self.performScheduling(
-                prayerEntries: prayerEntries,
-                preferences: preferences,
-                customAlarms: customAlarms
-            )
-        }
-        await schedulingTask?.value
-        schedulingTask = nil
+        await performScheduling(
+            prayerEntries: prayerEntries,
+            preferences: preferences,
+            customAlarms: customAlarms
+        )
 
         let scheduleDuration = Date().timeIntervalSince(scheduleStart)
         AppLogger.scheduling.info("rescheduleAll: finished in \(String(format: "%.2f", scheduleDuration))s")

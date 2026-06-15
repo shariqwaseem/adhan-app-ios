@@ -2,6 +2,7 @@ import SwiftUI
 import SwiftData
 
 struct HomeView: View {
+    @Environment(\.modelContext) private var modelContext
     @Environment(PrayerTimesViewModel.self) private var viewModel
     @Environment(NotificationScheduler.self) private var scheduler
     @Query private var preferences: [UserPreferences]
@@ -40,12 +41,8 @@ struct HomeView: View {
             .navigationTitle(viewModel.cityName.isEmpty ? "Adhan" : viewModel.cityName)
             .toolbarColorScheme(currentPhase.prefersDarkAppearance ? .dark : .light, for: .navigationBar, .tabBar)
             .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        showingNewAlarm = true
-                    } label: {
-                        Image(systemName: "plus")
-                    }
+                ToolbarItem(placement: .topBarTrailing) {
+                    optionsMenu
                 }
             }
             .sheet(isPresented: $showingNewAlarm) {
@@ -74,6 +71,44 @@ struct HomeView: View {
     }
 
     // MARK: - Countdown
+
+    private var optionsMenu: some View {
+        Menu {
+            Button {
+                showingNewAlarm = true
+            } label: {
+                Label(String(localized: "Add Alarm", bundle: langBundle), systemImage: "plus")
+            }
+
+            Section(String(localized: "Set for all", bundle: langBundle)) {
+                Picker(String(localized: "Delivery Mode", bundle: langBundle), selection: allAlarmsModeBinding) {
+                    if allAlarmsMode == nil {
+                        Text(String(localized: "Mixed", bundle: langBundle))
+                            .tag(Optional<PrayerNotificationMode>.none)
+                    }
+
+                    ForEach(PrayerNotificationMode.allCases) { mode in
+                        Label(mode.localizedName, systemImage: mode.systemImage)
+                            .tag(Optional(mode))
+                            .disabled(mode == .alarm && !AdhanAlarmManager.isAlarmSupported)
+                    }
+                }
+                .pickerStyle(.inline)
+            }
+        } label: {
+            Label(String(localized: "Options", bundle: langBundle), systemImage: "ellipsis.circle")
+        }
+    }
+
+    private var allAlarmsModeBinding: Binding<PrayerNotificationMode?> {
+        Binding(
+            get: { allAlarmsMode },
+            set: { newValue in
+                guard let newValue else { return }
+                setAllAlarmsMode(newValue)
+            }
+        )
+    }
 
     @ViewBuilder
     private var countdownSection: some View {
@@ -182,6 +217,60 @@ struct HomeView: View {
     }
 
     // MARK: - Helpers
+
+    private var allAlarmsMode: PrayerNotificationMode? {
+        let modes = PrayerName.allCases.map { currentMode(for: $0) } + customAlarms.map { alarm in
+            let mode = alarm.mode
+            if mode == .alarm && !AdhanAlarmManager.isAlarmSupported {
+                return .notification
+            }
+            return mode
+        }
+
+        guard let firstMode = modes.first else { return nil }
+        return modes.allSatisfy { $0 == firstMode } ? firstMode : nil
+    }
+
+    private func setAllAlarmsMode(_ mode: PrayerNotificationMode) {
+        guard mode != .alarm || AdhanAlarmManager.isAlarmSupported else { return }
+        let prefs = writablePreferences()
+
+        withAnimation(.easeInOut(duration: 0.3)) {
+            prefs.tahajjudNotificationMode = mode.rawValue
+            prefs.fajrNotificationMode = mode.rawValue
+            prefs.dhuhrNotificationMode = mode.rawValue
+            prefs.asrNotificationMode = mode.rawValue
+            prefs.maghribNotificationMode = mode.rawValue
+            prefs.ishaNotificationMode = mode.rawValue
+
+            for alarm in customAlarms {
+                alarm.mode = mode
+            }
+        }
+
+        try? modelContext.save()
+
+        Task {
+            if mode == .alarm {
+                await scheduler.alarmManager.requestAuthorization()
+            } else if mode == .notification {
+                await scheduler.requestPermission()
+            }
+
+            await scheduler.rescheduleAll(
+                prayerEntries: viewModel.multiDayTimes(),
+                preferences: prefs,
+                customAlarms: customAlarms
+            )
+        }
+    }
+
+    private func writablePreferences() -> UserPreferences {
+        if let existing = prefs { return existing }
+        let new = UserPreferences()
+        modelContext.insert(new)
+        return new
+    }
 
     /// The next enabled custom alarm's fire time today (or tomorrow if past).
     private var nextCustomAlarmTime: Date? {

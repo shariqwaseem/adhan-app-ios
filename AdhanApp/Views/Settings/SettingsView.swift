@@ -5,6 +5,7 @@ import MessageUI
 struct SettingsView: View {
     @Environment(PrayerTimesViewModel.self) private var viewModel
     @Environment(NotificationScheduler.self) private var scheduler
+    @Environment(\.modelContext) private var modelContext
     @Query private var preferences: [UserPreferences]
     @Query(sort: \CustomAlarm.createdAt) private var customAlarms: [CustomAlarm]
     @State private var showingMailCompose = false
@@ -100,14 +101,17 @@ struct SettingsView: View {
                 Text("Please configure a mail account in Settings, or email shariqwaseem41@gmail.com directly.")
             }
             .onChange(of: viewModel.calculationMethod) { _, _ in
+                syncCalculationPreferences()
                 viewModel.recalculate()
                 reschedule()
             }
             .onChange(of: viewModel.asrMethod) { _, _ in
+                syncCalculationPreferences()
                 viewModel.recalculate()
                 reschedule()
             }
             .onChange(of: viewModel.highLatitudeRule) { _, _ in
+                syncCalculationPreferences()
                 viewModel.recalculate()
                 reschedule()
             }
@@ -158,6 +162,22 @@ struct SettingsView: View {
                 customAlarms: customAlarms
             )
         }
+    }
+
+    private func syncCalculationPreferences() {
+        let prefs: UserPreferences
+        if let existing = preferences.first {
+            prefs = existing
+        } else {
+            let new = UserPreferences()
+            modelContext.insert(new)
+            prefs = new
+        }
+
+        prefs.calculationMethodRawValue = viewModel.calculationMethod.rawValue
+        prefs.asrJuristicMethodRawValue = viewModel.asrMethod.rawValue
+        prefs.highLatitudeRuleRawValue = viewModel.highLatitudeRule.rawValue
+        try? modelContext.save()
     }
 }
 
