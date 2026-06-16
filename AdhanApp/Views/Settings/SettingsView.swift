@@ -75,9 +75,11 @@ struct SettingsView: View {
                 }
 
                 #if DEBUG
-                Section("Developer") {
-                    Button("Fire Test Alarm in 5s") {
-                        scheduleTestAlarm()
+                if !UserDefaults.standard.bool(forKey: "FASTLANE_SCREENSHOTS") {
+                    Section("Developer") {
+                        Button("Fire Test Alarm in 5s") {
+                            scheduleTestAlarm()
+                        }
                     }
                 }
                 #endif

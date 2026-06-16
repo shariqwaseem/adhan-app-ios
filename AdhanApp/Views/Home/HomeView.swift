@@ -182,6 +182,7 @@ struct HomeView: View {
                 } label: {
                     PrayerRow(entry: effectiveEntry, mode: currentMode(for: entry.prayer))
                 }
+                .accessibilityIdentifier("prayer-row-\(entry.prayer.rawValue.lowercased())")
                 .tint(.primary)
                 if entry.prayer != .isha {
                     Divider()

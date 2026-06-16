@@ -1,0 +1,58 @@
+{
+  "device_frame_version": "latest",
+  "default": {
+    "background": "./background.png",
+    "keyword": {
+      "font": "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
+      "font_size": 62,
+      "font_weight": 500,
+      "color": "#73D2DE"
+    },
+    "title": {
+      "font": "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
+      "font_size": 104,
+      "font_weight": 700,
+      "color": "#FFFFFF"
+    },
+    "stack_title": true,
+    "title_below_image": false,
+    "show_complete_frame": false,
+    "title_min_height": "22%",
+    "padding": "6%x4%",
+    "interline_spacing": 4,
+    "frame": "BLACK",
+    "use_platform": "IOS"
+  },
+  "data": [
+    {
+      "filter": "01PrayerTimes",
+      "keyword": {
+        "color": "#F6C85F"
+      }
+    },
+    {
+      "filter": "02Qibla",
+      "keyword": {
+        "color": "#73D2DE"
+      }
+    },
+    {
+      "filter": "03Settings",
+      "keyword": {
+        "color": "#A9E5BB"
+      }
+    },
+    {
+      "filter": "04PrayerDetail",
+      "keyword": {
+        "color": "#F6C85F"
+      }
+    },
+    {
+      "filter": "05AdhanSounds",
+      "keyword": {
+        "color": "#D6A7F2"
+      }
+    }
+  ]
+}

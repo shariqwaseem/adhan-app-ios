@@ -79,6 +79,7 @@ struct PrayerDetailView: View {
                 } label: {
                     LabeledContent("Sound", value: currentAudioDisplayName)
                 }
+                .accessibilityIdentifier("alarm-sound-picker")
             }
         }
     }

@@ -97,3 +97,12 @@ targets:
         GENERATE_INFOPLIST_FILE: true
     dependencies:
       - target: AdhanApp
+
+schemes:
+  AdhanAppScreenshots:
+    build:
+      targets:
+        AdhanApp: all
+    test:
+      targets:
+        - AdhanAppUITests

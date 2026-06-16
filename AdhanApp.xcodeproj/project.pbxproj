@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0011223344556677AABBCCDD /* CancelSnoozeIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE55FF66001122BB33CC4455 /* CancelSnoozeIntent.swift */; };
 		00FCC178857A228DF1774ED7 /* GeofenceMonitorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F77D78FA3060412FC7C158 /* GeofenceMonitorService.swift */; };
 		04053086FD774A8E15FE3FD4 /* CalculationMethodInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D7E52640933BFFFE985213 /* CalculationMethodInfo.swift */; };
 		0435AF9116C6455B29C0A3F9 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7C4BAF4C76CCC5B8A60413 /* LocationManager.swift */; };
@@ -27,6 +28,7 @@
 		545872A387F6573BCB177D5B /* Adhan in Frameworks */ = {isa = PBXBuildFile; productRef = C02E3492A3D2E5D4FB1DC959 /* Adhan */; };
 		591819A5E7CA4E53CA939008 /* AdhanAudioSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE2561F73C12D3F5688C7B4 /* AdhanAudioSelectionView.swift */; };
 		5E96A61D4DBB21FE2F594255 /* AdhanWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A43415A2AEE8127C9947D6B /* AdhanWidgetsBundle.swift */; };
+		61CD0D08C15746C9A68D0001 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61CD0D08C15746C9A68D0002 /* SnapshotHelper.swift */; };
 		6B89B5A64BD2281ED321354B /* SyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7599B0628E2E92E1A4DF20E6 /* SyncManager.swift */; };
 		70AA54EEB73DAA41F77AEA80 /* PrayerDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F02E914992E012303CDBE69 /* PrayerDetailView.swift */; };
 		74E797AA5D777F599C53B25F /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331993B85EDD1C1AA8EA1CA8 /* LanguageManager.swift */; };
@@ -35,11 +37,6 @@
 		7D24534F388F9EA21177DADF /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A59A57E924F4811B02FE447 /* HomeView.swift */; };
 		8D9CE0C5CA7F2BA12A3055AB /* Adhan in Frameworks */ = {isa = PBXBuildFile; productRef = 17B10984E3CFD148FC4F329F /* Adhan */; };
 		9E836436F02462BB160D3480 /* AdhanAlarmAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BCC5F38A7A0B6C53346BA7D /* AdhanAlarmAttributes.swift */; };
-		DD44EE55FF66001122BB33CC /* AdhanAlarmAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BCC5F38A7A0B6C53346BA7D /* AdhanAlarmAttributes.swift */; };
-		EE55FF66001122BB33CC4455 /* CancelSnoozeIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelSnoozeIntent.swift; sourceTree = "<group>"; };
-		FF660011223344556677AABB /* CancelSnoozeIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE55FF66001122BB33CC4455 /* CancelSnoozeIntent.swift */; };
-		0011223344556677AABBCCDD /* CancelSnoozeIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE55FF66001122BB33CC4455 /* CancelSnoozeIntent.swift */; };
-
 		9EDD775AF0FF861CE007A819 /* CustomAlarmSoundSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B0C19D2730847644F7BD62 /* CustomAlarmSoundSelectionView.swift */; };
 		A17EB2359A4F49B08EA3DC3E /* UserPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 998C13B40966B1F1D7E5A657 /* UserPreferences.swift */; };
 		A1AE10AD46A5FDC32B15E2C8 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90DBCCEDEE4D24C88D4B53BB /* OnboardingView.swift */; };
@@ -60,6 +57,7 @@
 		DBE50F712F7FF68D007B3C16 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = DBE50F702F7FF68D007B3C16 /* FirebaseCrashlytics */; };
 		DBE50F732F7FFA16007B3C16 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DBE50F722F7FFA16007B3C16 /* GoogleService-Info.plist */; };
 		DBE50F762F7FFBB5007B3C16 /* AppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBE50F752F7FFBB5007B3C16 /* AppLogger.swift */; };
+		DD44EE55FF66001122BB33CC /* AdhanAlarmAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BCC5F38A7A0B6C53346BA7D /* AdhanAlarmAttributes.swift */; };
 		E0A91FCDBDEA0DFF21E1E1D4 /* AdhanAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F428D792497229FB8FDC77 /* AdhanAudio.swift */; };
 		E9ED2B76756FAE3C78A4E1AE /* TimeOfDayBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5317978492FF0BF787E9508 /* TimeOfDayBackground.swift */; };
 		ED1E16323F3B111820A2ED1B /* LocationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CFC7FC7F263BB65AA16DA82 /* LocationSettings.swift */; };
@@ -67,6 +65,7 @@
 		F7991B7A5F1B21DF9502B5D8 /* QiblaViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FBC88F3C32B1765563F3806 /* QiblaViewModel.swift */; };
 		F8FF4F4D48282C9CBC7E409A /* CustomAlarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7FBEF5CCF94FDA6F126C0CA /* CustomAlarm.swift */; };
 		FE691B576F5E59E1035FA580 /* AdhanWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 4262DFC37B01B6765C07659D /* AdhanWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FF660011223344556677AABB /* CancelSnoozeIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE55FF66001122BB33CC4455 /* CancelSnoozeIntent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -125,7 +124,6 @@
 		2FE2561F73C12D3F5688C7B4 /* AdhanAudioSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdhanAudioSelectionView.swift; sourceTree = "<group>"; };
 		331993B85EDD1C1AA8EA1CA8 /* LanguageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
 		3BCC5F38A7A0B6C53346BA7D /* AdhanAlarmAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdhanAlarmAttributes.swift; sourceTree = "<group>"; };
-
 		3FBC88F3C32B1765563F3806 /* QiblaViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QiblaViewModel.swift; sourceTree = "<group>"; };
 		407BC349F59799DE6DAF45F5 /* DownloadProgressButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProgressButton.swift; sourceTree = "<group>"; };
 		4262DFC37B01B6765C07659D /* AdhanWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AdhanWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -136,6 +134,7 @@
 		5A59A57E924F4811B02FE447 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		5EECB229A2224CF25B692062 /* HijriDateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HijriDateService.swift; sourceTree = "<group>"; };
 		5F02E914992E012303CDBE69 /* PrayerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerDetailView.swift; sourceTree = "<group>"; };
+		61CD0D08C15746C9A68D0002 /* SnapshotHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
 		67865DF5B8E9C978818743AA /* AdhanApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AdhanApp.entitlements; sourceTree = "<group>"; };
 		69C6BA7CE2DD85E28133A7B5 /* NotificationScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationScheduler.swift; sourceTree = "<group>"; };
 		7599B0628E2E92E1A4DF20E6 /* SyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
@@ -163,6 +162,7 @@
 		E5EA650E7B60A519EA577FA9 /* AdhanWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AdhanWidgets.entitlements; sourceTree = "<group>"; };
 		E6F428D792497229FB8FDC77 /* AdhanAudio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdhanAudio.swift; sourceTree = "<group>"; };
 		EB3B9FA14F4E72FD863E85F2 /* BackgroundTaskService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTaskService.swift; sourceTree = "<group>"; };
+		EE55FF66001122BB33CC4455 /* CancelSnoozeIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelSnoozeIntent.swift; sourceTree = "<group>"; };
 		EEDB0840ACF0AC1ECD5E2275 /* AlarmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmManager.swift; sourceTree = "<group>"; };
 		FE7C4BAF4C76CCC5B8A60413 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		FFB03ED0239083C36E5E3CF6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -212,6 +212,7 @@
 			isa = PBXGroup;
 			children = (
 				0C2F8F2C604452C4DA660A56 /* AdhanAppUITests.swift */,
+				61CD0D08C15746C9A68D0002 /* SnapshotHelper.swift */,
 			);
 			path = AdhanAppUITests;
 			sourceTree = "<group>";
@@ -621,6 +622,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				16AA664AC3C2D9B0171867B7 /* AdhanAppUITests.swift in Sources */,
+				61CD0D08C15746C9A68D0001 /* SnapshotHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -900,7 +902,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -990,7 +992,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};

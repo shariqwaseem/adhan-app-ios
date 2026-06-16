@@ -1,0 +1,13 @@
+Adhan adalah aplikasi waktu salat yang indah. 100% gratis, selamanya bebas iklan, dan menjaga privasi Anda.
+
+Fitur Utama:
+- Waktu Salat Akurat: Hitung mundur waktu nyata untuk Tahajjud, Subuh, Dzuhur, Ashar, Maghrib, dan Isya.
+- Alarm Azan Penuh (AlarmKit): Atur alarm azan lengkap dengan suara nyaring yang tetap berbunyi meski perangkat dalam Mode Hening (iOS 26+).
+- 17 Suara Azan: Rekaman berkualitas tinggi dari muazin di seluruh dunia. Sesuaikan suara azan yang berbeda untuk setiap waktu salat.
+- Pra-Alarm Tahajjud & Subuh: Pengingat bangun tidur yang lembut antara 10 hingga 120 menit sebelum waktu salat.
+- Alarm Harian Kustom: Buat alarm kustom tanpa batas.
+- Widget Indah & Live Activities: Tersedia 6 ukuran widget untuk Layar Utama & Layar Kunci, serta Live Activities di Dynamic Island Anda.
+- Kompas Kiblat: Petunjuk arah Kiblat waktu nyata dengan umpan balik haptic (getaran) saat posisi sudah sejajar.
+- Metode Perhitungan Pintar: 13 metode perhitungan otomatis berdasarkan lokasi Anda, pilihan Madzhab Hanafi/Standar, dan penyesuaian lintang tinggi.
+
+Tersedia dalam bahasa Inggris, Arab (dukungan RTL penuh), Indonesia, dan Turki.

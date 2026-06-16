@@ -19,6 +19,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     let notificationDelegate = NotificationDelegate()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        let isTakingScreenshots = UserDefaults.standard.bool(forKey: "FASTLANE_SNAPSHOT")
+
         #if canImport(FirebaseCore)
         if Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist") != nil {
             FirebaseApp.configure()
@@ -27,14 +29,16 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
         UNUserNotificationCenter.current().delegate = notificationDelegate
         NotificationDelegate.registerCategories()
-        BackgroundTaskService.registerBackgroundTasks()
-        BackgroundTaskService.scheduleBackgroundRefresh()
-        BackgroundTaskService.scheduleProcessingTask()
+        if !isTakingScreenshots {
+            BackgroundTaskService.registerBackgroundTasks()
+            BackgroundTaskService.scheduleBackgroundRefresh()
+            BackgroundTaskService.scheduleProcessingTask()
+        }
 
         // Geofence monitoring is started after onboarding completes
         // (see AdhanApp.onBecameActive) to avoid prompting for location
         // permission before the user reaches the onboarding location step.
-        if UserDefaults.standard.bool(forKey: "hasCompletedOnboarding") {
+        if !isTakingScreenshots && UserDefaults.standard.bool(forKey: "hasCompletedOnboarding") {
             Task { await GeofenceMonitorService.shared.startMonitoring() }
         }
 
@@ -107,6 +111,9 @@ struct AdhanApp: App {
                 .environment(LanguageManager.shared)
                 .environment(\.locale, LanguageManager.shared.locale)
                 .environment(\.layoutDirection, LanguageManager.shared.isRTL ? .rightToLeft : .leftToRight)
+                .task {
+                    configureForScreenshotsIfNeeded()
+                }
                 .onChange(of: locationManager.latitude) { _, _ in
                     onLocationChanged()
                 }
@@ -163,6 +170,44 @@ struct AdhanApp: App {
     }
 
     @MainActor
+    private func configureForScreenshotsIfNeeded() {
+        guard UserDefaults.standard.bool(forKey: "FASTLANE_SCREENSHOTS") else { return }
+
+        locationManager.authorizationStatus = .authorizedWhenInUse
+        locationManager.isAuthorized = true
+        locationManager.latitude = 21.4225
+        locationManager.longitude = 39.8262
+        locationManager.cityName = screenshotCityName
+        locationManager.countryCode = "SA"
+        notificationScheduler.isPermissionGranted = true
+        notificationScheduler.alarmManager.isAuthorized = true
+
+        prayerTimesViewModel.latitude = 21.4225
+        prayerTimesViewModel.longitude = 39.8262
+        prayerTimesViewModel.cityName = screenshotCityName
+        prayerTimesViewModel.countryCode = "SA"
+        prayerTimesViewModel.calculateToday()
+
+        let preferences = fetchPreferences() ?? {
+            let newPreferences = UserPreferences()
+            sharedModelContainer.mainContext.insert(newPreferences)
+            return newPreferences
+        }()
+        preferences.fajrNotificationMode = PrayerNotificationMode.alarm.rawValue
+        preferences.fajrAlarmAudio = ""
+        try? sharedModelContainer.mainContext.save()
+    }
+
+    private var screenshotCityName: String {
+        switch LanguageManager.shared.currentLanguage {
+        case "ar": return "مكة المكرمة"
+        case "id": return "Makkah"
+        case "tr": return "Mekke"
+        default: return "Makkah"
+        }
+    }
+
+    @MainActor
     private func fetchCustomAlarms() -> [CustomAlarm] {
         let descriptor = FetchDescriptor<CustomAlarm>(sortBy: [SortDescriptor(\CustomAlarm.createdAt)])
         return (try? sharedModelContainer.mainContext.fetch(descriptor)) ?? []
@@ -170,6 +215,8 @@ struct AdhanApp: App {
 
     /// Called every time the app comes to foreground — recalculates and reschedules everything.
     private func onBecameActive() {
+        guard !UserDefaults.standard.bool(forKey: "FASTLANE_SCREENSHOTS") else { return }
+
         // Clean up orphaned AlarmKit Live Activities without stopping active/snoozing alarms.
         #if canImport(AlarmKit)
         if #available(iOS 26, *) {
@@ -277,6 +324,7 @@ struct AdhanApp: App {
     }
 
     private func onLocationChanged() {
+        guard !UserDefaults.standard.bool(forKey: "FASTLANE_SCREENSHOTS") else { return }
         guard locationManager.latitude != 0 || locationManager.longitude != 0 else { return }
         guard locationManager.cityName != "Set Location" else { return }
         let isManual = locationManager.isManualLocationRequest

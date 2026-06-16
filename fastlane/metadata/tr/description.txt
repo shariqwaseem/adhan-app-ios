@@ -1,0 +1,13 @@
+Adhan, göz alıcı bir namaz vakitleri uygulamasıdır. %100 ücretsizdir, her zaman reklamsızdır ve gizliliğinize saygı duyar.
+
+Özellikler:
+- Doğru Namaz Vakitleri: Teheccüd, Fecr (Sabah), Öğle, İkindi, Akşam ve Yatsı vakitleri için canlı geri sayım.
+- Tam Ezan Alarmları (AlarmKit): Cihazınız Sessiz Modda olsa bile çalan, yüksek sesli ve tam ezan alarmları planlayın (iOS 26+).
+- 17 Ezan Sesi: Dünya genelindeki müezzinlerden yüksek kaliteli kayıtlar. Her vakit için farklı bir ezan sesi atayın.
+- Teheccüd ve Sabah Ön Alarmları: Namazdan 10 ila 120 dakika önce çalan hafif uyandırma alarmları.
+- Özel Günlük Alarmlar: Sınırsız sayıda özel alarm oluşturun.
+- Şık Widget'lar ve Canlı Etkinlikler: Ana Ekran ve Kilit Ekranı için 6 farklı boyutta widget ve Dynamic Island üzerinde canlı takip (Live Activities).
+- Kıble Pusulası: Hizalandığında titreşimli (haptik) geri bildirim veren gerçek zamanlı akıllı pusula.
+- Akıllı Hesaplama Yöntemleri: Konumunuza göre otomatik seçilen 13 hesaplama yöntemi, Hanefi/Standart Asr kuralları ve yüksek enlem ayarları.
+
+İngilizce, Arapça (tam RTL desteği), Endonezce ve Türkçe dillerinde tamamen yerelleştirilmiştir.

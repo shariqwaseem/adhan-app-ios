@@ -1,0 +1,13 @@
+Adhan is a beautiful prayer times app. It is 100% free, forever ad-free, and respects your privacy.
+
+Features:
+- Accurate Prayer Times: Real-time countdowns for Tahajjud, Fajr, Dhuhr, Asr, Maghrib, and Isha.
+- Full Adhan Alarms (AlarmKit): Schedule loud, full-length adhan alarms that play even in Silent Mode (iOS 26+).
+- 17 Adhan Sounds: High-fidelity recordings from muezzins worldwide. Customize the sound for each prayer.
+- Tahajjud & Fajr Pre-Alarms: Gentle wake-up alerts 10 to 120 minutes before prayers.
+- Custom Daily Alarms: Create unlimited custom alarms.
+- Elegant Widgets & Live Activities: 6 Home and Lock Screen widget sizes, plus real-time Live Activities on your Dynamic Island.
+- Qibla Finder: Smart compass with haptic feedback when aligned.
+- Smart Calculations: 13 calculation methods with automatic location selection, Hanafi/Standard Asr rules, and high-latitude adjustments.
+
+Fully localized in English, Arabic, Indonesian, and Turkish.

@@ -41,3 +41,8 @@ Pods/
 # Misc
 *.log
 xcuserdata/
+
+# Fastlane generated screenshots and reports
+fastlane/screenshots/*/*.png
+fastlane/screenshots/screenshots.html
+fastlane/screenshots/test_output/

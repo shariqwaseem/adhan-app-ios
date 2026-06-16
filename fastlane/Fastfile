@@ -1,0 +1,23 @@
+require_relative "snapshot_compatibility"
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Capture localized App Store screenshots"
+  lane :screenshots do |options|
+    capture_screenshots(
+      languages: options[:languages]
+    )
+  end
+
+  desc "Capture screenshots and add localized captions and device frames"
+  lane :screenshots_framed do |options|
+    capture_screenshots(
+      languages: options[:languages]
+    )
+    frame_screenshots(
+      path: "./fastlane/screenshots",
+      use_platform: "IOS"
+    )
+  end
+end

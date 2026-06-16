@@ -27,6 +27,10 @@ final class NotificationScheduler {
     var alarmManager = AdhanAlarmManager()
 
     func checkNotificationPermission() async {
+        if UserDefaults.standard.bool(forKey: "FASTLANE_SCREENSHOTS") {
+            isPermissionGranted = true
+            return
+        }
         let settings = await UNUserNotificationCenter.current().notificationSettings()
         isPermissionGranted = settings.authorizationStatus == .authorized
     }

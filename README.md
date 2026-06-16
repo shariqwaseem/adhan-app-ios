@@ -57,3 +57,27 @@ The project uses [XcodeGen](https://github.com/yonaskolb/XcodeGen) — run `xcod
 ## License
 
 This project is open source. See [LICENSE](LICENSE) for details.
+# Adhan
+
+## App Store screenshots
+
+Fastlane captures the Home, Qibla, and Settings screens in English, Arabic,
+Indonesian, and Turkish on an iPhone 17 Pro Max simulator.
+
+```sh
+brew install fastlane imagemagick
+fastlane ios screenshots_framed
+```
+
+Raw and framed images are written to `fastlane/screenshots`, with an HTML
+overview at `fastlane/screenshots/screenshots.html`.
+
+Edit localized marketing captions in each language folder:
+
+- `fastlane/screenshots/en-US`
+- `fastlane/screenshots/ar`
+- `fastlane/screenshots/id`
+- `fastlane/screenshots/tr`
+
+Use `fastlane ios screenshots` when you only need raw screenshots. To test one
+language while editing, run `fastlane ios screenshots languages:en-US`.

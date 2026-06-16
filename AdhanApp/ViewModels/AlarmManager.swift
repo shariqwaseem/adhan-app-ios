@@ -65,6 +65,11 @@ final class AdhanAlarmManager {
     }
 
     func checkAuthorization() {
+        if UserDefaults.standard.bool(forKey: "FASTLANE_SCREENSHOTS") {
+            isAuthorized = true
+            authError = nil
+            return
+        }
         #if canImport(AlarmKit)
         if #available(iOS 26, *) {
             isAuthorized = _manager.authorizationState == .authorized
