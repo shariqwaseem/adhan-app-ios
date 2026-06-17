@@ -44,8 +44,9 @@ module SnapshotPermissionSetup
     FastlaneCore::Helper.backticks(
       "xcrun simctl privacy #{device_udid} grant location-always #{bundle_id} &> /dev/null"
     )
+    appearance = Snapshot.config[:dark_mode] ? "dark" : "light"
     FastlaneCore::Helper.backticks(
-      "xcrun simctl ui #{device_udid} appearance dark &> /dev/null"
+      "xcrun simctl ui #{device_udid} appearance #{appearance} &> /dev/null"
     )
   end
 end

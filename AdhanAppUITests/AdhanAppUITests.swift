@@ -21,6 +21,17 @@ final class AdhanAppUITests: XCTestCase {
         waitForScreenToSettle()
         snapshot("01PrayerTimes")
 
+        tabBar.buttons.element(boundBy: 1).tap()
+        waitForScreenToSettle()
+        snapshot("02Qibla")
+
+        tabBar.buttons.element(boundBy: 2).tap()
+        waitForScreenToSettle()
+        snapshot("03Settings")
+
+        tabBar.buttons.element(boundBy: 0).tap()
+        waitForScreenToSettle()
+
         let fajrRow = app.buttons["prayer-row-fajr"]
         XCTAssertTrue(fajrRow.waitForExistence(timeout: 5))
         fajrRow.tap()
@@ -32,18 +43,6 @@ final class AdhanAppUITests: XCTestCase {
         soundPicker.tap()
         waitForScreenToSettle()
         snapshot("05AdhanSounds")
-
-        app.navigationBars.buttons.firstMatch.tap()
-        app.navigationBars.buttons.firstMatch.tap()
-        XCTAssertTrue(tabBar.waitForExistence(timeout: 5))
-
-        tabBar.buttons.element(boundBy: 1).tap()
-        waitForScreenToSettle()
-        snapshot("02Qibla")
-
-        tabBar.buttons.element(boundBy: 2).tap()
-        waitForScreenToSettle()
-        snapshot("03Settings")
     }
 
     private func waitForScreenToSettle() {
