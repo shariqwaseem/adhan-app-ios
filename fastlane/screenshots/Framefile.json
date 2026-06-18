@@ -3,13 +3,13 @@
   "default": {
     "background": "./background.png",
     "keyword": {
-      "font": "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
+      "font": "../../../../../../System/Library/Fonts/Supplemental/Arial Unicode.ttf",
       "font_size": 62,
       "font_weight": 500,
       "color": "#73D2DE"
     },
     "title": {
-      "font": "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
+      "font": "../../../../../../System/Library/Fonts/Supplemental/Arial Unicode.ttf",
       "font_size": 104,
       "font_weight": 700,
       "color": "#FFFFFF"

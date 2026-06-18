@@ -114,6 +114,7 @@ extension LocationManager: CLLocationManagerDelegate {
             if isAuthorized {
                 self.manager.requestLocation()
             }
+            SignificantLocationChangeService.shared.startMonitoringIfAuthorized()
         }
     }
 }

@@ -5,12 +5,22 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.000386">
+      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.000271">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: capture_screenshots" time="509.477984">
+      <testcase classname="fastlane.lanes" name="1: python3 reshape_arabic.py" time="0.09752">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="2: frame_screenshots" time="323.428523">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="3: python3 reshape_arabic.py restore" time="0.079948">
         
       </testcase>
     

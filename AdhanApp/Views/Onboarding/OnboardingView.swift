@@ -4,11 +4,15 @@ import UserNotifications
 
 struct OnboardingView: View {
     @Environment(LocationManager.self) private var locationManager
+    @Environment(PrayerTimesViewModel.self) private var prayerTimesViewModel
     @Environment(NotificationScheduler.self) private var notificationScheduler
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.scenePhase) private var scenePhase
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
 
     @State private var currentStep = 0
+    @State private var pendingPermissionStep: OnboardingStepType?
+    @State private var permissionPromptWasPresented = false
 
     private var steps: [OnboardingStep] {
         let bundle = LanguageManager.shared.bundle
@@ -37,8 +41,8 @@ struct OnboardingView: View {
                 icon: "airplane",
                 iconColor: .cyan,
                 title: String(localized: "Traveling?", bundle: bundle),
-                subtitle: String(localized: "Allow background location so your prayer times update automatically when you move to a new city. Your location never leaves your device.", bundle: bundle),
-                buttonTitle: String(localized: "Allow Background Location", bundle: bundle)
+                subtitle: String(localized: "Allow location access so Adhan can update prayer times after you travel to a new city. Your location stays on your device.", bundle: bundle),
+                buttonTitle: String(localized: "Allow Travel Updates", bundle: bundle)
             ))
         }
 
@@ -132,6 +136,8 @@ struct OnboardingView: View {
                         .padding(.vertical, 16)
                         .background(.white, in: .capsule)
                 }
+                .disabled(pendingPermissionStep != nil)
+                .opacity(pendingPermissionStep == nil ? 1 : 0.7)
                 .padding(.horizontal, 40)
                 .padding(.bottom, 16)
 
@@ -140,6 +146,16 @@ struct OnboardingView: View {
             }
         }
         .animation(.easeInOut(duration: 0.3), value: currentStep)
+        .onChange(of: locationManager.authorizationStatus) { _, _ in
+            handleLocationAuthorizationResponse()
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            if pendingPermissionStep != nil, newPhase != .active {
+                permissionPromptWasPresented = true
+            } else if newPhase == .active {
+                handlePermissionPromptReturn()
+            }
+        }
     }
 
     private func handleStepAction() {
@@ -149,52 +165,90 @@ struct OnboardingView: View {
 
         case .location:
             if locationManager.isAuthorized {
-                advanceStep()
-            } else {
+                advanceStep(from: .location)
+            } else if locationManager.authorizationStatus == .notDetermined {
+                beginPermissionRequest(for: .location)
                 locationManager.requestWhenInUsePermission()
-                waitForAuthorizationChange()
+            } else {
+                advanceStep(from: .location)
             }
 
         case .backgroundLocation:
             if locationManager.authorizationStatus == .authorizedAlways {
-                advanceStep()
+                advanceStep(from: .backgroundLocation)
             } else if locationManager.authorizationStatus == .authorizedWhenInUse {
+                beginPermissionRequest(for: .backgroundLocation)
                 locationManager.requestAlwaysPermission()
-                waitForAuthorizationChange(maxAttempts: 15)
             } else {
-                advanceStep()
+                advanceStep(from: .backgroundLocation)
             }
 
         case .notifications:
+            beginPermissionRequest(for: .notifications)
             Task {
                 let center = UNUserNotificationCenter.current()
                 let granted = try? await center.requestAuthorization(options: [.alert, .sound, .badge])
                 notificationScheduler.isPermissionGranted = granted ?? false
-                advanceStep()
+                finishPermissionRequest(for: .notifications, shouldAdvance: true)
             }
 
         case .alarms:
+            beginPermissionRequest(for: .alarms)
             Task {
                 await notificationScheduler.alarmManager.requestAuthorization()
-                advanceStep()
+                finishPermissionRequest(for: .alarms, shouldAdvance: true)
             }
         }
     }
 
-    private func waitForAuthorizationChange(maxAttempts: Int = 50) {
-        Task {
-            let startStatus = locationManager.authorizationStatus
-            for _ in 0..<maxAttempts {
-                try? await Task.sleep(for: .milliseconds(200))
-                if locationManager.authorizationStatus != startStatus {
-                    break
-                }
-            }
-            advanceStep()
+    private func beginPermissionRequest(for step: OnboardingStepType) {
+        pendingPermissionStep = step
+        permissionPromptWasPresented = false
+    }
+
+    private func finishPermissionRequest(for step: OnboardingStepType, shouldAdvance: Bool) {
+        guard pendingPermissionStep == step else { return }
+        pendingPermissionStep = nil
+        permissionPromptWasPresented = false
+        if shouldAdvance {
+            advanceStep(from: step)
         }
     }
 
-    private func advanceStep() {
+    private func handleLocationAuthorizationResponse() {
+        guard let pendingPermissionStep else { return }
+
+        switch pendingPermissionStep {
+        case .location:
+            guard locationManager.authorizationStatus != .notDetermined else { return }
+            finishPermissionRequest(for: .location, shouldAdvance: true)
+
+        case .backgroundLocation:
+            guard locationManager.authorizationStatus != .authorizedWhenInUse else { return }
+            finishPermissionRequest(for: .backgroundLocation, shouldAdvance: true)
+
+        default:
+            return
+        }
+    }
+
+    private func handlePermissionPromptReturn() {
+        guard permissionPromptWasPresented,
+              let pendingPermissionStep else { return }
+
+        switch pendingPermissionStep {
+        case .backgroundLocation:
+            finishPermissionRequest(for: .backgroundLocation, shouldAdvance: true)
+        default:
+            handleLocationAuthorizationResponse()
+        }
+    }
+
+    private func advanceStep(from expectedStep: OnboardingStepType? = nil) {
+        if let expectedStep, steps[currentStep].type != expectedStep {
+            return
+        }
+
         if currentStep < steps.count - 1 {
             currentStep += 1
         } else {
@@ -207,6 +261,9 @@ struct OnboardingView: View {
 
     private func configureDefaultPreferences() {
         let prefs = UserPreferences()
+        prefs.calculationMethodRawValue = prayerTimesViewModel.calculationMethod.rawValue
+        prefs.asrJuristicMethodRawValue = prayerTimesViewModel.asrMethod.rawValue
+        prefs.highLatitudeRuleRawValue = prayerTimesViewModel.highLatitudeRule.rawValue
 
         let alarmAuthorized = notificationScheduler.alarmManager.isAuthorized
 
@@ -257,6 +314,7 @@ private struct OnboardingStep {
 
 #Preview {
     OnboardingView()
+        .environment(PrayerTimesViewModel())
         .environment(LocationManager())
         .environment(NotificationScheduler())
 }

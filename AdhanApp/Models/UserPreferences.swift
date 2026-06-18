@@ -4,7 +4,7 @@ import SwiftData
 @Model
 final class UserPreferences {
     var calculationMethodRawValue: String = CalculationMethodInfo.MuslimWorldLeague.rawValue
-    var asrJuristicMethodRawValue: String = AsrJuristicMethod.standard.rawValue
+    var asrJuristicMethodRawValue: String = AsrJuristicMethod.hanafi.rawValue
     var highLatitudeRuleRawValue: String = HighLatitudeRuleOption.middleOfTheNight.rawValue
 
     // Per-prayer notification mode: silent / notification / alarm

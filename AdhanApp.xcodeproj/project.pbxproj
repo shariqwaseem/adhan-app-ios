@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0011223344556677AABBCCDD /* CancelSnoozeIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE55FF66001122BB33CC4455 /* CancelSnoozeIntent.swift */; };
-		00FCC178857A228DF1774ED7 /* GeofenceMonitorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F77D78FA3060412FC7C158 /* GeofenceMonitorService.swift */; };
+		00FCC178857A228DF1774ED7 /* SignificantLocationChangeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F77D78FA3060412FC7C158 /* SignificantLocationChangeService.swift */; };
 		04053086FD774A8E15FE3FD4 /* CalculationMethodInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D7E52640933BFFFE985213 /* CalculationMethodInfo.swift */; };
 		0435AF9116C6455B29C0A3F9 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7C4BAF4C76CCC5B8A60413 /* LocationManager.swift */; };
 		0512F6C60232A1C30E854BEB /* NotificationScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69C6BA7CE2DD85E28133A7B5 /* NotificationScheduler.swift */; };
@@ -149,7 +149,7 @@
 		A5317978492FF0BF787E9508 /* TimeOfDayBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeOfDayBackground.swift; sourceTree = "<group>"; };
 		AEF8F8F171C8ED9654BFC5E4 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		B418092ED3E3003E65974D05 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		B5F77D78FA3060412FC7C158 /* GeofenceMonitorService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeofenceMonitorService.swift; sourceTree = "<group>"; };
+		B5F77D78FA3060412FC7C158 /* SignificantLocationChangeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignificantLocationChangeService.swift; sourceTree = "<group>"; };
 		B7FBEF5CCF94FDA6F126C0CA /* CustomAlarm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlarm.swift; sourceTree = "<group>"; };
 		C234017519098BF3768F8275 /* Adhan alarm app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Adhan alarm app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3D7E52640933BFFFE985213 /* CalculationMethodInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculationMethodInfo.swift; sourceTree = "<group>"; };
@@ -336,7 +336,7 @@
 			children = (
 				996FE4AFDBDA4BC035AC0815 /* AdhanAudioDownloadManager.swift */,
 				EB3B9FA14F4E72FD863E85F2 /* BackgroundTaskService.swift */,
-				B5F77D78FA3060412FC7C158 /* GeofenceMonitorService.swift */,
+				B5F77D78FA3060412FC7C158 /* SignificantLocationChangeService.swift */,
 				5EECB229A2224CF25B692062 /* HijriDateService.swift */,
 				4C71623B4DE8036E0A637A27 /* PrayerCalculationService.swift */,
 				CC7B3F41DDEE129AABBFF8E6 /* RamadanDetectionService.swift */,
@@ -644,7 +644,7 @@
 				0E7364D769D692C1BD4EE329 /* CustomAlarmDetailView.swift in Sources */,
 				9EDD775AF0FF861CE007A819 /* CustomAlarmSoundSelectionView.swift in Sources */,
 				2CAB214458B535365ADD1714 /* DownloadProgressButton.swift in Sources */,
-				00FCC178857A228DF1774ED7 /* GeofenceMonitorService.swift in Sources */,
+				00FCC178857A228DF1774ED7 /* SignificantLocationChangeService.swift in Sources */,
 				C0C9E5CA97C14F3188145520 /* GlassCard.swift in Sources */,
 				44B18EA71052460070DCB844 /* HijriDateService.swift in Sources */,
 				7D24534F388F9EA21177DADF /* HomeView.swift in Sources */,

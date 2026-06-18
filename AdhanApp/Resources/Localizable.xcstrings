@@ -531,50 +531,6 @@
         }
       }
     },
-    "Allow Background Location" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "السماح بالموقع في الخلفية"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Izinkan Lokasi Latar Belakang"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Arka Plan Konumuna İzin Ver"
-          }
-        }
-      }
-    },
-    "Allow background location so your prayer times update automatically when you move to a new city. Your location never leaves your device." : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "اسمح بالموقع في الخلفية لتحديث أوقات الصلاة تلقائيًا عند انتقالك إلى مدينة جديدة. موقعك لا يغادر جهازك أبدًا."
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Izinkan lokasi latar belakang agar waktu sholat diperbarui otomatis saat Anda pindah ke kota baru. Lokasi Anda tidak pernah meninggalkan perangkat."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Yeni bir şehre taşındığınızda namaz vakitlerinin otomatik güncellenmesi için arka plan konumuna izin verin. Konumunuz cihazınızdan asla çıkmaz."
-          }
-        }
-      }
-    },
     "Allow Location" : {
       "localizations" : {
         "ar" : {
@@ -593,6 +549,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Konuma İzin Ver"
+          }
+        }
+      }
+    },
+    "Allow location access so Adhan can update prayer times after you travel to a new city. Your location stays on your device." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اسمح بالوصول إلى الموقع ليتمكن أذان من تحديث أوقات الصلاة بعد سفرك إلى مدينة جديدة. يبقى موقعك على جهازك."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izinkan akses lokasi agar Adhan dapat memperbarui waktu sholat setelah Anda bepergian ke kota baru. Lokasi Anda tetap berada di perangkat Anda."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni bir şehre seyahat ettikten sonra Adhan'ın namaz vakitlerini güncelleyebilmesi için konum erişimine izin verin. Konumunuz cihazınızda kalır."
           }
         }
       }
@@ -637,6 +615,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bildirimlere İzin Ver"
+          }
+        }
+      }
+    },
+    "Allow Travel Updates" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "السماح بتحديثات السفر"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izinkan Pembaruan Perjalanan"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seyahat Güncellemelerine İzin Ver"
           }
         }
       }

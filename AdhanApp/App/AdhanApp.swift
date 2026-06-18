@@ -35,11 +35,15 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             BackgroundTaskService.scheduleProcessingTask()
         }
 
-        // Geofence monitoring is started after onboarding completes
+        // Significant-change monitoring is started after onboarding completes
         // (see AdhanApp.onBecameActive) to avoid prompting for location
         // permission before the user reaches the onboarding location step.
-        if !isTakingScreenshots && UserDefaults.standard.bool(forKey: "hasCompletedOnboarding") {
-            Task { await GeofenceMonitorService.shared.startMonitoring() }
+        let wasLaunchedForLocation = launchOptions?[.location] != nil
+        if !isTakingScreenshots &&
+            (wasLaunchedForLocation || UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")) {
+            Task { @MainActor in
+                SignificantLocationChangeService.shared.startMonitoringIfAuthorized()
+            }
         }
 
         AppLogger.lifecycle.info("didFinishLaunchingWithOptions: completed")
@@ -121,6 +125,11 @@ struct AdhanApp: App {
                     guard newCity != "Set Location" else { return }
                     onLocationChanged()
                 }
+                .onChange(of: hasCompletedOnboarding) { _, completed in
+                    if completed {
+                        onOnboardingCompleted()
+                    }
+                }
                 .onChange(of: scenePhase) { _, newPhase in
                     if newPhase == .active {
                         onBecameActive()
@@ -175,17 +184,17 @@ struct AdhanApp: App {
 
         locationManager.authorizationStatus = .authorizedWhenInUse
         locationManager.isAuthorized = true
-        locationManager.latitude = 21.4225
-        locationManager.longitude = 39.8262
+        locationManager.latitude = 35.277611
+        locationManager.longitude = 75.639778
         locationManager.cityName = screenshotCityName
-        locationManager.countryCode = "SA"
+        locationManager.countryCode = "PK"
         notificationScheduler.isPermissionGranted = true
         notificationScheduler.alarmManager.isAuthorized = true
 
-        prayerTimesViewModel.latitude = 21.4225
-        prayerTimesViewModel.longitude = 39.8262
+        prayerTimesViewModel.latitude = 35.277611
+        prayerTimesViewModel.longitude = 75.639778
         prayerTimesViewModel.cityName = screenshotCityName
-        prayerTimesViewModel.countryCode = "SA"
+        prayerTimesViewModel.countryCode = "PK"
         prayerTimesViewModel.calculateToday()
 
         let preferences = fetchPreferences() ?? {
@@ -199,12 +208,7 @@ struct AdhanApp: App {
     }
 
     private var screenshotCityName: String {
-        switch LanguageManager.shared.currentLanguage {
-        case "ar": return "مكة المكرمة"
-        case "id": return "Makkah"
-        case "tr": return "Mekke"
-        default: return "Makkah"
-        }
+        "Skardu"
     }
 
     @MainActor
@@ -316,10 +320,12 @@ struct AdhanApp: App {
             locationManager.requestLocation()
         }
 
-        // Start geofence monitoring once onboarding is done (handles the case
+        // Start significant-change monitoring once onboarding is done (handles the case
         // where the app launched during onboarding and skipped it in AppDelegate).
         if hasCompletedOnboarding {
-            Task { await GeofenceMonitorService.shared.startMonitoring() }
+            Task { @MainActor in
+                SignificantLocationChangeService.shared.startMonitoringIfAuthorized()
+            }
         }
     }
 
@@ -327,6 +333,8 @@ struct AdhanApp: App {
         guard !UserDefaults.standard.bool(forKey: "FASTLANE_SCREENSHOTS") else { return }
         guard locationManager.latitude != 0 || locationManager.longitude != 0 else { return }
         guard locationManager.cityName != "Set Location" else { return }
+        let isInitialStoredLocation = SharedDataManager.loadLocation() == nil
+        let shouldSchedule = hasCompletedOnboarding
         let isManual = locationManager.isManualLocationRequest
         locationManager.isManualLocationRequest = false
         prayerTimesViewModel.updateLocation(
@@ -334,8 +342,11 @@ struct AdhanApp: App {
             longitude: locationManager.longitude,
             cityName: locationManager.cityName,
             countryCode: locationManager.countryCode,
-            autoSetCalculationMethod: isManual
+            autoSetCalculationMethod: isManual || isInitialStoredLocation
         )
+        syncCalculationPreferencesIfPresent()
+        guard shouldSchedule else { return }
+
         // Defer rescheduling if onBecameActive() is in progress — it will
         // redo with fresh data once it finishes.
         if isActivating {
@@ -349,5 +360,30 @@ struct AdhanApp: App {
                 customAlarms: fetchCustomAlarms()
             )
         }
+    }
+
+    private func onOnboardingCompleted() {
+        guard !UserDefaults.standard.bool(forKey: "FASTLANE_SCREENSHOTS") else { return }
+
+        onLocationChanged()
+
+        if locationManager.isAuthorized,
+           (locationManager.cityName == "Set Location" ||
+            (locationManager.latitude == 0 && locationManager.longitude == 0)) {
+            locationManager.requestLocation()
+        }
+
+        Task { @MainActor in
+            SignificantLocationChangeService.shared.startMonitoringIfAuthorized()
+        }
+    }
+
+    @MainActor
+    private func syncCalculationPreferencesIfPresent() {
+        guard let prefs = fetchPreferences() else { return }
+        prefs.calculationMethodRawValue = prayerTimesViewModel.calculationMethod.rawValue
+        prefs.asrJuristicMethodRawValue = prayerTimesViewModel.asrMethod.rawValue
+        prefs.highLatitudeRuleRawValue = prayerTimesViewModel.highLatitudeRule.rawValue
+        try? sharedModelContainer.mainContext.save()
     }
 }

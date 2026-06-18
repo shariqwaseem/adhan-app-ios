@@ -31,6 +31,14 @@ Capture localized App Store screenshots
 
 Capture screenshots and add localized captions and device frames
 
+### ios frame
+
+```sh
+[bundle exec] fastlane ios frame
+```
+
+Frame existing screenshots with Arabic shaping support
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

@@ -83,7 +83,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Adhan uses your location in the background to update prayer times when you move to a new area."
+            "value" : "Adhan uses significant location changes in the background to update prayer times after you travel to a new area."
           }
         },
         "id" : {

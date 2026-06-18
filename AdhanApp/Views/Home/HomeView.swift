@@ -18,6 +18,14 @@ struct HomeView: View {
         TimePhase.current(for: viewModel.prayerEntries, at: Date())
     }
 
+    private var activeColorScheme: ColorScheme {
+        if UserDefaults.standard.bool(forKey: "FASTLANE_SCREENSHOTS") {
+            return .light
+        }
+
+        return currentPhase.prefersDarkAppearance ? .dark : .light
+    }
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -39,7 +47,7 @@ struct HomeView: View {
                 }
             }
             .navigationTitle(viewModel.cityName.isEmpty ? "Adhan" : viewModel.cityName)
-            .toolbarColorScheme(currentPhase.prefersDarkAppearance ? .dark : .light, for: .navigationBar, .tabBar)
+            .toolbarColorScheme(activeColorScheme, for: .navigationBar, .tabBar)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     optionsMenu
@@ -67,7 +75,7 @@ struct HomeView: View {
                 )
             }
         }
-        .environment(\.colorScheme, currentPhase.prefersDarkAppearance ? .dark : .light)
+        .environment(\.colorScheme, activeColorScheme)
     }
 
     // MARK: - Countdown

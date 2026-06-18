@@ -23,7 +23,7 @@ final class PrayerTimesViewModel {
             SharedDataManager.saveCalculationMethod(calculationMethod.rawValue)
         }
     }
-    var asrMethod: AsrJuristicMethod = .standard {
+    var asrMethod: AsrJuristicMethod = .hanafi {
         didSet {
             UserDefaults.standard.set(asrMethod.rawValue, forKey: "asrMethod")
             SharedDataManager.saveAsrMethod(asrMethod.rawValue)
@@ -140,10 +140,8 @@ final class PrayerTimesViewModel {
         }
         calculateToday()
 
-        Task {
-            await GeofenceMonitorService.shared.updateGeofenceForManualLocationChange(
-                latitude: latitude, longitude: longitude
-            )
+        Task { @MainActor in
+            SignificantLocationChangeService.shared.startMonitoringIfAuthorized()
         }
     }
 

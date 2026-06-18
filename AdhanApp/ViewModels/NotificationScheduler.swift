@@ -42,9 +42,6 @@ final class NotificationScheduler {
         } catch {
             isPermissionGranted = false
         }
-        if AdhanAlarmManager.isAlarmSupported {
-            await alarmManager.requestAuthorization()
-        }
     }
 
     private static let alarmCooldown: TimeInterval = 600 // 10 minutes

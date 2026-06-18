@@ -15,9 +15,27 @@ platform :ios do
     capture_screenshots(
       languages: options[:languages]
     )
-    frame_screenshots(
-      path: "./fastlane/screenshots",
-      use_platform: "IOS"
-    )
+    sh("python3 reshape_arabic.py")
+    begin
+      frame_screenshots(
+        path: "./fastlane/screenshots",
+        use_platform: "IOS"
+      )
+    ensure
+      sh("python3 reshape_arabic.py restore")
+    end
+  end
+
+  desc "Frame existing screenshots with Arabic shaping support"
+  lane :frame do |options|
+    sh("python3 reshape_arabic.py")
+    begin
+      frame_screenshots(
+        path: options[:path] || "./fastlane/screenshots",
+        use_platform: options[:use_platform] || "IOS"
+      )
+    ensure
+      sh("python3 reshape_arabic.py restore")
+    end
   end
 end

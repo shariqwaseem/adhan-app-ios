@@ -127,7 +127,7 @@ final class AdhanAlarmManager {
             AppLogger.alarm.info("scheduleAlarm: \(prayer.rawValue) at \(prayerTime.formatted(date: .abbreviated, time: .standard))")
 
             if !isAuthorized {
-                await requestAuthorization()
+                checkAuthorization()
             }
             guard isAuthorized else {
                 let msg = authError ?? "Alarm permission not granted"
@@ -188,7 +188,7 @@ final class AdhanAlarmManager {
         #if canImport(AlarmKit)
         if #available(iOS 26, *) {
             if !isAuthorized {
-                await requestAuthorization()
+                checkAuthorization()
             }
             guard isAuthorized else {
                 throw AlarmScheduleError.notAuthorized(authError ?? "Alarm permission not granted")
@@ -242,7 +242,7 @@ final class AdhanAlarmManager {
         #if canImport(AlarmKit)
         if #available(iOS 26, *) {
             if !isAuthorized {
-                await requestAuthorization()
+                checkAuthorization()
             }
             guard isAuthorized else {
                 throw AlarmScheduleError.notAuthorized(authError ?? "Alarm permission not granted")
@@ -291,7 +291,7 @@ final class AdhanAlarmManager {
         #if canImport(AlarmKit)
         if #available(iOS 26, *) {
             if !isAuthorized {
-                await requestAuthorization()
+                checkAuthorization()
             }
             guard isAuthorized else {
                 throw AlarmScheduleError.notAuthorized(authError ?? "Alarm permission not granted")

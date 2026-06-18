@@ -225,7 +225,7 @@ struct BackgroundTaskService {
             if let method = SharedDataManager.loadAsrMethod() {
                 return method
             }
-            return .standard
+            return .hanafi
         }()
 
         let highLatitudeRule: HighLatitudeRuleOption = {
@@ -273,9 +273,6 @@ struct BackgroundTaskService {
 
         // 5. Reschedule all notifications/alarms
         let scheduler = NotificationScheduler()
-        if AdhanAlarmManager.isAlarmSupported {
-            await scheduler.alarmManager.requestAuthorization()
-        }
         await scheduler.rescheduleAll(
             prayerEntries: multiDayEntries,
             preferences: prefs,
