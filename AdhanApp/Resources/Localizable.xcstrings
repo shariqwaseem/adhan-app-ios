@@ -2715,6 +2715,7 @@
       }
     },
     "Snooze" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -2758,6 +2759,12 @@
           }
         }
       }
+    },
+    "Snooze Alarm" : {
+
+    },
+    "Snooze an Adhan alarm" : {
+
     },
     "Snoozing — %@" : {
       "localizations" : {

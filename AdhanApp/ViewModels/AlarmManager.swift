@@ -89,7 +89,7 @@ final class AdhanAlarmManager {
     ) -> AlarmPresentation {
         let bundle = LanguageManager.shared.bundle
         let stopText = String(localized: "Stop", bundle: bundle)
-        let snoozeText = String(localized: "Snooze", bundle: bundle)
+//        let snoozeText = String(localized: "Snooze", bundle: bundle)
 
         let stopButton = AlarmButton(
             text: LocalizedStringResource(stringLiteral: stopText),
@@ -100,19 +100,21 @@ final class AdhanAlarmManager {
         let alert = AlarmPresentation.Alert(
             title: LocalizedStringResource(stringLiteral: alertTitle),
             stopButton: stopButton,
-            secondaryButton: AlarmButton(
-                text: LocalizedStringResource(stringLiteral: snoozeText),
-                textColor: .white,
-                systemImageName: "moon.zzz"
-            ),
-            secondaryButtonBehavior: .countdown
+            
+//            secondaryButton: AlarmButton(
+//                text: LocalizedStringResource(stringLiteral: snoozeText),
+//                textColor: .white,
+//                systemImageName: "moon.zzz"
+//            ),
+//            secondaryButtonBehavior: .countdown
         )
 
-        let countdown = AlarmPresentation.Countdown(
-            title: LocalizedStringResource(stringLiteral: snoozeCountdownTitle)
-        )
+//        let countdown = AlarmPresentation.Countdown(
+//            title: LocalizedStringResource(stringLiteral: snoozeCountdownTitle)
+//        )
 
-        return AlarmPresentation(alert: alert, countdown: countdown)
+//        return AlarmPresentation(alert: alert, countdown: countdown)
+        return AlarmPresentation(alert: alert)
     }
     #endif
 
@@ -159,10 +161,10 @@ final class AdhanAlarmManager {
             }
 
             let configuration = AlarmKit.AlarmManager.AlarmConfiguration(
-                countdownDuration: Alarm.CountdownDuration(preAlert: nil, postAlert: Self.maxAlertDurationSeconds),
                 schedule: .fixed(prayerTime),
                 attributes: attributes,
                 stopIntent: StopAdhanAlarmIntent(alarmID: alarmID.uuidString),
+
                 sound: sound
             )
 
@@ -217,10 +219,10 @@ final class AdhanAlarmManager {
             }
 
             let configuration = AlarmKit.AlarmManager.AlarmConfiguration(
-                countdownDuration: Alarm.CountdownDuration(preAlert: nil, postAlert: Self.maxAlertDurationSeconds),
                 schedule: .fixed(alarmTime),
                 attributes: attributes,
                 stopIntent: StopAdhanAlarmIntent(alarmID: alarmID.uuidString),
+
                 sound: sound
             )
 
@@ -265,10 +267,10 @@ final class AdhanAlarmManager {
             )
 
             let configuration = AlarmKit.AlarmManager.AlarmConfiguration(
-                countdownDuration: Alarm.CountdownDuration(preAlert: nil, postAlert: Self.maxAlertDurationSeconds),
                 schedule: .fixed(preAlarmTime),
                 attributes: attributes,
                 stopIntent: StopAdhanAlarmIntent(alarmID: alarmID.uuidString),
+
                 sound: .default
             )
 
@@ -314,10 +316,10 @@ final class AdhanAlarmManager {
             )
 
             let configuration = AlarmKit.AlarmManager.AlarmConfiguration(
-                countdownDuration: Alarm.CountdownDuration(preAlert: nil, postAlert: Self.maxAlertDurationSeconds),
                 schedule: .fixed(preAlarmTime),
                 attributes: attributes,
                 stopIntent: StopAdhanAlarmIntent(alarmID: alarmID.uuidString),
+
                 sound: .default
             )
 

@@ -13,9 +13,9 @@ struct AdhanWidgetsBundle: WidgetBundle {
     var body: some Widget {
         PrayerTimesWidget()
         #if canImport(AlarmKit)
-        if #available(iOS 26, *) {
-            AlarmSnoozeActivityWidget()
-        }
+//        if #available(iOS 26, *) {
+//            AlarmSnoozeActivityWidget()
+//        }
         #endif
     }
 }
@@ -509,104 +509,233 @@ struct PrayerWidgetEntryView: View {
     }
 }
 
-// MARK: - AlarmKit Snooze Countdown Live Activity
+// MARK: - AlarmKit Live Activity
 
 #if canImport(AlarmKit)
-@available(iOS 26, *)
-private struct AlarmCountdownView: View {
-    let context: ActivityViewContext<AlarmAttributes<AdhanAlarmMetadata>>
-
-    private var prayerName: String {
-        guard let raw = context.attributes.metadata?.prayerName else {
-            return WidgetLanguage.localized("Prayer")
-        }
-        // Strip prefixes for display (e.g. "custom_UUID", "fajr_prealarm")
-        if raw.hasPrefix("custom_") {
-            return WidgetLanguage.localized("Custom Alarm")
-        }
-        if raw.hasSuffix("_prealarm") {
-            let base = String(raw.dropLast("_prealarm".count))
-            return WidgetLanguage.localized(base.capitalized)
-        }
-        return WidgetLanguage.localized(raw.capitalized)
-    }
-
-    var body: some View {
-        switch context.state.mode {
-        case .countdown(let countdown):
-            HStack {
-                Text(timerInterval: .now...max(.now, countdown.fireDate), countsDown: true)
-                    .font(.system(size: 48, weight: .bold, design: .rounded))
-                    .monospacedDigit()
-                    .foregroundStyle(.white)
-
-                Spacer()
-
-                Button(intent: CancelAlarmSnoozeIntent()) {
-                    Image(systemName: "xmark")
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundStyle(.white)
-                        .frame(width: 52, height: 52)
-                        .background(.white.opacity(0.2), in: Circle())
-                }
-                .buttonStyle(.plain)
-            }
-
-        case .alert:
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(prayerName)
-                        .font(.system(size: 24, weight: .bold, design: .rounded))
-                        .foregroundStyle(.white)
-                    Text(WidgetLanguage.localized("Alarm Ringing"))
-                        .font(.subheadline)
-                        .foregroundStyle(.white.opacity(0.7))
-                }
-                Spacer()
-                Image(systemName: "alarm.waves.left.and.right.fill")
-                    .font(.system(size: 32))
-                    .foregroundStyle(.white)
-            }
-
-        @unknown default:
-            EmptyView()
-        }
-    }
-}
-
 @available(iOS 26, *)
 struct AlarmSnoozeActivityWidget: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: AlarmAttributes<AdhanAlarmMetadata>.self) { context in
-            AlarmCountdownView(context: context)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 16)
+            lockScreenView(attributes: context.attributes, state: context.state)
                 .activityBackgroundTint(.black)
         } dynamicIsland: { context in
             DynamicIsland {
-                DynamicIslandExpandedRegion(.center) {
-                    AlarmCountdownView(context: context)
-                        .padding(.horizontal)
+                DynamicIslandExpandedRegion(.leading) {
+                    alarmTitle(attributes: context.attributes, state: context.state)
+                }
+                DynamicIslandExpandedRegion(.trailing) {
+                    Image(systemName: alarmIcon(metadata: context.attributes.metadata))
+                        .foregroundStyle(context.attributes.tintColor)
+                }
+                DynamicIslandExpandedRegion(.bottom) {
+                    bottomView(attributes: context.attributes, state: context.state)
                 }
             } compactLeading: {
-                if case .countdown(let countdown) = context.state.mode {
-                    Text(timerInterval: .now...max(.now, countdown.fireDate), countsDown: true)
-                        .monospacedDigit()
-                        .font(.system(.body, design: .rounded, weight: .bold))
-                        .frame(width: 44)
-                } else {
-                    Image(systemName: "alarm.fill")
-                        .imageScale(.medium)
-                }
+                countdown(state: context.state, maxWidth: 44)
+                    .foregroundStyle(context.attributes.tintColor)
             } compactTrailing: {
-                Image(systemName: "alarm.fill")
-                    .imageScale(.medium)
+                AlarmProgressView(
+                    metadata: context.attributes.metadata,
+                    mode: context.state.mode,
+                    tint: context.attributes.tintColor
+                )
             } minimal: {
-                Image(systemName: "alarm.fill")
-                    .imageScale(.small)
+                AlarmProgressView(
+                    metadata: context.attributes.metadata,
+                    mode: context.state.mode,
+                    tint: context.attributes.tintColor
+                )
+            }
+            .keylineTint(context.attributes.tintColor)
+        }
+    }
+
+    private func lockScreenView(
+        attributes: AlarmAttributes<AdhanAlarmMetadata>,
+        state: AlarmPresentationState
+    ) -> some View {
+        VStack {
+            HStack(alignment: .top) {
+                alarmTitle(attributes: attributes, state: state)
+                Spacer()
+                Image(systemName: alarmIcon(metadata: attributes.metadata))
+                    .foregroundStyle(attributes.tintColor)
+            }
+
+            bottomView(attributes: attributes, state: state)
+        }
+        .padding(12)
+    }
+
+    private func bottomView(
+        attributes: AlarmAttributes<AdhanAlarmMetadata>,
+        state: AlarmPresentationState
+    ) -> some View {
+        HStack {
+            countdown(state: state, maxWidth: 150)
+                .font(.system(size: 40, design: .rounded))
+            Spacer()
+            AlarmControls(presentation: attributes.presentation, state: state)
+        }
+    }
+
+    @ViewBuilder
+    private func countdown(
+        state: AlarmPresentationState,
+        maxWidth: CGFloat = .infinity
+    ) -> some View {
+        Group {
+            switch state.mode {
+            case .countdown(let countdown):
+                Text(timerInterval: Date.now...countdown.fireDate, countsDown: true)
+            case .paused(let paused):
+                let remaining = Duration.seconds(
+                    paused.totalCountdownDuration - paused.previouslyElapsedDuration
+                )
+                let pattern: Duration.TimeFormatStyle.Pattern = remaining > .seconds(60 * 60)
+                    ? .hourMinuteSecond
+                    : .minuteSecond
+                Text(remaining.formatted(.time(pattern: pattern)))
+            default:
+                EmptyView()
+            }
+        }
+        .monospacedDigit()
+        .lineLimit(1)
+        .minimumScaleFactor(0.6)
+        .frame(maxWidth: maxWidth, alignment: .leading)
+    }
+
+    @ViewBuilder
+    private func alarmTitle(
+        attributes: AlarmAttributes<AdhanAlarmMetadata>,
+        state: AlarmPresentationState
+    ) -> some View {
+        let title: LocalizedStringResource? = switch state.mode {
+        case .countdown:
+            attributes.presentation.countdown?.title
+        case .paused:
+            attributes.presentation.paused?.title
+        case .alert:
+            attributes.presentation.alert.title
+        @unknown default:
+            nil
+        }
+
+        Text(title ?? "")
+            .font(.title3)
+            .fontWeight(.semibold)
+            .lineLimit(1)
+            .padding(.leading, 6)
+    }
+
+    private func alarmIcon(metadata: AdhanAlarmMetadata?) -> String {
+        guard let prayerName = metadata?.prayerName else { return "alarm.fill" }
+        if prayerName.hasSuffix("_prealarm") { return "bell.badge.fill" }
+        if prayerName.hasPrefix("custom_") { return "alarm.fill" }
+        return "moon.stars.fill"
+    }
+}
+
+@available(iOS 26, *)
+private struct AlarmProgressView: View {
+    let metadata: AdhanAlarmMetadata?
+    let mode: AlarmPresentationState.Mode
+    let tint: Color
+
+    var body: some View {
+        Group {
+            switch mode {
+            case .countdown(let countdown):
+                ProgressView(
+                    timerInterval: Date.now...countdown.fireDate,
+                    countsDown: true,
+                    label: { EmptyView() },
+                    currentValueLabel: {
+                        Image(systemName: alarmIcon)
+                            .scaleEffect(0.9)
+                    }
+                )
+            case .paused(let paused):
+                let remaining = paused.totalCountdownDuration - paused.previouslyElapsedDuration
+                ProgressView(
+                    value: remaining,
+                    total: paused.totalCountdownDuration,
+                    label: { EmptyView() },
+                    currentValueLabel: {
+                        Image(systemName: "pause.fill")
+                            .scaleEffect(0.8)
+                    }
+                )
+            case .alert:
+                Image(systemName: "alarm.waves.left.and.right.fill")
+            @unknown default:
+                EmptyView()
+            }
+        }
+        .progressViewStyle(.circular)
+        .foregroundStyle(tint)
+        .tint(tint)
+    }
+
+    private var alarmIcon: String {
+        guard let prayerName = metadata?.prayerName else { return "alarm.fill" }
+        if prayerName.hasSuffix("_prealarm") { return "bell.badge.fill" }
+        if prayerName.hasPrefix("custom_") { return "alarm.fill" }
+        return "moon.stars.fill"
+    }
+}
+
+@available(iOS 26, *)
+private struct AlarmControls: View {
+    let presentation: AlarmPresentation
+    let state: AlarmPresentationState
+
+    var body: some View {
+        HStack(spacing: 4) {
+            switch state.mode {
+            case .countdown:
+                // A prayer alarm has no pause/resume workflow. Stopping its snooze
+                // cancels only this alarm, rather than every alarm in the schedule.
+                AlarmButtonView(
+                    config: presentation.alert.stopButton,
+                    intent: CancelAlarmSnoozeIntent(alarmID: state.alarmID.uuidString),
+                    tint: .red
+                )
+            case .alert:
+                AlarmButtonView(
+                    config: presentation.alert.stopButton,
+                    intent: StopAdhanAlarmIntent(alarmID: state.alarmID.uuidString),
+                    tint: .red
+                )
+            default:
+                EmptyView()
             }
         }
     }
 }
-#endif
 
+@available(iOS 26, *)
+private struct AlarmButtonView<Intent>: View where Intent: AppIntent {
+    let config: AlarmButton
+    let intent: Intent
+    let tint: Color
+
+    init?(config: AlarmButton?, intent: Intent, tint: Color) {
+        guard let config else { return nil }
+        self.config = config
+        self.intent = intent
+        self.tint = tint
+    }
+
+    var body: some View {
+        Button(intent: intent) {
+            Label(config.text, systemImage: config.systemImageName)
+                .lineLimit(1)
+        }
+        .tint(tint)
+        .buttonStyle(.borderedProminent)
+        .frame(width: 96, height: 30)
+    }
+}
+#endif
