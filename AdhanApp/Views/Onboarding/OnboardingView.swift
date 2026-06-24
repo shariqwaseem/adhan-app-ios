@@ -265,35 +265,14 @@ struct OnboardingView: View {
         prefs.asrJuristicMethodRawValue = prayerTimesViewModel.asrMethod.rawValue
         prefs.highLatitudeRuleRawValue = prayerTimesViewModel.highLatitudeRule.rawValue
 
-        let alarmAuthorized = notificationScheduler.alarmManager.isAuthorized
-
-        if alarmAuthorized {
-            // Alarm permission granted → all prayers to alarm, system default sound
-            let alarm = PrayerNotificationMode.alarm.rawValue
-            prefs.fajrNotificationMode = alarm
-            prefs.dhuhrNotificationMode = alarm
-            prefs.asrNotificationMode = alarm
-            prefs.maghribNotificationMode = alarm
-            prefs.ishaNotificationMode = alarm
-            // Audio stays "" (system default)
-        } else if notificationScheduler.isPermissionGranted {
-            // Only notification permission → all prayers to notification
-            let notif = PrayerNotificationMode.notification.rawValue
-            prefs.fajrNotificationMode = notif
-            prefs.dhuhrNotificationMode = notif
-            prefs.asrNotificationMode = notif
-            prefs.maghribNotificationMode = notif
-            prefs.ishaNotificationMode = notif
-        } else {
-            // No permissions granted → all prayers to silent
-            let silent = PrayerNotificationMode.silent.rawValue
-            prefs.fajrNotificationMode = silent
-            prefs.dhuhrNotificationMode = silent
-            prefs.asrNotificationMode = silent
-            prefs.maghribNotificationMode = silent
-            prefs.ishaNotificationMode = silent
-        }
-        // tahajjud stays silent (the default)
+        // New installs use standard notifications regardless of AlarmKit authorization.
+        // Tahajjud stays silent via UserPreferences' default value.
+        let notification = PrayerNotificationMode.notification.rawValue
+        prefs.fajrNotificationMode = notification
+        prefs.dhuhrNotificationMode = notification
+        prefs.asrNotificationMode = notification
+        prefs.maghribNotificationMode = notification
+        prefs.ishaNotificationMode = notification
 
         modelContext.insert(prefs)
     }
