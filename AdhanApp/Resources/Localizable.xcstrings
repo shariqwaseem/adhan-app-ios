@@ -641,8 +641,13 @@
         }
       }
     },
+    "Ask Adhan for a specific prayer time." : {
+
+    },
+    "Ask Adhan for the next prayer time." : {
+
+    },
     "Asr" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -912,8 +917,10 @@
         }
       }
     },
+    "Developer" : {
+
+    },
     "Dhuhr" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -1074,7 +1081,6 @@
 
     },
     "Fajr" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -1140,6 +1146,9 @@
         }
       }
     },
+    "Fire Test Alarm in 5s" : {
+
+    },
     "Full Adhan Alarms" : {
       "localizations" : {
         "ar" : {
@@ -1185,6 +1194,9 @@
         }
       }
     },
+    "Get Next Prayer Time" : {
+
+    },
     "Get notified when it's time to pray so you can stay on track throughout the day." : {
       "localizations" : {
         "ar" : {
@@ -1206,6 +1218,9 @@
           }
         }
       }
+    },
+    "Get Prayer Time" : {
+
     },
     "Get Started" : {
       "localizations" : {
@@ -1342,7 +1357,6 @@
       }
     },
     "Isha" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -1521,7 +1535,6 @@
       }
     },
     "Maghrib" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -1768,6 +1781,9 @@
           }
         }
       }
+    },
+    "Next Prayer" : {
+
     },
     "No custom adhan audio selected. Set a prayer to Alarm mode and choose an adhan sound to test it here." : {
       "localizations" : {
@@ -2108,6 +2124,9 @@
           }
         }
       }
+    },
+    "Prayer Time" : {
+
     },
     "Pre" : {
       "localizations" : {
@@ -3042,7 +3061,6 @@
       }
     },
     "Tahajjud" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {

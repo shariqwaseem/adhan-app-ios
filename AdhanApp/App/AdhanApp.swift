@@ -2,6 +2,7 @@ import SwiftUI
 import SwiftData
 import UserNotifications
 import ActivityKit
+import Intents
 
 #if canImport(AlarmKit)
 import AlarmKit
@@ -231,6 +232,7 @@ struct AdhanApp: App {
         #endif
 
         guard hasCompletedOnboarding else { return }
+        requestSiriAuthorizationIfNeeded()
         isActivating = true
         AppLogger.lifecycle.info("onBecameActive: started")
         #if canImport(FirebaseCrashlytics)
@@ -366,6 +368,7 @@ struct AdhanApp: App {
         guard !UserDefaults.standard.bool(forKey: "FASTLANE_SCREENSHOTS") else { return }
 
         onLocationChanged()
+        requestSiriAuthorizationIfNeeded()
 
         if locationManager.isAuthorized,
            (locationManager.cityName == "Set Location" ||
@@ -375,6 +378,13 @@ struct AdhanApp: App {
 
         Task { @MainActor in
             SignificantLocationChangeService.shared.startMonitoringIfAuthorized()
+        }
+    }
+
+    private func requestSiriAuthorizationIfNeeded() {
+        guard INPreferences.siriAuthorizationStatus() == .notDetermined else { return }
+        INPreferences.requestSiriAuthorization { status in
+            AppLogger.lifecycle.info("Siri authorization status: \(String(describing: status))")
         }
     }
 

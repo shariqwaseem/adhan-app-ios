@@ -35,9 +35,11 @@
 		7927EAB1EC99A857EF1D7493 /* AdhanApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131F68871A87011055ADE7E3 /* AdhanApp.swift */; };
 		7BD900964F8DCE0AB368CE8A /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA3423700813829C8A403F7 /* TestView.swift */; };
 		7D24534F388F9EA21177DADF /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A59A57E924F4811B02FE447 /* HomeView.swift */; };
+		8A8B8C8D8E8F909192939495 /* NumeralFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8B8C8D8E8F909192939496 /* NumeralFormatter.swift */; };
 		8D9CE0C5CA7F2BA12A3055AB /* Adhan in Frameworks */ = {isa = PBXBuildFile; productRef = 17B10984E3CFD148FC4F329F /* Adhan */; };
 		9E836436F02462BB160D3480 /* AdhanAlarmAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BCC5F38A7A0B6C53346BA7D /* AdhanAlarmAttributes.swift */; };
 		9EDD775AF0FF861CE007A819 /* CustomAlarmSoundSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B0C19D2730847644F7BD62 /* CustomAlarmSoundSelectionView.swift */; };
+		A111B222C333D444E555F666 /* PrayerTimeIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = A111B222C333D444E555F667 /* PrayerTimeIntents.swift */; };
 		A17EB2359A4F49B08EA3DC3E /* UserPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 998C13B40966B1F1D7E5A657 /* UserPreferences.swift */; };
 		A1AE10AD46A5FDC32B15E2C8 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90DBCCEDEE4D24C88D4B53BB /* OnboardingView.swift */; };
 		A3EECA01873A9EB4B272E85F /* PrayerTimesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1932D99F1773D9E6FCAE34F6 /* PrayerTimesViewModel.swift */; };
@@ -140,12 +142,14 @@
 		7599B0628E2E92E1A4DF20E6 /* SyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncManager.swift; sourceTree = "<group>"; };
 		75BFA6A7A7B0717F00925D0F /* AdhanAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdhanAppTests.swift; sourceTree = "<group>"; };
 		8194E8F3776D50FC3A70B4A2 /* RamadanBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RamadanBanner.swift; sourceTree = "<group>"; };
+		8A8B8C8D8E8F909192939496 /* NumeralFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumeralFormatter.swift; sourceTree = "<group>"; };
 		8B7844EECE7D69EF9C27DB71 /* PrayerTimeEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTimeEntry.swift; sourceTree = "<group>"; };
 		90DBCCEDEE4D24C88D4B53BB /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		949491B1C76EC56E3C3AE93A /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		996FE4AFDBDA4BC035AC0815 /* AdhanAudioDownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdhanAudioDownloadManager.swift; sourceTree = "<group>"; };
 		998C13B40966B1F1D7E5A657 /* UserPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPreferences.swift; sourceTree = "<group>"; };
 		9A43415A2AEE8127C9947D6B /* AdhanWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdhanWidgetsBundle.swift; sourceTree = "<group>"; };
+		A111B222C333D444E555F667 /* PrayerTimeIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTimeIntents.swift; sourceTree = "<group>"; };
 		A5317978492FF0BF787E9508 /* TimeOfDayBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeOfDayBackground.swift; sourceTree = "<group>"; };
 		AEF8F8F171C8ED9654BFC5E4 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		B418092ED3E3003E65974D05 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -239,6 +243,7 @@
 				DBE50F752F7FFBB5007B3C16 /* AppLogger.swift */,
 				121298217F8A6F74B7D203DC /* Constants.swift */,
 				331993B85EDD1C1AA8EA1CA8 /* LanguageManager.swift */,
+				8A8B8C8D8E8F909192939496 /* NumeralFormatter.swift */,
 				CFFBADFA6A7C46A434D9701F /* SharedDataManager.swift */,
 			);
 			path = Utilities;
@@ -411,6 +416,7 @@
 				C3D7E52640933BFFFE985213 /* CalculationMethodInfo.swift */,
 				B7FBEF5CCF94FDA6F126C0CA /* CustomAlarm.swift */,
 				8B7844EECE7D69EF9C27DB71 /* PrayerTimeEntry.swift */,
+				A111B222C333D444E555F667 /* PrayerTimeIntents.swift */,
 				998C13B40966B1F1D7E5A657 /* UserPreferences.swift */,
 			);
 			path = Models;
@@ -653,11 +659,13 @@
 				ED1E16323F3B111820A2ED1B /* LocationSettings.swift in Sources */,
 				AF1E3C3D74A8D3E8264F80AD /* MainTabView.swift in Sources */,
 				1FC2E56ADCD3C5825559D7E8 /* ModeRow.swift in Sources */,
+				8A8B8C8D8E8F909192939495 /* NumeralFormatter.swift in Sources */,
 				0512F6C60232A1C30E854BEB /* NotificationScheduler.swift in Sources */,
 				A1AE10AD46A5FDC32B15E2C8 /* OnboardingView.swift in Sources */,
 				2D6830AAA3AFDABF77C0AD47 /* PrayerCalculationService.swift in Sources */,
 				70AA54EEB73DAA41F77AEA80 /* PrayerDetailView.swift in Sources */,
 				0D82A4CC5017FB5EBE4ABE01 /* PrayerTimeEntry.swift in Sources */,
+				A111B222C333D444E555F666 /* PrayerTimeIntents.swift in Sources */,
 				A3EECA01873A9EB4B272E85F /* PrayerTimesViewModel.swift in Sources */,
 				B7441EFC229FECC77C4AD17C /* QiblaView.swift in Sources */,
 				F7991B7A5F1B21DF9502B5D8 /* QiblaViewModel.swift in Sources */,
@@ -898,6 +906,7 @@
 				);
 				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.shariq.adhanapp;
+				PRODUCT_MODULE_NAME = AdhanApp;
 				PRODUCT_NAME = "Adhan alarm app";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
@@ -988,6 +997,7 @@
 				);
 				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.shariq.adhanapp;
+				PRODUCT_MODULE_NAME = AdhanApp;
 				PRODUCT_NAME = "Adhan alarm app";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;

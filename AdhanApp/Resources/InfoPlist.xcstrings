@@ -128,6 +128,36 @@
           }
         }
       }
+    },
+    "NSSiriUsageDescription" : {
+      "comment" : "Privacy - Siri Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يستخدم أذان Siri للإجابة عن أسئلة أوقات الصلاة، مثل: \"ما وقت الصلاة التالية في أذان؟\""
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adhan uses Siri to answer prayer time questions, for example, \"What time is the next prayer in Adhan?\""
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adhan menggunakan Siri untuk menjawab pertanyaan waktu sholat, misalnya, \"Jam berapa waktu sholat berikutnya di Adhan?\""
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adhan, Siri ile namaz vakti sorularını yanıtlar; örneğin: \"Ezan'da bir sonraki namaz vakti ne zaman?\""
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

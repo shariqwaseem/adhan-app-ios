@@ -35,6 +35,7 @@ final class UserPreferences {
     var ramadanAutoDetect: Bool = true
     var ramadanManualOverride: Bool = false
     var suhoorBufferMinutes: Int = 10
+    var useArabicNumerals: Bool = false
 
     init() {}
 }

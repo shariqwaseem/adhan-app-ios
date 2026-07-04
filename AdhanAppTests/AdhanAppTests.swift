@@ -163,6 +163,53 @@ struct HijriDateTests {
     }
 }
 
+@Suite("Siri Prayer Time Tests")
+struct SiriPrayerTimeTests {
+    @Test("Next prayer answer picks the next upcoming entry")
+    func nextPrayerAnswerPicksUpcomingEntry() {
+        let now = Self.fixedDate(hour: 12, minute: 0)
+        let service = SiriPrayerTimeService { date in
+            guard Calendar.current.isDate(date, inSameDayAs: now) else { return nil }
+            return [
+                PrayerTimeEntry(prayer: .fajr, time: Self.fixedDate(hour: 5, minute: 10)),
+                PrayerTimeEntry(prayer: .dhuhr, time: Self.fixedDate(hour: 13, minute: 15)),
+                PrayerTimeEntry(prayer: .asr, time: Self.fixedDate(hour: 16, minute: 45))
+            ]
+        }
+
+        let answer = service.nextPrayerAnswer(now: now)
+
+        #expect(answer.contains("Dhuhr"))
+        #expect(answer.contains("in 1 hour"))
+    }
+
+    @Test("Specific prayer answer uses past tense after the time passes")
+    func specificPrayerAnswerUsesPastTense() {
+        let now = Self.fixedDate(hour: 8, minute: 0)
+        let service = SiriPrayerTimeService { date in
+            guard Calendar.current.isDate(date, inSameDayAs: now) else { return nil }
+            return [
+                PrayerTimeEntry(prayer: .fajr, time: Self.fixedDate(hour: 5, minute: 10))
+            ]
+        }
+
+        let answer = service.prayerTimeAnswer(for: PrayerName.fajr, now: now)
+
+        #expect(answer.contains("Fajr was at"))
+        #expect(answer.contains("today"))
+    }
+
+    private static func fixedDate(hour: Int, minute: Int) -> Date {
+        var components = DateComponents()
+        components.year = 2026
+        components.month = 7
+        components.day = 3
+        components.hour = hour
+        components.minute = minute
+        return Calendar.current.date(from: components)!
+    }
+}
+
 @Suite("Localization Tests")
 struct LocalizationTests {
 
