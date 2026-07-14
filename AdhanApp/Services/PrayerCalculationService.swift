@@ -14,7 +14,7 @@ protocol PrayerCalculationServiceProtocol: Sendable {
         date: Date,
         latitude: Double,
         longitude: Double,
-        method: CalculationMethodInfo,
+        configuration: ResolvedCalculationConfiguration,
         asrMethod: AsrJuristicMethod,
         highLatitudeRule: HighLatitudeRuleOption,
         adjustments: [PrayerName: Int]
@@ -25,7 +25,7 @@ protocol PrayerCalculationServiceProtocol: Sendable {
         days: Int,
         latitude: Double,
         longitude: Double,
-        method: CalculationMethodInfo,
+        configuration: ResolvedCalculationConfiguration,
         asrMethod: AsrJuristicMethod,
         highLatitudeRule: HighLatitudeRuleOption,
         adjustments: [PrayerName: Int]
@@ -35,128 +35,82 @@ protocol PrayerCalculationServiceProtocol: Sendable {
 }
 
 struct PrayerCalculationService: PrayerCalculationServiceProtocol {
+    private let calendar: Calendar
+    private let core: PrayerCalculationCore
+
+    init(calendar: Calendar = .autoupdatingCurrent) {
+        self.calendar = calendar
+        self.core = PrayerCalculationCore(calendar: calendar)
+    }
 
     func calculatePrayerTimes(
         date: Date,
         latitude: Double,
         longitude: Double,
-        method: CalculationMethodInfo,
+        configuration: ResolvedCalculationConfiguration,
         asrMethod: AsrJuristicMethod,
         highLatitudeRule: HighLatitudeRuleOption,
         adjustments: [PrayerName: Int]
     ) -> [PrayerTimeEntry] {
-        let cal = Calendar.current
-        let components = cal.dateComponents([.year, .month, .day], from: date)
-        let dateComponents = DateComponents(
-            calendar: cal,
-            year: components.year,
-            month: components.month,
-            day: components.day
-        )
-        let coordinates = Coordinates(latitude: latitude, longitude: longitude)
-        var params = calculationParameters(for: method)
-        params.madhab = adhanMadhab(for: asrMethod)
-        params.highLatitudeRule = adhanHighLatitudeRule(for: highLatitudeRule)
-
-        guard let prayerTimes = PrayerTimes(coordinates: coordinates, date: dateComponents, calculationParameters: params) else {
-            return []
+        let entries = core.calculate(
+            date: date,
+            latitude: latitude,
+            longitude: longitude,
+            configuration: configuration,
+            asrMethod: asrMethod,
+            highLatitudeRule: highLatitudeRule
+        ).map { base in
+            PrayerTimeEntry(
+                prayer: base.prayer,
+                time: base.time,
+                manualAdjustmentMinutes: adjustments[base.prayer] ?? 0
+            )
         }
-
-        let now = Date()
-
-        // Calculate Tahajjud: last third of the night between previous Isha and today's Fajr
-        let tahajjudTime: Date = {
-            let fajr = prayerTimes.fajr
-            // Get yesterday's Isha for the night calculation
-            let cal = Calendar.current
-            if let yesterday = cal.date(byAdding: .day, value: -1, to: date) {
-                let yComponents = cal.dateComponents([.year, .month, .day], from: yesterday)
-                let yDateComponents = DateComponents(calendar: cal, year: yComponents.year, month: yComponents.month, day: yComponents.day)
-                if let yesterdayPrayers = PrayerTimes(coordinates: coordinates, date: yDateComponents, calculationParameters: params) {
-                    let isha = yesterdayPrayers.isha
-                    let nightDuration = fajr.timeIntervalSince(isha)
-                    // Last third of the night = Isha + (2/3 of night duration)
-                    return isha.addingTimeInterval(nightDuration * 2.0 / 3.0)
-                }
-            }
-            // Fallback: estimate last third as 2 hours before Fajr
-            return fajr.addingTimeInterval(-2 * 3600)
-        }()
-
-        var entries = [
-            PrayerTimeEntry(prayer: .tahajjud, time: tahajjudTime, manualAdjustmentMinutes: adjustments[.tahajjud] ?? 0),
-            PrayerTimeEntry(prayer: .fajr, time: prayerTimes.fajr, manualAdjustmentMinutes: adjustments[.fajr] ?? 0),
-            PrayerTimeEntry(prayer: .dhuhr, time: prayerTimes.dhuhr, manualAdjustmentMinutes: adjustments[.dhuhr] ?? 0),
-            PrayerTimeEntry(prayer: .asr, time: prayerTimes.asr, manualAdjustmentMinutes: adjustments[.asr] ?? 0),
-            PrayerTimeEntry(prayer: .maghrib, time: prayerTimes.maghrib, manualAdjustmentMinutes: adjustments[.maghrib] ?? 0),
-            PrayerTimeEntry(prayer: .isha, time: prayerTimes.isha, manualAdjustmentMinutes: adjustments[.isha] ?? 0),
-        ]
 
         // Log all computed prayer times
         let tf = DateFormatter()
         tf.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        tf.timeZone = .current
+        tf.timeZone = calendar.timeZone
         let timesLog = entries.map { "\($0.prayer.rawValue)=\(tf.string(from: $0.adjustedTime))" }.joined(separator: ", ")
-        AppLogger.calculation.info("Prayer times for \(tf.string(from: date)) at (\(latitude), \(longitude)) method=\(method.rawValue): \(timesLog)")
+        AppLogger.calculation.info("Prayer times for \(tf.string(from: date)) at (\(latitude), \(longitude)) method=\(configuration.logName): \(timesLog)")
 
         // Flag anomaly: Isha between midnight and 3 AM at non-extreme latitudes
-        let ishaHour = cal.component(.hour, from: prayerTimes.isha)
-        if abs(latitude) < 50 && ishaHour >= 0 && ishaHour < 3 {
-            AppLogger.calculation.error("ANOMALY: Isha at \(tf.string(from: prayerTimes.isha)) — unexpected for latitude \(latitude)")
+        if let isha = entries.first(where: { $0.prayer == .isha })?.time,
+           abs(latitude) < 50,
+           (0..<3).contains(calendar.component(.hour, from: isha)) {
+            AppLogger.calculation.error("ANOMALY: Isha at \(tf.string(from: isha)) — unexpected for latitude \(latitude)")
             #if canImport(FirebaseCrashlytics)
             let anomalyError = NSError(domain: "com.shariqw.adhanpro.anomaly", code: 1, userInfo: [
                 "prayer": "Isha",
-                "time": tf.string(from: prayerTimes.isha),
+                "time": tf.string(from: isha),
                 "latitude": latitude,
                 "longitude": longitude,
-                "method": method.rawValue
+                "method": configuration.logName
             ])
             Crashlytics.crashlytics().record(error: anomalyError)
             #endif
             #if canImport(FirebaseAnalytics)
             Analytics.logEvent("prayer_time_anomaly", parameters: [
                 "prayer": "Isha",
-                "isha_time": tf.string(from: prayerTimes.isha),
+                "isha_time": tf.string(from: isha),
                 "latitude": latitude,
                 "longitude": longitude,
-                "method": method.rawValue
+                "method": configuration.logName
             ])
             #endif
         }
 
         #if canImport(FirebaseCrashlytics)
         let crashlytics = Crashlytics.crashlytics()
-        crashlytics.setCustomValue(tf.string(from: prayerTimes.isha), forKey: "last_computed_isha")
-        crashlytics.setCustomValue(tf.string(from: prayerTimes.fajr), forKey: "last_computed_fajr")
-        crashlytics.setCustomValue("\(latitude),\(longitude)", forKey: "last_coordinates")
-        crashlytics.setCustomValue(method.rawValue, forKey: "last_calc_method")
-        #endif
-
-        // Determine current and next prayer
-        if cal.isDate(date, inSameDayAs: now) {
-            for i in entries.indices {
-                let adjustedTime = entries[i].adjustedTime
-                let nextIndex = entries.index(after: i)
-                let nextTime = nextIndex < entries.count ? entries[nextIndex].adjustedTime : nil
-
-                if now >= adjustedTime && (nextTime == nil || now < nextTime!) {
-                    entries[i].isCurrent = true
-                    if let ni = nextTime, ni > now, nextIndex < entries.count {
-                        entries[nextIndex].isNext = true
-                    }
-                }
-            }
-
-            // If before first prayer, first prayer is next
-            if !entries.contains(where: { $0.isNext || $0.isCurrent }) {
-                if let first = entries.first, now < first.adjustedTime {
-                    entries[0].isNext = true
-                }
-            }
-
-            // If after last prayer, no current/next for today
+        if let isha = entries.first(where: { $0.prayer == .isha })?.time {
+            crashlytics.setCustomValue(tf.string(from: isha), forKey: "last_computed_isha")
         }
-
+        if let fajr = entries.first(where: { $0.prayer == .fajr })?.time {
+            crashlytics.setCustomValue(tf.string(from: fajr), forKey: "last_computed_fajr")
+        }
+        crashlytics.setCustomValue("\(latitude),\(longitude)", forKey: "last_coordinates")
+        crashlytics.setCustomValue(configuration.logName, forKey: "last_calc_method")
+        #endif
         return entries
     }
 
@@ -165,19 +119,18 @@ struct PrayerCalculationService: PrayerCalculationServiceProtocol {
         days: Int,
         latitude: Double,
         longitude: Double,
-        method: CalculationMethodInfo,
+        configuration: ResolvedCalculationConfiguration,
         asrMethod: AsrJuristicMethod,
         highLatitudeRule: HighLatitudeRuleOption,
         adjustments: [PrayerName: Int]
     ) -> [[PrayerTimeEntry]] {
-        let cal = Calendar.current
         return (0..<days).compactMap { offset in
-            guard let date = cal.date(byAdding: .day, value: offset, to: startDate) else { return nil }
+            guard let date = calendar.date(byAdding: .day, value: offset, to: startDate) else { return nil }
             return calculatePrayerTimes(
                 date: date,
                 latitude: latitude,
                 longitude: longitude,
-                method: method,
+                configuration: configuration,
                 asrMethod: asrMethod,
                 highLatitudeRule: highLatitudeRule,
                 adjustments: adjustments
@@ -188,53 +141,5 @@ struct PrayerCalculationService: PrayerCalculationServiceProtocol {
     func qiblaDirection(latitude: Double, longitude: Double) -> Double {
         let qibla = Qibla(coordinates: Coordinates(latitude: latitude, longitude: longitude))
         return qibla.direction
-    }
-
-    // MARK: - Private Mappings
-
-    private func calculationParameters(for method: CalculationMethodInfo) -> CalculationParameters {
-        switch method {
-        case .MuslimWorldLeague:
-            return CalculationMethod.muslimWorldLeague.params
-        case .Egyptian:
-            return CalculationMethod.egyptian.params
-        case .Karachi:
-            return CalculationMethod.karachi.params
-        case .UmmAlQura:
-            return CalculationMethod.ummAlQura.params
-        case .Dubai:
-            return CalculationMethod.dubai.params
-        case .MoonsightingCommittee:
-            return CalculationMethod.moonsightingCommittee.params
-        case .NorthAmerica:
-            return CalculationMethod.northAmerica.params
-        case .Kuwait:
-            return CalculationMethod.kuwait.params
-        case .Qatar:
-            return CalculationMethod.qatar.params
-        case .Singapore:
-            return CalculationMethod.singapore.params
-        case .Jafari:
-            return CalculationMethod.tehran.params
-        case .Turkey:
-            return CalculationMethod.turkey.params
-        case .Other:
-            return CalculationMethod.other.params
-        }
-    }
-
-    private func adhanMadhab(for method: AsrJuristicMethod) -> Madhab {
-        switch method {
-        case .standard: return .shafi
-        case .hanafi: return .hanafi
-        }
-    }
-
-    private func adhanHighLatitudeRule(for rule: HighLatitudeRuleOption) -> HighLatitudeRule {
-        switch rule {
-        case .middleOfTheNight: return .middleOfTheNight
-        case .seventhOfTheNight: return .seventhOfTheNight
-        case .twilightAngle: return .twilightAngle
-        }
     }
 }

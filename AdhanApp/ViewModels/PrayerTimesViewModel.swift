@@ -15,14 +15,55 @@ final class PrayerTimesViewModel {
 
     private let calculationService: PrayerCalculationServiceProtocol
     private let hijriDateService: HijriDateService
+    private let calculationCore: PrayerCalculationCore
+    private let calendar: Calendar
+    private let persistsCalculationSettings: Bool
+    private var calculatedDate: Date?
 
-    // Current calculation parameters — persisted via UserDefaults
-    var calculationMethod: CalculationMethodInfo = .MuslimWorldLeague {
+    // Current calculation parameters — persisted as one versioned payload.
+    var calculationSettings: CalculationSettingsPayload {
         didSet {
-            UserDefaults.standard.set(calculationMethod.rawValue, forKey: "calculationMethod")
-            SharedDataManager.saveCalculationMethod(calculationMethod.rawValue)
+            persistCalculationSettings()
         }
     }
+
+    var calculationSelection: CalculationSelection { calculationSettings.selection }
+
+    var resolvedCalculationConfiguration: ResolvedCalculationConfiguration {
+        calculationSelection.resolved(countryCode: countryCode)
+    }
+
+    var effectiveCalculationMethod: CalculationMethodInfo? {
+        resolvedCalculationConfiguration.presetMethod
+    }
+
+    var calculationSelectionLabel: String {
+        switch calculationSelection {
+        case .automatic:
+            let method = CalculationMethodInfo.recommendedMethod(forCountryCode: countryCode)
+            return "Auto (\(method.shortDisplayName))"
+        case .preset(let method):
+            return method.localizedName
+        case .custom:
+            return String(localized: "Custom", bundle: LanguageManager.shared.bundle)
+        }
+    }
+
+    var customCalculationParameters: CustomCalculationParameters {
+        if case .custom(let parameters) = calculationSelection {
+            return parameters
+        }
+        if let saved = calculationSettings.savedCustomParameters {
+            return saved
+        }
+        let seed = effectiveCalculationMethod ?? CalculationMethodInfo.recommendedMethod(forCountryCode: countryCode)
+        return calculationCore.customParameters(seedFrom: seed)
+    }
+
+    var calculationSettingsData: Data? {
+        CalculationSettingsStorage.encode(calculationSettings)
+    }
+
     var asrMethod: AsrJuristicMethod = .hanafi {
         didSet {
             UserDefaults.standard.set(asrMethod.rawValue, forKey: "asrMethod")
@@ -43,20 +84,29 @@ final class PrayerTimesViewModel {
     var longitude: Double = 39.8262
 
     init(
-        calculationService: PrayerCalculationServiceProtocol = PrayerCalculationService(),
-        hijriDateService: HijriDateService = HijriDateService()
+        calculationService: PrayerCalculationServiceProtocol? = nil,
+        hijriDateService: HijriDateService = HijriDateService(),
+        calendar: Calendar = .autoupdatingCurrent,
+        initialCalculationSettings: CalculationSettingsPayload? = nil,
+        persistsCalculationSettings: Bool = true
     ) {
-        self.calculationService = calculationService
+        self.calculationService = calculationService ?? PrayerCalculationService(calendar: calendar)
         self.hijriDateService = hijriDateService
+        self.calendar = calendar
+        self.calculationCore = PrayerCalculationCore(calendar: calendar)
+        self.persistsCalculationSettings = persistsCalculationSettings
+
+        let iCloudData = initialCalculationSettings == nil && persistsCalculationSettings
+            ? NSUbiquitousKeyValueStore.default.data(forKey: CalculationSettingsStorage.iCloudKey)
+            : nil
+        self.calculationSettings = initialCalculationSettings ?? CalculationSettingsStorage.preferred([
+            CalculationSettingsStorage.load(from: .standard),
+            Constants.sharedDefaults.flatMap(CalculationSettingsStorage.load(from:)),
+            CalculationSettingsStorage.decode(iCloudData),
+        ]) ?? CalculationSettingsPayload()
 
         // Restore saved calculation settings
         let defaults = UserDefaults.standard
-        if let raw = defaults.string(forKey: "calculationMethod"),
-           let method = CalculationMethodInfo(rawValue: raw) {
-            self.calculationMethod = method
-        }
-        // Sync to shared defaults for the widget
-        SharedDataManager.saveCalculationMethod(calculationMethod.rawValue)
         if let raw = defaults.string(forKey: "asrMethod"),
            let method = AsrJuristicMethod(rawValue: raw) {
             self.asrMethod = method
@@ -75,23 +125,54 @@ final class PrayerTimesViewModel {
             self.cityName = saved.cityName
             self.countryCode = saved.countryCode
         }
+
+        persistCalculationSettings()
     }
 
-    func calculateToday() {
-        let now = Date()
+    func setCalculationSelection(_ selection: CalculationSelection) {
+        var settings = calculationSettings
+        settings.selection = selection
+        if case .custom(let parameters) = selection {
+            settings.savedCustomParameters = parameters
+        }
+        settings.updatedAt = Date()
+        settings.wasExplicitlySelected = true
+        calculationSettings = settings
+    }
+
+    func updateCustomCalculationParameters(_ parameters: CustomCalculationParameters) {
+        setCalculationSelection(.custom(parameters.validated))
+    }
+
+    func resetCustomCalculationParameters() {
+        let method = CalculationMethodInfo.recommendedMethod(forCountryCode: countryCode)
+        updateCustomCalculationParameters(calculationCore.customParameters(seedFrom: method))
+    }
+
+    @discardableResult
+    func mergeCalculationSettings(_ incoming: CalculationSettingsPayload) -> Bool {
+        guard let preferred = CalculationSettingsStorage.preferred([calculationSettings, incoming]),
+              preferred != calculationSettings else { return false }
+        calculationSettings = preferred
+        calculateToday()
+        return true
+    }
+
+    func calculateToday(at now: Date = Date()) {
         hijriDate = hijriDateService.hijriDateString(for: now)
+        calculatedDate = now
 
         prayerEntries = calculationService.calculatePrayerTimes(
             date: now,
             latitude: latitude,
             longitude: longitude,
-            method: calculationMethod,
+            configuration: resolvedCalculationConfiguration,
             asrMethod: asrMethod,
             highLatitudeRule: highLatitudeRule,
             adjustments: manualAdjustments
         )
 
-        updateCurrentAndNext()
+        refreshPrayerState(at: now, recalculateDayIfNeeded: false)
         isLoading = false
 
         // Save for widget
@@ -102,42 +183,56 @@ final class PrayerTimesViewModel {
         SharedDataManager.reloadWidgets()
     }
 
-    func updateCurrentAndNext() {
-        let now = Date()
-        currentPrayer = prayerEntries.first(where: { $0.isCurrent })
-        nextPrayer = prayerEntries.first(where: { $0.isNext })
+    func refreshPrayerState(at now: Date = Date()) {
+        refreshPrayerState(at: now, recalculateDayIfNeeded: true)
+    }
 
-        // If no next prayer today, get tomorrow's fajr
-        if nextPrayer == nil && (currentPrayer != nil || prayerEntries.allSatisfy({ $0.adjustedTime < now })) {
-            let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: now)!
-            let tomorrowEntries = calculationService.calculatePrayerTimes(
-                date: tomorrow,
+    private func refreshPrayerState(at now: Date, recalculateDayIfNeeded: Bool) {
+        if recalculateDayIfNeeded,
+           let calculatedDate,
+           !calendar.isDate(calculatedDate, inSameDayAs: now) {
+            calculateToday(at: now)
+            return
+        }
+
+        let adjacentDates = [-1, 0, 1].compactMap { calendar.date(byAdding: .day, value: $0, to: now) }
+        let schedule = adjacentDates.flatMap { date in
+            calculationService.calculatePrayerTimes(
+                date: date,
                 latitude: latitude,
                 longitude: longitude,
-                method: calculationMethod,
+                configuration: resolvedCalculationConfiguration,
                 asrMethod: asrMethod,
                 highLatitudeRule: highLatitudeRule,
                 adjustments: manualAdjustments
             )
-            if let fajr = tomorrowEntries.first {
-                nextPrayer = PrayerTimeEntry(prayer: fajr.prayer, time: fajr.time, isNext: true, manualAdjustmentMinutes: fajr.manualAdjustmentMinutes)
-            }
-        }
+        }.sorted { $0.adjustedTime < $1.adjustedTime }
 
-        if let next = nextPrayer {
-            timeUntilNext = next.adjustedTime.timeIntervalSince(now)
+        var current = schedule.last(where: { $0.adjustedTime <= now })
+        var next = schedule.first(where: { $0.adjustedTime > now })
+        current?.isCurrent = true
+        next?.isNext = true
+        currentPrayer = current
+        nextPrayer = next
+        timeUntilNext = max(0, next?.adjustedTime.timeIntervalSince(now) ?? 0)
+
+        prayerEntries = prayerEntries.map { entry in
+            var updated = entry
+            updated.isCurrent = current.map {
+                $0.prayer == entry.prayer && abs($0.adjustedTime.timeIntervalSince(entry.adjustedTime)) < 1
+            } ?? false
+            updated.isNext = next.map {
+                $0.prayer == entry.prayer && abs($0.adjustedTime.timeIntervalSince(entry.adjustedTime)) < 1
+            } ?? false
+            return updated
         }
     }
 
-    func updateLocation(latitude: Double, longitude: Double, cityName: String, countryCode: String?, autoSetCalculationMethod: Bool = false) {
+    func updateLocation(latitude: Double, longitude: Double, cityName: String, countryCode: String?) {
         self.latitude = latitude
         self.longitude = longitude
         self.cityName = cityName
         self.countryCode = countryCode
-
-        if autoSetCalculationMethod, let code = countryCode {
-            self.calculationMethod = CalculationMethodInfo.recommendedMethod(forCountryCode: code)
-        }
         calculateToday()
 
         Task { @MainActor in
@@ -155,7 +250,7 @@ final class PrayerTimesViewModel {
             days: Constants.NotificationBudget.daysToScheduleAhead,
             latitude: latitude,
             longitude: longitude,
-            method: calculationMethod,
+            configuration: resolvedCalculationConfiguration,
             asrMethod: asrMethod,
             highLatitudeRule: highLatitudeRule,
             adjustments: manualAdjustments
@@ -164,5 +259,17 @@ final class PrayerTimesViewModel {
 
     var qiblaDirection: Double {
         calculationService.qiblaDirection(latitude: latitude, longitude: longitude)
+    }
+
+    private func persistCalculationSettings() {
+        guard persistsCalculationSettings else { return }
+        CalculationSettingsStorage.save(calculationSettings, to: .standard)
+        if let sharedDefaults = Constants.sharedDefaults {
+            CalculationSettingsStorage.save(calculationSettings, to: sharedDefaults)
+        }
+        if let data = calculationSettingsData {
+            NSUbiquitousKeyValueStore.default.set(data, forKey: CalculationSettingsStorage.iCloudKey)
+            NSUbiquitousKeyValueStore.default.synchronize()
+        }
     }
 }

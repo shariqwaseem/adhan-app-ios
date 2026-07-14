@@ -8,6 +8,7 @@ final class SyncManager {
 
     // Synced preference keys
     private enum SyncKeys {
+        static let calculationSettings = CalculationSettingsStorage.iCloudKey
         static let calculationMethod = "sync_calculationMethod"
         static let asrMethod = "sync_asrMethod"
         static let highLatitudeRule = "sync_highLatitudeRule"
@@ -17,6 +18,7 @@ final class SyncManager {
         static let asrMode = "sync_asrNotificationMode"
         static let maghribMode = "sync_maghribNotificationMode"
         static let ishaMode = "sync_ishaNotificationMode"
+        static let alertTimingSettings = "sync_alertTimingSettings"
         static let ramadanAutoDetect = "sync_ramadanAutoDetect"
         static let ramadanManualOverride = "sync_ramadanManualOverride"
         static let suhoorBuffer = "sync_suhoorBufferMinutes"
@@ -39,6 +41,9 @@ final class SyncManager {
     // MARK: - Push to iCloud
 
     func pushPreferences(_ preferences: UserPreferences) {
+        if let data = preferences.calculationSettingsData {
+            store.set(data, forKey: SyncKeys.calculationSettings)
+        }
         store.set(preferences.calculationMethodRawValue, forKey: SyncKeys.calculationMethod)
         store.set(preferences.asrJuristicMethodRawValue, forKey: SyncKeys.asrMethod)
         store.set(preferences.highLatitudeRuleRawValue, forKey: SyncKeys.highLatitudeRule)
@@ -48,6 +53,9 @@ final class SyncManager {
         store.set(preferences.asrNotificationMode, forKey: SyncKeys.asrMode)
         store.set(preferences.maghribNotificationMode, forKey: SyncKeys.maghribMode)
         store.set(preferences.ishaNotificationMode, forKey: SyncKeys.ishaMode)
+        if let data = preferences.alertTimingSettingsData {
+            store.set(data, forKey: SyncKeys.alertTimingSettings)
+        }
         store.set(preferences.ramadanAutoDetect, forKey: SyncKeys.ramadanAutoDetect)
         store.set(preferences.ramadanManualOverride, forKey: SyncKeys.ramadanManualOverride)
         store.set(preferences.suhoorBufferMinutes, forKey: SyncKeys.suhoorBuffer)
@@ -57,6 +65,10 @@ final class SyncManager {
     // MARK: - Pull from iCloud
 
     func pullPreferences(into preferences: UserPreferences) {
+        if let data = store.data(forKey: SyncKeys.calculationSettings),
+           CalculationSettingsStorage.decode(data) != nil {
+            preferences.calculationSettingsData = data
+        }
         if let method = store.string(forKey: SyncKeys.calculationMethod), !method.isEmpty {
             preferences.calculationMethodRawValue = method
         }
@@ -83,6 +95,10 @@ final class SyncManager {
         }
         if let mode = store.string(forKey: SyncKeys.ishaMode), !mode.isEmpty {
             preferences.ishaNotificationMode = mode
+        }
+        if let data = store.data(forKey: SyncKeys.alertTimingSettings),
+           (try? JSONDecoder().decode([String: AlertTimingSettings].self, from: data)) != nil {
+            preferences.alertTimingSettingsData = data
         }
         preferences.ramadanAutoDetect = store.bool(forKey: SyncKeys.ramadanAutoDetect)
         preferences.ramadanManualOverride = store.bool(forKey: SyncKeys.ramadanManualOverride)

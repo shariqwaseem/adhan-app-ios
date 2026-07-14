@@ -32,6 +32,16 @@ struct SharedDataManager: Sendable {
         defaults.set(rawValue, forKey: Constants.Keys.calculationMethod)
     }
 
+    static func saveCalculationSettings(_ payload: CalculationSettingsPayload) {
+        guard let defaults = Constants.sharedDefaults else { return }
+        CalculationSettingsStorage.save(payload, to: defaults)
+    }
+
+    static func loadCalculationSettings() -> CalculationSettingsPayload? {
+        guard let defaults = Constants.sharedDefaults else { return nil }
+        return CalculationSettingsStorage.load(from: defaults)
+    }
+
     static func loadCalculationMethod() -> CalculationMethodInfo? {
         guard let rawValue = Constants.sharedDefaults?.string(forKey: Constants.Keys.calculationMethod) else {
             return nil

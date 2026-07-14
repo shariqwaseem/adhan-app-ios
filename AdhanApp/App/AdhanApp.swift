@@ -169,6 +169,19 @@ struct AdhanApp: App {
                         )
                     }
                 }
+                .onReceive(NotificationCenter.default.publisher(for: NSUbiquitousKeyValueStore.didChangeExternallyNotification)) { _ in
+                    guard let data = NSUbiquitousKeyValueStore.default.data(forKey: CalculationSettingsStorage.iCloudKey),
+                          let incoming = CalculationSettingsStorage.decode(data),
+                          prayerTimesViewModel.mergeCalculationSettings(incoming) else { return }
+                    syncCalculationPreferencesIfPresent()
+                    Task { @MainActor in
+                        await notificationScheduler.rescheduleAll(
+                            prayerEntries: prayerTimesViewModel.multiDayTimes(),
+                            preferences: fetchPreferences(),
+                            customAlarms: fetchCustomAlarms()
+                        )
+                    }
+                }
         }
         .modelContainer(sharedModelContainer)
     }
@@ -335,16 +348,12 @@ struct AdhanApp: App {
         guard !UserDefaults.standard.bool(forKey: "FASTLANE_SCREENSHOTS") else { return }
         guard locationManager.latitude != 0 || locationManager.longitude != 0 else { return }
         guard locationManager.cityName != "Set Location" else { return }
-        let isInitialStoredLocation = SharedDataManager.loadLocation() == nil
         let shouldSchedule = hasCompletedOnboarding
-        let isManual = locationManager.isManualLocationRequest
-        locationManager.isManualLocationRequest = false
         prayerTimesViewModel.updateLocation(
             latitude: locationManager.latitude,
             longitude: locationManager.longitude,
             cityName: locationManager.cityName,
-            countryCode: locationManager.countryCode,
-            autoSetCalculationMethod: isManual || isInitialStoredLocation
+            countryCode: locationManager.countryCode
         )
         syncCalculationPreferencesIfPresent()
         guard shouldSchedule else { return }
@@ -391,7 +400,8 @@ struct AdhanApp: App {
     @MainActor
     private func syncCalculationPreferencesIfPresent() {
         guard let prefs = fetchPreferences() else { return }
-        prefs.calculationMethodRawValue = prayerTimesViewModel.calculationMethod.rawValue
+        prefs.calculationSettingsData = prayerTimesViewModel.calculationSettingsData
+        prefs.calculationMethodRawValue = prayerTimesViewModel.resolvedCalculationConfiguration.logName
         prefs.asrJuristicMethodRawValue = prayerTimesViewModel.asrMethod.rawValue
         prefs.highLatitudeRuleRawValue = prayerTimesViewModel.highLatitudeRule.rawValue
         try? sharedModelContainer.mainContext.save()

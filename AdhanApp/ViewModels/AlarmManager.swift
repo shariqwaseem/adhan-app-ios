@@ -235,11 +235,11 @@ final class AdhanAlarmManager {
         throw AlarmScheduleError.notAuthorized("Alarm mode requires iOS 26 or later.")
     }
 
-    /// Schedule a pre-alarm that fires before a prayer.
+    /// Schedule an offset alarm before, at, or after a prayer.
     func schedulePreAlarm(
         for prayer: PrayerName,
-        at preAlarmTime: Date,
-        minutesBefore: Int
+        at offsetAlarmTime: Date,
+        offsetMinutes: Int
     ) async throws {
         #if canImport(AlarmKit)
         if #available(iOS 26, *) {
@@ -252,8 +252,12 @@ final class AdhanAlarmManager {
 
             let alarmID = UUID()
             let bundle = LanguageManager.shared.bundle
-            let title = String(localized: "\(prayer.localizedName) in \(minutesBefore) min", bundle: bundle)
-            let snoozeCountdownTitle = String(localized: "Snoozing — \(prayer.localizedName) pre-alarm", bundle: bundle)
+            let timing = AlertTimingSettings(
+                offsetMinutes: offsetMinutes,
+                isOffsetAlertEnabled: true
+            )
+            let title = timing.localizedAlertTitle(subject: prayer.localizedName, bundle: bundle)
+            let snoozeCountdownTitle = String(localized: "Snoozing — \(prayer.localizedName) offset alarm", bundle: bundle)
 
             let presentation = makePresentation(
                 alertTitle: title,
@@ -262,12 +266,12 @@ final class AdhanAlarmManager {
 
             let attributes = AlarmAttributes<AdhanAlarmMetadata>(
                 presentation: presentation,
-                metadata: AdhanAlarmMetadata(prayerName: "\(prayer.rawValue)_prealarm", prayerTime: preAlarmTime),
+                metadata: AdhanAlarmMetadata(prayerName: "\(prayer.rawValue)_prealarm", prayerTime: offsetAlarmTime),
                 tintColor: .orange
             )
 
             let configuration = AlarmKit.AlarmManager.AlarmConfiguration(
-                schedule: .fixed(preAlarmTime),
+                schedule: .fixed(offsetAlarmTime),
                 attributes: attributes,
                 stopIntent: StopAdhanAlarmIntent(alarmID: alarmID.uuidString),
 
@@ -283,12 +287,12 @@ final class AdhanAlarmManager {
         throw AlarmScheduleError.notAuthorized("Alarm mode requires iOS 26 or later.")
     }
 
-    /// Schedule a pre-alarm for a custom alarm.
+    /// Schedule an offset alarm for a custom alarm.
     func scheduleCustomPreAlarm(
         id: UUID,
         title: String,
-        at preAlarmTime: Date,
-        minutesBefore: Int
+        at offsetAlarmTime: Date,
+        offsetMinutes: Int
     ) async throws {
         #if canImport(AlarmKit)
         if #available(iOS 26, *) {
@@ -301,8 +305,12 @@ final class AdhanAlarmManager {
 
             let alarmID = UUID()
             let bundle = LanguageManager.shared.bundle
-            let alertTitle = String(localized: "\(title) in \(minutesBefore) min", bundle: bundle)
-            let snoozeCountdownTitle = String(localized: "Snoozing — \(title) pre-alarm", bundle: bundle)
+            let timing = AlertTimingSettings(
+                offsetMinutes: offsetMinutes,
+                isOffsetAlertEnabled: true
+            )
+            let alertTitle = timing.localizedAlertTitle(subject: title, bundle: bundle)
+            let snoozeCountdownTitle = String(localized: "Snoozing — \(title) offset alarm", bundle: bundle)
 
             let presentation = makePresentation(
                 alertTitle: alertTitle,
@@ -311,12 +319,12 @@ final class AdhanAlarmManager {
 
             let attributes = AlarmAttributes<AdhanAlarmMetadata>(
                 presentation: presentation,
-                metadata: AdhanAlarmMetadata(prayerName: "custom_\(id.uuidString)_prealarm", prayerTime: preAlarmTime),
+                metadata: AdhanAlarmMetadata(prayerName: "custom_\(id.uuidString)_prealarm", prayerTime: offsetAlarmTime),
                 tintColor: .orange
             )
 
             let configuration = AlarmKit.AlarmManager.AlarmConfiguration(
-                schedule: .fixed(preAlarmTime),
+                schedule: .fixed(offsetAlarmTime),
                 attributes: attributes,
                 stopIntent: StopAdhanAlarmIntent(alarmID: alarmID.uuidString),
 

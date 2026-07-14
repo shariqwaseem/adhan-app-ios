@@ -1,0 +1,3 @@
+• Namaz ve özel alarm bildirimlerini artık belirlenen saatten önce, tam zamanında veya sonra planlayabilir; dilerseniz iki bildirim kullanabilirsiniz.
+• Otomatik, hazır veya özel namaz vakti hesaplamasını seçebilir; İmsak ve Yatsı ayarlarını özelleştirebilirsiniz.
+• Ayar eşzamanlama, namaz vakti geçişleri, bildirim planlama ve araç takımı güvenilirliği geliştirildi.

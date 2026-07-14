@@ -203,20 +203,12 @@ struct BackgroundTaskService {
             return (try? container.mainContext.fetch(descriptor)) ?? []
         }()
 
-        // 3. Determine calculation parameters from preferences or country code
-        let calculationMethod: CalculationMethodInfo = {
-            if let prefs,
-               let method = CalculationMethodInfo(rawValue: prefs.calculationMethodRawValue) {
-                return method
-            }
-            if let method = SharedDataManager.loadCalculationMethod() {
-                return method
-            }
-            if let code = countryCode {
-                return CalculationMethodInfo.recommendedMethod(forCountryCode: code)
-            }
-            return .MuslimWorldLeague
-        }()
+        // 3. Resolve the same versioned Auto/preset/Custom payload used by the app and widget.
+        let calculationSettings = CalculationSettingsStorage.preferred([
+            CalculationSettingsStorage.decode(prefs?.calculationSettingsData),
+            SharedDataManager.loadCalculationSettings(),
+        ]) ?? CalculationSettingsPayload()
+        let calculationConfiguration = calculationSettings.selection.resolved(countryCode: countryCode)
 
         let asrMethod: AsrJuristicMethod = {
             if let prefs, let method = AsrJuristicMethod(rawValue: prefs.asrJuristicMethodRawValue) {
@@ -239,7 +231,7 @@ struct BackgroundTaskService {
         }()
 
         // 4. Calculate prayer times for N days
-        AppLogger.background.info("performFullRefresh: calculating for (\(latitude), \(longitude)) method=\(calculationMethod.rawValue) hlr=\(highLatitudeRule.rawValue)")
+        AppLogger.background.info("performFullRefresh: calculating for (\(latitude), \(longitude)) method=\(calculationConfiguration.logName) hlr=\(highLatitudeRule.rawValue)")
         let service = PrayerCalculationService()
         let days = Constants.NotificationBudget.daysToScheduleAhead
         let multiDayEntries = service.calculateMultipleDays(
@@ -247,7 +239,7 @@ struct BackgroundTaskService {
             days: days,
             latitude: latitude,
             longitude: longitude,
-            method: calculationMethod,
+            configuration: calculationConfiguration,
             asrMethod: asrMethod,
             highLatitudeRule: highLatitudeRule,
             adjustments: SharedDataManager.loadManualAdjustments()
@@ -264,7 +256,7 @@ struct BackgroundTaskService {
             Analytics.logEvent("background_refresh", parameters: [
                 "latitude": latitude,
                 "longitude": longitude,
-                "method": calculationMethod.rawValue,
+                "method": calculationConfiguration.logName,
                 "isha_hour": Calendar.current.component(.hour, from: isha.adjustedTime),
                 "isha_minute": Calendar.current.component(.minute, from: isha.adjustedTime)
             ])

@@ -128,7 +128,9 @@ struct SiriPrayerTimeService: Sendable {
             date: date,
             latitude: location.latitude,
             longitude: location.longitude,
-            method: SharedDataManager.loadCalculationMethod() ?? .MuslimWorldLeague,
+            configuration: (SharedDataManager.loadCalculationSettings() ?? CalculationSettingsPayload())
+                .selection
+                .resolved(countryCode: location.countryCode),
             asrMethod: SharedDataManager.loadAsrMethod() ?? .hanafi,
             highLatitudeRule: SharedDataManager.loadHighLatitudeRule() ?? .middleOfTheNight,
             adjustments: SharedDataManager.loadManualAdjustments()

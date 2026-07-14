@@ -49,6 +49,17 @@
                ReferencedContainer = "container:AdhanApp.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "EDB5C1B89CCDF3A9C2DFC25C"
+               BuildableName = "AdhanAppUITests.xctest"
+               BlueprintName = "AdhanAppUITests"
+               ReferencedContainer = "container:AdhanApp.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

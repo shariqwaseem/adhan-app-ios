@@ -157,63 +157,66 @@ final class NotificationScheduler {
 
         var scheduledCount = 0
         let maxNotifications = Constants.NotificationBudget.maxPendingNotifications
+        let now = Date()
 
         for dayEntries in prayerEntries {
             for entry in dayEntries {
                 guard scheduledCount < maxNotifications else { break }
-                guard entry.adjustedTime > Date() else { continue }
 
                 let mode = notificationMode(for: entry.prayer, preferences: preferences)
+                guard mode != .silent else { continue }
+                let timing = alertTimingSettings(for: entry.prayer, preferences: preferences)
 
-                switch mode {
-                case .silent:
-                    continue
+                if timing.shouldScheduleMainAlert && entry.adjustedTime > now {
+                    switch mode {
+                    case .silent:
+                        break
 
-                case .notification:
-                    let request = createNotificationRequest(for: entry, mode: .notification)
-                    do {
-                        try await center.add(request)
-                        scheduledCount += 1
-                        AppLogger.scheduling.debug("scheduled notification: \(entry.prayer.rawValue) at \(entry.adjustedTime.formatted(date: .abbreviated, time: .standard))")
-                    } catch {
-                        AppLogger.scheduling.error("notification failed for \(entry.prayer.rawValue): \(error.localizedDescription)")
-                        #if canImport(FirebaseCrashlytics)
-                        Crashlytics.crashlytics().record(error: error, userInfo: ["context": "schedule_notification", "prayer": entry.prayer.rawValue])
-                        #endif
-                    }
+                    case .notification:
+                        let request = createNotificationRequest(for: entry, mode: .notification)
+                        do {
+                            try await center.add(request)
+                            scheduledCount += 1
+                            AppLogger.scheduling.debug("scheduled notification: \(entry.prayer.rawValue) at \(entry.adjustedTime.formatted(date: .abbreviated, time: .standard))")
+                        } catch {
+                            AppLogger.scheduling.error("notification failed for \(entry.prayer.rawValue): \(error.localizedDescription)")
+                            #if canImport(FirebaseCrashlytics)
+                            Crashlytics.crashlytics().record(error: error, userInfo: ["context": "schedule_notification", "prayer": entry.prayer.rawValue])
+                            #endif
+                        }
 
-                case .alarm:
-                    let audio = alarmAudio(for: entry.prayer, preferences: preferences)
-                    do {
-                        try await alarmManager.scheduleAlarm(
-                            for: entry.prayer,
-                            at: entry.adjustedTime,
-                            audioFileName: audio
-                        )
-                        scheduledAlarmTimes[entry.prayer.rawValue, default: []].append(entry.adjustedTime)
-                        scheduledCount += 1
-                    } catch {
-                        AppLogger.scheduling.error("alarm failed for \(entry.prayer.rawValue) at \(entry.adjustedTime.formatted()): \(error.localizedDescription)")
-                        #if canImport(FirebaseCrashlytics)
-                        Crashlytics.crashlytics().record(error: error, userInfo: ["context": "schedule_alarm", "prayer": entry.prayer.rawValue])
-                        #endif
+                    case .alarm:
+                        let audio = alarmAudio(for: entry.prayer, preferences: preferences)
+                        do {
+                            try await alarmManager.scheduleAlarm(
+                                for: entry.prayer,
+                                at: entry.adjustedTime,
+                                audioFileName: audio
+                            )
+                            scheduledAlarmTimes[entry.prayer.rawValue, default: []].append(entry.adjustedTime)
+                            scheduledCount += 1
+                        } catch {
+                            AppLogger.scheduling.error("alarm failed for \(entry.prayer.rawValue) at \(entry.adjustedTime.formatted()): \(error.localizedDescription)")
+                            #if canImport(FirebaseCrashlytics)
+                            Crashlytics.crashlytics().record(error: error, userInfo: ["context": "schedule_alarm", "prayer": entry.prayer.rawValue])
+                            #endif
+                        }
                     }
                 }
 
-                // Pre-alarm scheduling
-                let preMinutes = preAlarmMinutes(for: entry.prayer, preferences: preferences)
-                if preMinutes > 0 {
-                    let preAlarmTime = entry.adjustedTime.addingTimeInterval(-Double(preMinutes) * 60)
-                    guard preAlarmTime > Date() else { continue }
+                if timing.isOffsetAlertEnabled {
+                    let offsetTime = timing.offsetFireDate(relativeTo: entry.adjustedTime)
+                    guard offsetTime > now else { continue }
 
                     switch mode {
                     case .silent:
                         break
                     case .notification:
                         guard scheduledCount < maxNotifications else { break }
-                        let request = createPreAlarmNotificationRequest(
+                        let request = createOffsetNotificationRequest(
                             for: entry,
-                            minutesBefore: preMinutes
+                            timing: timing,
+                            at: offsetTime
                         )
                         do {
                             try await center.add(request)
@@ -224,10 +227,10 @@ final class NotificationScheduler {
                         do {
                             try await alarmManager.schedulePreAlarm(
                                 for: entry.prayer,
-                                at: preAlarmTime,
-                                minutesBefore: preMinutes
+                                at: offsetTime,
+                                offsetMinutes: timing.offsetMinutes
                             )
-                            scheduledAlarmTimes["\(entry.prayer.rawValue)_pre", default: []].append(preAlarmTime)
+                            scheduledAlarmTimes["\(entry.prayer.rawValue)_offset", default: []].append(offsetTime)
                         } catch { /* skip */ }
                     }
                 }
@@ -265,75 +268,72 @@ final class NotificationScheduler {
     func refreshNextAlarmTime(
         prayerEntries: [PrayerTimeEntry] = [],
         customAlarms: [CustomAlarm] = [],
-        preferences: UserPreferences? = nil
+        preferences: UserPreferences? = nil,
+        now: Date = Date()
     ) {
-        let now = Date()
         var earliest: Date? = nil
         var earliestIsAlarm = false
         var earliestName: String? = nil
 
-        // Check prayer entries (main + pre-alarm)
+        func consider(_ time: Date, isAlarm: Bool, name: String) {
+            guard time > now, earliest == nil || time < earliest! else { return }
+            earliest = time
+            earliestIsAlarm = isAlarm
+            earliestName = name
+        }
+
+        // Check prayer entries (main + offset alert)
         for entry in prayerEntries {
             let time = entry.adjustedTime
             let mode = notificationMode(for: entry.prayer, preferences: preferences)
             guard mode != .silent else { continue }
+            let timing = alertTimingSettings(for: entry.prayer, preferences: preferences)
 
-            // Main prayer time
-            if time > now {
-                if earliest == nil || time < earliest! {
-                    earliest = time
-                    earliestIsAlarm = mode == .alarm
-                    earliestName = entry.prayer.localizedName
-                }
+            if timing.shouldScheduleMainAlert {
+                consider(time, isAlarm: mode == .alarm, name: entry.prayer.localizedName)
             }
 
-            // Pre-alarm
-            let preMinutes = preAlarmMinutes(for: entry.prayer, preferences: preferences)
-            if preMinutes > 0 {
-                let preTime = time.addingTimeInterval(-Double(preMinutes) * 60)
-                if preTime > now {
-                    if earliest == nil || preTime < earliest! {
-                        earliest = preTime
-                        earliestIsAlarm = mode == .alarm
-                        let bundle = LanguageManager.shared.bundle
-                        earliestName = String(localized: "Pre", bundle: bundle) + " " + entry.prayer.localizedName
-                    }
-                }
+            if timing.isOffsetAlertEnabled {
+                consider(
+                    timing.offsetFireDate(relativeTo: time),
+                    isAlarm: mode == .alarm,
+                    name: offsetAlertName(subject: entry.prayer.localizedName, offsetMinutes: timing.offsetMinutes)
+                )
             }
         }
 
-        // Check enabled custom alarms (main + pre-alarm)
+        // Check enabled custom alarms (main + offset alert)
         let calendar = Calendar.current
         for alarm in customAlarms where alarm.isEnabled {
             let mode = alarm.mode
             guard mode != .silent else { continue }
+            let timing = alarm.alertTimingSettings
             var comps = calendar.dateComponents([.year, .month, .day], from: now)
             comps.hour = alarm.hour
             comps.minute = alarm.minute
             comps.second = 0
-            guard var alarmTime = calendar.date(from: comps) else { continue }
-            if alarmTime <= now {
-                alarmTime = calendar.date(byAdding: .day, value: 1, to: alarmTime) ?? alarmTime
-            }
+            guard let todayAlarmTime = calendar.date(from: comps) else { continue }
 
-            // Main custom alarm
-            if earliest == nil || alarmTime < earliest! {
-                earliest = alarmTime
-                earliestIsAlarm = mode == .alarm
-                earliestName = alarm.title
-            }
-
-            // Pre-alarm for custom
-            if alarm.preAlarmMinutes > 0 {
-                let preTime = alarmTime.addingTimeInterval(-Double(alarm.preAlarmMinutes) * 60)
-                if preTime > now {
-                    if earliest == nil || preTime < earliest! {
-                        earliest = preTime
-                        earliestIsAlarm = mode == .alarm
-                        let bundle = LanguageManager.shared.bundle
-                        earliestName = String(localized: "Pre", bundle: bundle) + " " + alarm.title
-                    }
+            if timing.shouldScheduleMainAlert {
+                let nextMainTime = todayAlarmTime > now
+                    ? todayAlarmTime
+                    : calendar.date(byAdding: .day, value: 1, to: todayAlarmTime)
+                if let nextMainTime {
+                    consider(nextMainTime, isAlarm: mode == .alarm, name: alarm.title)
                 }
+            }
+
+            if timing.isOffsetAlertEnabled {
+                var nextOffsetTime = timing.offsetFireDate(relativeTo: todayAlarmTime)
+                if nextOffsetTime <= now,
+                   let tomorrowAlarmTime = calendar.date(byAdding: .day, value: 1, to: todayAlarmTime) {
+                    nextOffsetTime = timing.offsetFireDate(relativeTo: tomorrowAlarmTime)
+                }
+                consider(
+                    nextOffsetTime,
+                    isAlarm: mode == .alarm,
+                    name: offsetAlertName(subject: alarm.title, offsetMinutes: timing.offsetMinutes)
+                )
             }
         }
 
@@ -353,6 +353,8 @@ final class NotificationScheduler {
             guard alarm.isEnabled else { continue }
 
             let mode = alarm.mode
+            guard mode != .silent else { continue }
+            let timing = alarm.alertTimingSettings
 
             for dayOffset in 0..<daysAhead {
                 guard let baseDate = calendar.date(byAdding: .day, value: dayOffset, to: now) else { continue }
@@ -362,48 +364,47 @@ final class NotificationScheduler {
                 components.minute = alarm.minute
                 components.second = 0
 
-                guard let alarmTime = calendar.date(from: components),
-                      alarmTime > now else { continue }
+                guard let alarmTime = calendar.date(from: components) else { continue }
 
-                switch mode {
-                case .silent:
-                    continue
+                if timing.shouldScheduleMainAlert && alarmTime > now {
+                    switch mode {
+                    case .silent:
+                        break
 
-                case .notification:
-                    let request = createCustomNotificationRequest(alarm: alarm, at: alarmTime, dayOffset: dayOffset)
-                    do {
-                        try await UNUserNotificationCenter.current().add(request)
-                    } catch { /* main notification failed; still attempt pre-alarm below */ }
+                    case .notification:
+                        let request = createCustomNotificationRequest(alarm: alarm, at: alarmTime, dayOffset: dayOffset)
+                        do {
+                            try await UNUserNotificationCenter.current().add(request)
+                        } catch { /* main notification failed; still attempt offset alert below */ }
 
-                case .alarm:
-                    let audioPath: String? = alarm.alarmAudio.isEmpty
-                        ? nil
-                        : AdhanAudioCatalog.alarmSoundPath(forID: alarm.alarmAudio)
-                    do {
-                        try await alarmManager.scheduleCustomAlarm(
-                            id: alarm.id,
-                            title: alarm.title,
-                            at: alarmTime,
-                            audioFileName: audioPath
-                        )
-                        scheduledAlarmTimes["custom_\(alarm.id.uuidString)", default: []].append(alarmTime)
-                    } catch { /* main alarm failed; still attempt pre-alarm below */ }
+                    case .alarm:
+                        let audioPath: String? = alarm.alarmAudio.isEmpty
+                            ? nil
+                            : AdhanAudioCatalog.alarmSoundPath(forID: alarm.alarmAudio)
+                        do {
+                            try await alarmManager.scheduleCustomAlarm(
+                                id: alarm.id,
+                                title: alarm.title,
+                                at: alarmTime,
+                                audioFileName: audioPath
+                            )
+                            scheduledAlarmTimes["custom_\(alarm.id.uuidString)", default: []].append(alarmTime)
+                        } catch { /* main alarm failed; still attempt offset alert below */ }
+                    }
                 }
 
-                // Pre-alarm scheduling for custom alarms
-                let preMinutes = alarm.preAlarmMinutes
-                if preMinutes > 0 {
-                    let preAlarmTime = alarmTime.addingTimeInterval(-Double(preMinutes) * 60)
-                    guard preAlarmTime > now else { continue }
+                if timing.isOffsetAlertEnabled {
+                    let offsetTime = timing.offsetFireDate(relativeTo: alarmTime)
+                    guard offsetTime > now else { continue }
 
                     switch mode {
                     case .silent:
                         break
                     case .notification:
-                        let request = createCustomPreAlarmNotificationRequest(
+                        let request = createCustomOffsetNotificationRequest(
                             alarm: alarm,
-                            at: preAlarmTime,
-                            minutesBefore: preMinutes,
+                            at: offsetTime,
+                            timing: timing,
                             dayOffset: dayOffset
                         )
                         do {
@@ -415,10 +416,10 @@ final class NotificationScheduler {
                             try await alarmManager.scheduleCustomPreAlarm(
                                 id: alarm.id,
                                 title: alarm.title,
-                                at: preAlarmTime,
-                                minutesBefore: preMinutes
+                                at: offsetTime,
+                                offsetMinutes: timing.offsetMinutes
                             )
-                            scheduledAlarmTimes["custom_\(alarm.id.uuidString)_pre", default: []].append(preAlarmTime)
+                            scheduledAlarmTimes["custom_\(alarm.id.uuidString)_offset", default: []].append(offsetTime)
                         } catch { /* skip */ }
                     }
                 }
@@ -426,15 +427,16 @@ final class NotificationScheduler {
         }
     }
 
-    private func createCustomPreAlarmNotificationRequest(
+    private func createCustomOffsetNotificationRequest(
         alarm: CustomAlarm,
         at time: Date,
-        minutesBefore: Int,
+        timing: AlertTimingSettings,
         dayOffset: Int
     ) -> UNNotificationRequest {
         let content = UNMutableNotificationContent()
-        content.title = String(localized: "\(alarm.title) in \(minutesBefore) min", bundle: LanguageManager.shared.bundle)
-        content.body = String(localized: "Prepare for \(alarm.title)", bundle: LanguageManager.shared.bundle)
+        let bundle = LanguageManager.shared.bundle
+        content.title = timing.localizedAlertTitle(subject: alarm.title, bundle: bundle)
+        content.body = offsetNotificationBody(subject: alarm.title, timing: timing, bundle: bundle)
         content.categoryIdentifier = "CUSTOM_PRE_ALARM"
         content.sound = .default
 
@@ -585,35 +587,32 @@ final class NotificationScheduler {
         return AdhanAudioCatalog.alarmSoundPath(forID: value)
     }
 
-    private func preAlarmMinutes(for prayer: PrayerName, preferences: UserPreferences?) -> Int {
-        guard let prefs = preferences else { return 0 }
-        switch prayer {
-        case .tahajjud: return prefs.tahajjudPreAlarmMinutes
-        case .fajr: return prefs.fajrPreAlarmMinutes
-        case .dhuhr: return prefs.dhuhrPreAlarmMinutes
-        case .asr: return prefs.asrPreAlarmMinutes
-        case .maghrib: return prefs.maghribPreAlarmMinutes
-        case .isha: return prefs.ishaPreAlarmMinutes
-        }
+    private func alertTimingSettings(
+        for prayer: PrayerName,
+        preferences: UserPreferences?
+    ) -> AlertTimingSettings {
+        preferences?.alertTimingSettings(for: prayer) ?? AlertTimingSettings()
     }
 
-    private func createPreAlarmNotificationRequest(
+    private func createOffsetNotificationRequest(
         for entry: PrayerTimeEntry,
-        minutesBefore: Int
+        timing: AlertTimingSettings,
+        at offsetTime: Date
     ) -> UNNotificationRequest {
         let content = UNMutableNotificationContent()
-        content.title = String(localized: "\(entry.prayer.localizedName) in \(minutesBefore) min", bundle: LanguageManager.shared.bundle)
-        content.body = String(
-            localized: "Prepare for \(entry.prayer.localizedName) prayer",
-            bundle: LanguageManager.shared.bundle
+        let bundle = LanguageManager.shared.bundle
+        content.title = timing.localizedAlertTitle(subject: entry.prayer.localizedName, bundle: bundle)
+        content.body = offsetNotificationBody(
+            subject: entry.prayer.localizedName,
+            timing: timing,
+            bundle: bundle
         )
         content.categoryIdentifier = "PRAYER_PRE_ALARM"
         content.sound = .default
 
-        let preAlarmTime = entry.adjustedTime.addingTimeInterval(-Double(minutesBefore) * 60)
         let dateComponents = Calendar.current.dateComponents(
             [.year, .month, .day, .hour, .minute, .second],
-            from: preAlarmTime
+            from: offsetTime
         )
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
 
@@ -621,6 +620,32 @@ final class NotificationScheduler {
         let identifier = "\(entry.prayer.rawValue)_\(dateString)_prealarm"
 
         return UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+    }
+
+    private func offsetNotificationBody(
+        subject: String,
+        timing: AlertTimingSettings,
+        bundle: Bundle
+    ) -> String {
+        if timing.offsetMinutes < 0 {
+            return String(localized: "Prepare for \(subject)", bundle: bundle)
+        } else if timing.offsetMinutes > 0 {
+            return String(
+                localized: "The scheduled time for \(subject) was \(timing.offsetMinutes) min ago",
+                bundle: bundle
+            )
+        }
+        return String(localized: "It's time for \(subject)", bundle: bundle)
+    }
+
+    private func offsetAlertName(subject: String, offsetMinutes: Int) -> String {
+        let bundle = LanguageManager.shared.bundle
+        if offsetMinutes < 0 {
+            return String(localized: "Before \(subject)", bundle: bundle)
+        } else if offsetMinutes > 0 {
+            return String(localized: "After \(subject)", bundle: bundle)
+        }
+        return subject
     }
 
     private func formatDateForId(_ date: Date) -> String {

@@ -145,7 +145,7 @@ struct HomeView: View {
                     }
                     .onChange(of: remaining <= 0) { _, expired in
                         if expired {
-                            viewModel.updateCurrentAndNext()
+                            viewModel.refreshPrayerState(at: context.date)
                         }
                     }
                 }
@@ -284,17 +284,9 @@ struct HomeView: View {
     /// The next enabled custom alarm's fire time today (or tomorrow if past).
     private var nextCustomAlarmTime: Date? {
         let now = Date()
-        let calendar = Calendar.current
         var earliest: Date? = nil
         for alarm in customAlarms where alarm.isEnabled && alarm.mode != .silent {
-            var comps = calendar.dateComponents([.year, .month, .day], from: now)
-            comps.hour = alarm.hour
-            comps.minute = alarm.minute
-            comps.second = 0
-            guard var time = calendar.date(from: comps) else { continue }
-            if time <= now {
-                time = calendar.date(byAdding: .day, value: 1, to: time) ?? time
-            }
+            guard let time = nextFireTime(for: alarm, after: now) else { continue }
             if earliest == nil || time < earliest! {
                 earliest = time
             }
@@ -304,33 +296,53 @@ struct HomeView: View {
 
     /// Whether a custom alarm fires before the next prayer.
     private var customAlarmIsNext: Bool {
-        guard let customTime = nextCustomAlarmTime else { return false }
-        guard let nextPrayer = viewModel.prayerEntries.first(where: { $0.isNext }) else { return true }
-        return customTime < nextPrayer.adjustedTime
+        guard let customTime = nextCustomAlarmTime,
+              let nextScheduledTime = scheduler.nextScheduledAlarmTime else { return false }
+        return abs(customTime.timeIntervalSince(nextScheduledTime)) < 1
     }
 
     /// The ID of the custom alarm that fires next (if it's before next prayer).
     private var nextCustomAlarmID: UUID? {
         guard customAlarmIsNext else { return nil }
         let now = Date()
-        let calendar = Calendar.current
         var earliestAlarm: CustomAlarm? = nil
         var earliestTime: Date? = nil
         for alarm in customAlarms where alarm.isEnabled && alarm.mode != .silent {
-            var comps = calendar.dateComponents([.year, .month, .day], from: now)
-            comps.hour = alarm.hour
-            comps.minute = alarm.minute
-            comps.second = 0
-            guard var time = calendar.date(from: comps) else { continue }
-            if time <= now {
-                time = calendar.date(byAdding: .day, value: 1, to: time) ?? time
-            }
+            guard let time = nextFireTime(for: alarm, after: now) else { continue }
             if earliestTime == nil || time < earliestTime! {
                 earliestTime = time
                 earliestAlarm = alarm
             }
         }
         return earliestAlarm?.id
+    }
+
+    private func nextFireTime(for alarm: CustomAlarm, after now: Date) -> Date? {
+        let calendar = Calendar.current
+        let timing = alarm.alertTimingSettings
+        var components = calendar.dateComponents([.year, .month, .day], from: now)
+        components.hour = alarm.hour
+        components.minute = alarm.minute
+        components.second = 0
+        guard let todayTime = calendar.date(from: components) else { return nil }
+
+        var candidates: [Date] = []
+        if timing.shouldScheduleMainAlert {
+            candidates.append(
+                todayTime > now
+                    ? todayTime
+                    : calendar.date(byAdding: .day, value: 1, to: todayTime) ?? todayTime
+            )
+        }
+        if timing.isOffsetAlertEnabled {
+            var offsetTime = timing.offsetFireDate(relativeTo: todayTime)
+            if offsetTime <= now,
+               let tomorrowTime = calendar.date(byAdding: .day, value: 1, to: todayTime) {
+                offsetTime = timing.offsetFireDate(relativeTo: tomorrowTime)
+            }
+            candidates.append(offsetTime)
+        }
+        return candidates.filter { $0 > now }.min()
     }
 
     private func currentMode(for prayer: PrayerName) -> PrayerNotificationMode {

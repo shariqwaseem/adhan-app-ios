@@ -1,6 +1,50 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@ after" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ بعد"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ setelah"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ sonra"
+          }
+        }
+      }
+    },
+    "%@ before" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ قبل"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ sebelum"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ önce"
+          }
+        }
+      }
+    },
     "%@ in %lld min" : {
       "localizations" : {
         "ar" : {
@@ -128,6 +172,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld saat"
+          }
+        }
+      }
+    },
+    "%lld min after %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بعد %2$@ بـ %1$lld دقيقة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld min after %2$@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld menit setelah %2$@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%2$@ vaktinden %1$lld dk sonra"
           }
         }
       }
@@ -327,6 +399,28 @@
         }
       }
     },
+    "After %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بعد %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Setelah %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ Sonrası"
+          }
+        }
+      }
+    },
     "Alarm" : {
       "localizations" : {
         "ar" : {
@@ -486,6 +580,28 @@
         }
       }
     },
+    "Alerts" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "التنبيهات"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peringatan"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uyarılar"
+          }
+        }
+      }
+    },
     "Aligned with Qibla" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -641,6 +757,9 @@
         }
       }
     },
+    "Angle" : {
+
+    },
     "Ask Adhan for a specific prayer time." : {
 
     },
@@ -715,6 +834,50 @@
     },
     "Bahasa Indonesia" : {
 
+    },
+    "Before %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "قبل %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sebelum %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ Öncesi"
+          }
+        }
+      }
+    },
+    "Both Times" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "كلا الوقتين"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kedua Waktu"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Her İki Zaman"
+          }
+        }
+      }
     },
     "Cancel" : {
       "localizations" : {
@@ -807,6 +970,9 @@
         }
       }
     },
+    "Custom" : {
+
+    },
     "Custom alarm: %@" : {
       "localizations" : {
         "ar" : {
@@ -828,6 +994,9 @@
           }
         }
       }
+    },
+    "Custom Settings" : {
+
     },
     "Default" : {
       "localizations" : {
@@ -916,9 +1085,6 @@
           }
         }
       }
-    },
-    "Developer" : {
-
     },
     "Dhuhr" : {
       "localizations" : {
@@ -1102,6 +1268,9 @@
         }
       }
     },
+    "Fajr Angle" : {
+
+    },
     "Feedback & Bug Report" : {
       "localizations" : {
         "ar" : {
@@ -1145,9 +1314,6 @@
           }
         }
       }
-    },
-    "Fire Test Alarm in 5s" : {
-
     },
     "Full Adhan Alarms" : {
       "localizations" : {
@@ -1378,6 +1544,15 @@
         }
       }
     },
+    "Isha Angle" : {
+
+    },
+    "Isha Calculation" : {
+
+    },
+    "Isha Interval" : {
+
+    },
     "ISNA (North America)" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1397,6 +1572,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ISNA (Kuzey Amerika)"
+          }
+        }
+      }
+    },
+    "It's time for %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حان وقت %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saatnya %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ zamanı"
           }
         }
       }
@@ -1600,6 +1797,9 @@
           }
         }
       }
+    },
+    "Minutes after Maghrib" : {
+
     },
     "Mixed" : {
 
@@ -2008,8 +2208,206 @@
         }
       }
     },
+    "Offset" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الإزاحة الزمنية"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selisih Waktu"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaman Farkı"
+          }
+        }
+      }
+    },
+    "Offset Only" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "التوقيت الإضافي فقط"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hanya Waktu Tambahan"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yalnızca Ek Zaman"
+          }
+        }
+      }
+    },
+    "Offset Sound" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "صوت التنبيه الإضافي"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suara Peringatan Tambahan"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ek Uyarı Sesi"
+          }
+        }
+      }
+    },
     "OK" : {
 
+    },
+    "One alert %@ prayer time and another at prayer time." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تنبيه واحد %@ وقت الصلاة وتنبيه آخر عند وقت الصلاة."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satu peringatan %@ waktu salat dan satu lagi pada waktu salat."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Namaz vaktinden %@ bir uyarı ve namaz vaktinde bir uyarı daha."
+          }
+        }
+      }
+    },
+    "One alert %@ prayer time." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تنبيه واحد %@ وقت الصلاة."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satu peringatan %@ waktu salat."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Namaz vaktinden %@ bir uyarı."
+          }
+        }
+      }
+    },
+    "One alert %@ the set time and another at the set time." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تنبيه واحد %@ الوقت المحدد وتنبيه آخر عند الوقت المحدد."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satu peringatan %@ waktu yang diatur dan satu lagi pada waktu yang diatur."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarlanan saatten %@ bir uyarı ve ayarlanan saatte bir uyarı daha."
+          }
+        }
+      }
+    },
+    "One alert %@ the set time." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تنبيه واحد %@ الوقت المحدد."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satu peringatan %@ waktu yang diatur."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarlanan saatten %@ bir uyarı."
+          }
+        }
+      }
+    },
+    "One alert at prayer time." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تنبيه واحد عند وقت الصلاة."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satu peringatan pada waktu salat."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Namaz vaktinde bir uyarı."
+          }
+        }
+      }
+    },
+    "One alert at the set time." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تنبيه واحد عند الوقت المحدد."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satu peringatan pada waktu yang diatur."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarlanan saatte bir uyarı."
+          }
+        }
+      }
     },
     "Open Settings" : {
       "localizations" : {
@@ -2128,7 +2526,30 @@
     "Prayer Time" : {
 
     },
+    "Prayer Time Only" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "وقت الصلاة فقط"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hanya Waktu Salat"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yalnızca Namaz Vakti"
+          }
+        }
+      }
+    },
     "Pre" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -2151,6 +2572,7 @@
       }
     },
     "Pre-Alarm" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -2173,6 +2595,7 @@
       }
     },
     "Pre-Notification" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -2217,6 +2640,7 @@
       }
     },
     "Prepare for %@ prayer" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -2485,6 +2909,7 @@
       }
     },
     "Rings before %@ using the same delivery mode with the default sound." : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -2507,6 +2932,7 @@
       }
     },
     "Rings before this alarm using the same delivery mode with the default sound." : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -2529,6 +2955,7 @@
       }
     },
     "Rings before this notification using the same delivery mode with the default sound." : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -2596,6 +3023,28 @@
     },
     "Set for all" : {
 
+    },
+    "Set Time Only" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الوقت المحدد فقط"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hanya Waktu yang Diatur"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yalnızca Ayarlanan Saat"
+          }
+        }
+      }
     },
     "Settings" : {
       "localizations" : {
@@ -2807,6 +3256,28 @@
         }
       }
     },
+    "Snoozing — %@ offset alarm" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تأجيل — تنبيه %@ الإضافي"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ditunda — Alarm Tambahan %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erteleniyor — %@ ek alarmı"
+          }
+        }
+      }
+    },
     "Snoozing — %@ Prayer" : {
       "localizations" : {
         "ar" : {
@@ -2830,6 +3301,7 @@
       }
     },
     "Snoozing — %@ pre-alarm" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -3192,6 +3664,34 @@
         }
       }
     },
+    "The scheduled time for %@ was %lld min ago" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "كان الوقت المحدد لـ %1$@ قبل %2$lld دقيقة"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "The scheduled time for %1$@ was %2$lld min ago"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waktu terjadwal untuk %1$@ telah lewat %2$lld menit"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ için ayarlanan saat %2$lld dk önceydi"
+          }
+        }
+      }
+    },
     "This app supports full-length alarms and adhan sounds that play even when your phone is on silent or in Focus mode." : {
       "localizations" : {
         "ar" : {
@@ -3281,6 +3781,7 @@
       }
     },
     "Time Before" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -3301,6 +3802,9 @@
           }
         }
       }
+    },
+    "Today's Preview" : {
+
     },
     "Traveling?" : {
       "localizations" : {
@@ -3525,6 +4029,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bölgeniz için doğru namaz vakitlerini hesaplamak için konumunuza ihtiyacımız var."
+          }
+        }
+      }
+    },
+    "When" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الموعد"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waktu"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaman"
           }
         }
       }

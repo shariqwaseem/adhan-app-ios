@@ -26,6 +26,25 @@ platform :ios do
     end
   end
 
+  desc "Regenerate only the localized prayer detail screenshot and frame it"
+  lane :prayer_detail_screenshots do |options|
+    capture_screenshots(
+      languages: options[:languages] || ["en-US", "ar", "id", "tr"],
+      launch_arguments: ["-PRAYER_DETAIL_SCREENSHOT_ONLY"],
+      clear_previous_screenshots: false
+    )
+    sh("python3 reshape_arabic.py")
+    begin
+      frame_screenshots(
+        path: "./fastlane/screenshots",
+        use_platform: "IOS",
+        resume: true
+      )
+    ensure
+      sh("python3 reshape_arabic.py restore")
+    end
+  end
+
   desc "Frame existing screenshots with Arabic shaping support"
   lane :frame do |options|
     sh("python3 reshape_arabic.py")

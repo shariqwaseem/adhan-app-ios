@@ -261,7 +261,8 @@ struct OnboardingView: View {
 
     private func configureDefaultPreferences() {
         let prefs = UserPreferences()
-        prefs.calculationMethodRawValue = prayerTimesViewModel.calculationMethod.rawValue
+        prefs.calculationSettingsData = prayerTimesViewModel.calculationSettingsData
+        prefs.calculationMethodRawValue = prayerTimesViewModel.resolvedCalculationConfiguration.logName
         prefs.asrJuristicMethodRawValue = prayerTimesViewModel.asrMethod.rawValue
         prefs.highLatitudeRuleRawValue = prayerTimesViewModel.highLatitudeRule.rawValue
 

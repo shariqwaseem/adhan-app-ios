@@ -18,7 +18,7 @@ struct CustomAlarmDetailView: View {
     @State private var selectedMode: PrayerNotificationMode = .notification
     @State private var selectedAudio: String = ""
     @State private var isEnabled: Bool = true
-    @State private var preAlarmMinutes: Int = 0
+    @State private var alertTimingSettings = AlertTimingSettings()
 
     private var isNew: Bool { existingAlarm == nil }
     private var isNotificationMode: Bool { selectedMode == .notification }
@@ -69,7 +69,7 @@ struct CustomAlarmDetailView: View {
                 .onChange(of: selectedMode) { _, _ in syncToExisting() }
                 .onChange(of: selectedAudio) { _, _ in syncToExisting() }
                 .onChange(of: isEnabled) { _, _ in syncToExisting() }
-                .onChange(of: preAlarmMinutes) { _, _ in syncToExisting() }
+                .onChange(of: alertTimingSettings) { _, _ in syncToExisting() }
         }
     }
 
@@ -135,7 +135,7 @@ struct CustomAlarmDetailView: View {
 
     @ViewBuilder
     private var alarmSoundSection: some View {
-        if selectedMode == .alarm {
+        if selectedMode == .alarm && alertTimingSettings.shouldScheduleMainAlert {
             Section("Alarm Sound") {
                 NavigationLink {
                     CustomAlarmSoundSelectionView(selectedAudioID: $selectedAudio)
@@ -146,47 +146,56 @@ struct CustomAlarmDetailView: View {
         }
     }
 
-    private static let preAlarmOptions: [Int] = stride(from: 10, through: 120, by: 5).map { $0 }
-
     @ViewBuilder
     private var preAlarmSection: some View {
         if selectedMode != .silent {
             Section {
-                Toggle(isNotificationMode ? "Pre-Notification" : "Pre-Alarm", isOn: Binding(
-                    get: { preAlarmMinutes > 0 },
-                    set: { enabled in
-                        preAlarmMinutes = enabled ? 30 : 0
-                    }
-                ))
+                Picker("When", selection: Binding(
+                    get: { AlertScheduleSelection(settings: alertTimingSettings) },
+                    set: { alertTimingSettings = $0.applying(to: alertTimingSettings) }
+                )) {
+                    Text("Set Time Only").tag(AlertScheduleSelection.mainOnly)
+                    Text("Offset Only").tag(AlertScheduleSelection.offsetOnly)
+                    Text("Both Times").tag(AlertScheduleSelection.both)
+                }
 
-                if preAlarmMinutes > 0 {
-                    Picker("Time Before", selection: $preAlarmMinutes) {
-                        ForEach(Self.preAlarmOptions, id: \.self) { minutes in
-                            Text(formattedPreAlarmTime(minutes)).tag(minutes)
+                if alertTimingSettings.isOffsetAlertEnabled {
+                    Picker("Offset", selection: $alertTimingSettings.offsetMinutes) {
+                        ForEach(AlertTimingSettings.availableOffsetsMinutes, id: \.self) { offset in
+                            Text(formattedOffset(offset)).tag(offset)
                         }
                     }
-                    LabeledContent("Sound", value: String(localized: "Default", bundle: langBundle))
+
+                    LabeledContent(
+                        "Offset Sound",
+                        value: String(localized: "Default", bundle: langBundle)
+                    )
                 }
             } header: {
-                Text(isNotificationMode ? "Pre-Notification" : "Pre-Alarm")
+                Text("Alerts")
             } footer: {
-                Text(isNotificationMode
-                    ? "Rings before this notification using the same delivery mode with the default sound."
-                    : "Rings before this alarm using the same delivery mode with the default sound.")
+                Text(alertScheduleSummary)
             }
         }
     }
 
-    private func formattedPreAlarmTime(_ minutes: Int) -> String {
-        let bundle = LanguageManager.shared.bundle
-        if minutes < 60 {
-            return String(localized: "\(minutes) minutes", bundle: bundle)
-        } else if minutes == 60 {
-            return String(localized: "1 hour", bundle: bundle)
-        } else if minutes % 60 == 0 {
-            return String(localized: "\(minutes / 60) hours", bundle: bundle)
-        } else {
-            return String(localized: "\(minutes / 60)h \(minutes % 60)m", bundle: bundle)
+    private func formattedOffset(_ offset: Int) -> String {
+        AlertTimingSettings(offsetMinutes: offset)
+            .localizedOffsetDescription(bundle: langBundle)
+    }
+
+    private var alertScheduleSummary: String {
+        let offset = formattedOffset(alertTimingSettings.offsetMinutes)
+        switch AlertScheduleSelection(settings: alertTimingSettings) {
+        case .mainOnly:
+            return String(localized: "One alert at the set time.", bundle: langBundle)
+        case .offsetOnly:
+            return String(localized: "One alert \(offset) the set time.", bundle: langBundle)
+        case .both:
+            return String(
+                localized: "One alert \(offset) the set time and another at the set time.",
+                bundle: langBundle
+            )
         }
     }
 
@@ -210,7 +219,7 @@ struct CustomAlarmDetailView: View {
         selectedMode = alarm.mode
         selectedAudio = alarm.alarmAudio
         isEnabled = alarm.isEnabled
-        preAlarmMinutes = alarm.preAlarmMinutes
+        alertTimingSettings = alarm.alertTimingSettings
 
         var components = Calendar.current.dateComponents([.year, .month, .day], from: Date())
         components.hour = alarm.hour
@@ -227,7 +236,7 @@ struct CustomAlarmDetailView: View {
         alarm.mode = selectedMode
         alarm.alarmAudio = selectedAudio
         alarm.isEnabled = isEnabled
-        alarm.preAlarmMinutes = preAlarmMinutes
+        alarm.alertTimingSettings = alertTimingSettings
         reschedule()
     }
 
@@ -240,7 +249,7 @@ struct CustomAlarmDetailView: View {
             notificationMode: selectedMode,
             alarmAudio: selectedAudio,
             isEnabled: true,
-            preAlarmMinutes: preAlarmMinutes
+            alertTimingSettings: alertTimingSettings
         )
         modelContext.insert(alarm)
         reschedule()

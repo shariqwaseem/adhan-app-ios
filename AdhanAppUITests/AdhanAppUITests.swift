@@ -9,6 +9,13 @@ final class AdhanAppUITests: XCTestCase {
     func testAppStoreScreenshots() throws {
         let app = XCUIApplication()
         setupSnapshot(app, waitForAnimations: false)
+        if let screenshotsDirectory = Snapshot.screenshotsDirectory {
+            try? FileManager.default.removeItem(at: screenshotsDirectory)
+            try FileManager.default.createDirectory(
+                at: screenshotsDirectory,
+                withIntermediateDirectories: true
+            )
+        }
         app.launchArguments += [
             "-hasCompletedOnboarding", "YES",
             "-FASTLANE_SCREENSHOTS", "YES"
@@ -17,6 +24,12 @@ final class AdhanAppUITests: XCTestCase {
 
         let tabBar = app.tabBars.firstMatch
         XCTAssertTrue(tabBar.waitForExistence(timeout: 15))
+
+        if app.launchArguments.contains("-PRAYER_DETAIL_SCREENSHOT_ONLY") {
+            waitForScreenToSettle()
+            capturePrayerDetail(in: app)
+            return
+        }
 
         waitForScreenToSettle()
         snapshot("01PrayerTimes")
@@ -29,20 +42,27 @@ final class AdhanAppUITests: XCTestCase {
         waitForScreenToSettle()
         snapshot("03Settings")
 
-        tabBar.buttons.element(boundBy: 0).tap()
-        waitForScreenToSettle()
+        // Relaunch instead of relying on a stale indexed tab query after taking
+        // screenshots. XCUI can otherwise synthesize the tap against another
+        // simulator process when several apps are installed.
+        app.terminate()
+        app.launch()
 
-        let fajrRow = app.buttons["prayer-row-fajr"]
-        XCTAssertTrue(fajrRow.waitForExistence(timeout: 5))
-        fajrRow.tap()
-        waitForScreenToSettle()
-        snapshot("04PrayerDetail")
+        capturePrayerDetail(in: app)
 
         let soundPicker = app.buttons["alarm-sound-picker"]
         XCTAssertTrue(soundPicker.waitForExistence(timeout: 5))
         soundPicker.tap()
         waitForScreenToSettle()
         snapshot("05AdhanSounds")
+    }
+
+    private func capturePrayerDetail(in app: XCUIApplication) {
+        let fajrRow = app.buttons["prayer-row-fajr"]
+        XCTAssertTrue(fajrRow.waitForExistence(timeout: 5))
+        fajrRow.tap()
+        waitForScreenToSettle()
+        snapshot("04PrayerDetail")
     }
 
     private func waitForScreenToSettle() {

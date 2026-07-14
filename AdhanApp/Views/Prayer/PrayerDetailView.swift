@@ -72,7 +72,7 @@ struct PrayerDetailView: View {
 
     @ViewBuilder
     private var alarmSoundSection: some View {
-        if selectedMode == .alarm {
+        if selectedMode == .alarm && getAlertTimingSettings().shouldScheduleMainAlert {
             Section("Alarm Sound") {
                 NavigationLink {
                     AdhanAudioSelectionView(prayer: prayer)
@@ -88,75 +88,82 @@ struct PrayerDetailView: View {
         AdhanAudioCatalog.displayName(forID: getAudioSelection())
     }
 
-    // MARK: - Pre-Alarm Section
-
-    private static let preAlarmOptions: [Int] = stride(from: 10, through: 120, by: 5).map { $0 }
-
-    private var isNotificationMode: Bool { selectedMode == .notification }
+    // MARK: - Offset Alert Section
 
     @ViewBuilder
     private var preAlarmSection: some View {
         if selectedMode != .silent {
             Section {
-                Toggle(isNotificationMode ? "Pre-Notification" : "Pre-Alarm", isOn: Binding(
-                    get: { getPreAlarmMinutes() > 0 },
-                    set: { enabled in
-                        setPreAlarmMinutes(enabled ? 30 : 0)
-                    }
-                ))
+                Picker("When", selection: Binding(
+                    get: { AlertScheduleSelection(settings: getAlertTimingSettings()) },
+                    set: { setAlertSchedule($0) }
+                )) {
+                    Text("Prayer Time Only").tag(AlertScheduleSelection.mainOnly)
+                    Text("Offset Only").tag(AlertScheduleSelection.offsetOnly)
+                    Text("Both Times").tag(AlertScheduleSelection.both)
+                }
 
-                if getPreAlarmMinutes() > 0 {
-                    Picker("Time Before", selection: Binding(
-                        get: { getPreAlarmMinutes() },
-                        set: { setPreAlarmMinutes($0) }
+                if getAlertTimingSettings().isOffsetAlertEnabled {
+                    Picker("Offset", selection: Binding(
+                        get: { getAlertTimingSettings().offsetMinutes },
+                        set: { setOffsetMinutes($0) }
                     )) {
-                        ForEach(Self.preAlarmOptions, id: \.self) { minutes in
-                            Text(formattedPreAlarmTime(minutes)).tag(minutes)
+                        ForEach(AlertTimingSettings.availableOffsetsMinutes, id: \.self) { offset in
+                            Text(formattedOffset(offset)).tag(offset)
                         }
                     }
-                    LabeledContent("Sound", value: String(localized: "Default", bundle: LanguageManager.shared.bundle))
+
+                    LabeledContent(
+                        "Offset Sound",
+                        value: String(localized: "Default", bundle: LanguageManager.shared.bundle)
+                    )
                 }
             } header: {
-                Text(isNotificationMode ? "Pre-Notification" : "Pre-Alarm")
+                Text("Alerts")
             } footer: {
-                Text("Rings before \(prayer.localizedName) using the same delivery mode with the default sound.")
+                Text(alertScheduleSummary)
             }
         }
     }
 
-    private func formattedPreAlarmTime(_ minutes: Int) -> String {
+    private func formattedOffset(_ offset: Int) -> String {
+        AlertTimingSettings(offsetMinutes: offset)
+            .localizedOffsetDescription(bundle: LanguageManager.shared.bundle)
+    }
+
+    private func getAlertTimingSettings() -> AlertTimingSettings {
+        prefs.alertTimingSettings(for: prayer)
+    }
+
+    private var alertScheduleSummary: String {
+        let settings = getAlertTimingSettings()
+        let offset = formattedOffset(settings.offsetMinutes)
         let bundle = LanguageManager.shared.bundle
-        if minutes < 60 {
-            return String(localized: "\(minutes) minutes", bundle: bundle)
-        } else if minutes == 60 {
-            return String(localized: "1 hour", bundle: bundle)
-        } else if minutes % 60 == 0 {
-            return String(localized: "\(minutes / 60) hours", bundle: bundle)
-        } else {
-            return String(localized: "\(minutes / 60)h \(minutes % 60)m", bundle: bundle)
+        switch AlertScheduleSelection(settings: settings) {
+        case .mainOnly:
+            return String(localized: "One alert at prayer time.", bundle: bundle)
+        case .offsetOnly:
+            return String(localized: "One alert \(offset) prayer time.", bundle: bundle)
+        case .both:
+            return String(
+                localized: "One alert \(offset) prayer time and another at prayer time.",
+                bundle: bundle
+            )
         }
     }
 
-    private func getPreAlarmMinutes() -> Int {
-        switch prayer {
-        case .tahajjud: return prefs.tahajjudPreAlarmMinutes
-        case .fajr: return prefs.fajrPreAlarmMinutes
-        case .dhuhr: return prefs.dhuhrPreAlarmMinutes
-        case .asr: return prefs.asrPreAlarmMinutes
-        case .maghrib: return prefs.maghribPreAlarmMinutes
-        case .isha: return prefs.ishaPreAlarmMinutes
-        }
+    private func setAlertSchedule(_ selection: AlertScheduleSelection) {
+        setAlertTimingSettings(selection.applying(to: getAlertTimingSettings()))
     }
 
-    private func setPreAlarmMinutes(_ value: Int) {
-        switch prayer {
-        case .tahajjud: prefs.tahajjudPreAlarmMinutes = value
-        case .fajr: prefs.fajrPreAlarmMinutes = value
-        case .dhuhr: prefs.dhuhrPreAlarmMinutes = value
-        case .asr: prefs.asrPreAlarmMinutes = value
-        case .maghrib: prefs.maghribPreAlarmMinutes = value
-        case .isha: prefs.ishaPreAlarmMinutes = value
-        }
+    private func setOffsetMinutes(_ offset: Int) {
+        var settings = getAlertTimingSettings()
+        settings.offsetMinutes = offset
+        setAlertTimingSettings(settings)
+    }
+
+    private func setAlertTimingSettings(_ settings: AlertTimingSettings) {
+        prefs.setAlertTimingSettings(settings, for: prayer)
 
         Task {
             await scheduler.rescheduleAll(

@@ -103,8 +103,7 @@ struct LocationSettings: View {
             latitude: result.latitude,
             longitude: result.longitude,
             cityName: result.name,
-            countryCode: result.countryCode,
-            autoSetCalculationMethod: true
+            countryCode: result.countryCode
         )
         dismiss()
     }

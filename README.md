@@ -81,3 +81,10 @@ Edit localized marketing captions in each language folder:
 
 Use `fastlane ios screenshots` when you only need raw screenshots. To test one
 language while editing, run `fastlane ios screenshots languages:en-US`.
+
+To regenerate and frame only the Prayer Detail screenshot in all four languages
+without deleting or reframing the other screens, run:
+
+```sh
+fastlane ios prayer_detail_screenshots
+```

@@ -1,7 +1,7 @@
 devices([
   "iPhone 11 Pro Max"
 ])
-ios_version("26.3.1")
+ios_version("26.5")
 
 languages([
   "en-US",

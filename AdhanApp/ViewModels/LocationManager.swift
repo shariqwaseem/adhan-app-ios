@@ -14,7 +14,6 @@ final class LocationManager: NSObject {
     var isAuthorized: Bool = false
     var locationError: String? = nil
     var lastLocationUpdate: Date? = nil
-    var isManualLocationRequest: Bool = false
 
     private let manager = CLLocationManager()
     private let geocoder = CLGeocoder()
@@ -40,7 +39,6 @@ final class LocationManager: NSObject {
             requestWhenInUsePermission()
             return
         }
-        isManualLocationRequest = true
         manager.requestLocation()
     }
 

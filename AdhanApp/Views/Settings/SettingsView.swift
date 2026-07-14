@@ -10,6 +10,7 @@ struct SettingsView: View {
     @Query(sort: \CustomAlarm.createdAt) private var customAlarms: [CustomAlarm]
     @State private var showingMailCompose = false
     @State private var showingMailError = false
+    @State private var calculationRescheduleTask: Task<Void, Never>?
 
     var body: some View {
         NavigationStack {
@@ -23,14 +24,13 @@ struct SettingsView: View {
                 }
 
                 Section("Prayer Calculation") {
-                    @Bindable var vm = viewModel
-                    Picker("Method", selection: $vm.calculationMethod) {
-                        ForEach(CalculationMethodInfo.allCases) { method in
-                            Text(method.localizedName).tag(method)
-                        }
+                    NavigationLink {
+                        CalculationMethodSettingsView()
+                    } label: {
+                        LabeledContent("Method", value: viewModel.calculationSelectionLabel)
                     }
-                    .pickerStyle(.navigationLink)
 
+                    @Bindable var vm = viewModel
                     Picker("Asr Calculation", selection: $vm.asrMethod) {
                         ForEach(AsrJuristicMethod.allCases) { method in
                             Text(method.localizedName).tag(method)
@@ -102,10 +102,8 @@ struct SettingsView: View {
             } message: {
                 Text("Please configure a mail account in Settings, or email shariqwaseem41@gmail.com directly.")
             }
-            .onChange(of: viewModel.calculationMethod) { _, _ in
-                syncCalculationPreferences()
-                viewModel.recalculate()
-                reschedule()
+            .onChange(of: viewModel.calculationSettings) { _, _ in
+                calculationSettingsChanged()
             }
             .onChange(of: viewModel.asrMethod) { _, _ in
                 syncCalculationPreferences()
@@ -128,7 +126,7 @@ struct SettingsView: View {
 
     private func buildDiagnostics() -> String {
         let device = UIDevice.current
-        let calcMethod = viewModel.calculationMethod.localizedName
+        let calcMethod = viewModel.calculationSelectionLabel
         let lang = LanguageManager.shared.currentLanguage
         let location = viewModel.cityName.isEmpty ? "Not Set" : viewModel.cityName
 
@@ -166,6 +164,21 @@ struct SettingsView: View {
         }
     }
 
+    private func calculationSettingsChanged() {
+        syncCalculationPreferences()
+        viewModel.recalculate()
+        calculationRescheduleTask?.cancel()
+        calculationRescheduleTask = Task {
+            try? await Task.sleep(for: .milliseconds(600))
+            guard !Task.isCancelled else { return }
+            await scheduler.rescheduleAll(
+                prayerEntries: viewModel.multiDayTimes(),
+                preferences: preferences.first,
+                customAlarms: customAlarms
+            )
+        }
+    }
+
     private func syncCalculationPreferences() {
         let prefs: UserPreferences
         if let existing = preferences.first {
@@ -176,11 +189,219 @@ struct SettingsView: View {
             prefs = new
         }
 
-        prefs.calculationMethodRawValue = viewModel.calculationMethod.rawValue
+        prefs.calculationSettingsData = viewModel.calculationSettingsData
+        prefs.calculationMethodRawValue = viewModel.resolvedCalculationConfiguration.logName
         prefs.asrJuristicMethodRawValue = viewModel.asrMethod.rawValue
         prefs.highLatitudeRuleRawValue = viewModel.highLatitudeRule.rawValue
         try? modelContext.save()
     }
+}
+
+private struct CalculationMethodSettingsView: View {
+    @Environment(PrayerTimesViewModel.self) private var viewModel
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        List {
+            Section {
+                selectionButton(
+                    label: autoCalculationLabel,
+                    selection: .automatic,
+                    dismissAfterSelection: true
+                )
+
+                ForEach(CalculationMethodInfo.allCases) { method in
+                    selectionButton(
+                        label: method.localizedName,
+                        selection: .preset(method),
+                        dismissAfterSelection: true
+                    )
+                }
+
+                selectionButton(
+                    label: String(localized: "Custom", bundle: LanguageManager.shared.bundle),
+                    selection: .custom(viewModel.customCalculationParameters),
+                    dismissAfterSelection: false
+                )
+            }
+
+            if case .custom = viewModel.calculationSelection {
+                Section("Custom Settings") {
+                    customCalculationControls
+                }
+
+                if let fajr = viewModel.prayerEntries.first(where: { $0.prayer == .fajr }),
+                   let isha = viewModel.prayerEntries.first(where: { $0.prayer == .isha }) {
+                    Section("Today's Preview") {
+                        LabeledContent(
+                            "Fajr",
+                            value: fajr.adjustedTime.formatted(date: .omitted, time: .shortened)
+                        )
+                        LabeledContent(
+                            "Isha",
+                            value: isha.adjustedTime.formatted(date: .omitted, time: .shortened)
+                        )
+                    }
+                }
+
+            }
+        }
+        .navigationTitle("Method")
+        .navigationBarTitleDisplayMode(.inline)
+        .animation(.default, value: viewModel.calculationSelection)
+    }
+
+    private var recommendedMethod: CalculationMethodInfo {
+        CalculationMethodInfo.recommendedMethod(forCountryCode: viewModel.countryCode)
+    }
+
+    private var autoCalculationLabel: String {
+        "Auto (\(recommendedMethod.shortDisplayName))"
+    }
+
+    @ViewBuilder
+    private func selectionButton(
+        label: String,
+        selection: CalculationSelection,
+        dismissAfterSelection: Bool
+    ) -> some View {
+        let isSelected = isSelectionActive(selection)
+
+        Button {
+            if !isSelected {
+                switch selection {
+                case .custom:
+                    viewModel.setCalculationSelection(.custom(viewModel.customCalculationParameters))
+                default:
+                    viewModel.setCalculationSelection(selection)
+                }
+            }
+
+            if dismissAfterSelection {
+                dismiss()
+            }
+        } label: {
+            HStack {
+                Text(label)
+                    .foregroundStyle(.primary)
+                Spacer()
+                if isSelected {
+                    Image(systemName: "checkmark")
+                        .foregroundStyle(.tint)
+                }
+            }
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
+    }
+
+    private func isSelectionActive(_ selection: CalculationSelection) -> Bool {
+        switch (viewModel.calculationSelection, selection) {
+        case (.automatic, .automatic), (.custom, .custom):
+            return true
+        case (.preset(let current), .preset(let candidate)):
+            return current == candidate
+        default:
+            return false
+        }
+    }
+
+    @ViewBuilder
+    private var customCalculationControls: some View {
+        Stepper(value: fajrAngleBinding, in: 1...30, step: 0.1) {
+            LabeledContent("Fajr Angle", value: angleText(viewModel.customCalculationParameters.fajrAngle))
+        }
+
+        Picker("Isha Calculation", selection: ishaModeBinding) {
+            Text("Angle").tag(CustomIshaMode.angle)
+            Text("Minutes after Maghrib").tag(CustomIshaMode.fixedInterval)
+        }
+
+        switch viewModel.customCalculationParameters.ishaRule {
+        case .angle(let angle):
+            Stepper(value: ishaAngleBinding, in: 1...30, step: 0.1) {
+                LabeledContent("Isha Angle", value: angleText(angle))
+            }
+        case .fixedMinutesAfterMaghrib(let minutes):
+            Stepper(value: ishaIntervalBinding, in: 1...240, step: 1) {
+                LabeledContent("Isha Interval", value: "\(minutes) min")
+            }
+        }
+    }
+
+    private var fajrAngleBinding: Binding<Double> {
+        Binding(
+            get: { viewModel.customCalculationParameters.fajrAngle },
+            set: { value in
+                var custom = viewModel.customCalculationParameters
+                custom.fajrAngle = roundedAngle(value)
+                viewModel.updateCustomCalculationParameters(custom)
+            }
+        )
+    }
+
+    private var ishaModeBinding: Binding<CustomIshaMode> {
+        Binding(
+            get: {
+                switch viewModel.customCalculationParameters.ishaRule {
+                case .angle: return .angle
+                case .fixedMinutesAfterMaghrib: return .fixedInterval
+                }
+            },
+            set: { mode in
+                var custom = viewModel.customCalculationParameters
+                switch mode {
+                case .angle:
+                    custom.ishaRule = .angle(17)
+                case .fixedInterval:
+                    custom.ishaRule = .fixedMinutesAfterMaghrib(90)
+                }
+                viewModel.updateCustomCalculationParameters(custom)
+            }
+        )
+    }
+
+    private var ishaAngleBinding: Binding<Double> {
+        Binding(
+            get: {
+                guard case .angle(let angle) = viewModel.customCalculationParameters.ishaRule else { return 17 }
+                return angle
+            },
+            set: { value in
+                var custom = viewModel.customCalculationParameters
+                custom.ishaRule = .angle(roundedAngle(value))
+                viewModel.updateCustomCalculationParameters(custom)
+            }
+        )
+    }
+
+    private var ishaIntervalBinding: Binding<Int> {
+        Binding(
+            get: {
+                guard case .fixedMinutesAfterMaghrib(let minutes) = viewModel.customCalculationParameters.ishaRule else { return 90 }
+                return minutes
+            },
+            set: { value in
+                var custom = viewModel.customCalculationParameters
+                custom.ishaRule = .fixedMinutesAfterMaghrib(CustomCalculationParameters.clampedInterval(value))
+                viewModel.updateCustomCalculationParameters(custom)
+            }
+        )
+    }
+
+    private func roundedAngle(_ value: Double) -> Double {
+        CustomCalculationParameters.clampedAngle((value * 10).rounded() / 10)
+    }
+
+    private func angleText(_ value: Double) -> String {
+        String(format: "%.1f°", value)
+    }
+}
+
+private enum CustomIshaMode: Hashable {
+    case angle
+    case fixedInterval
 }
 
 // MARK: - Mail Compose

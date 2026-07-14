@@ -148,46 +148,14 @@ struct PrayerTimelineProvider: TimelineProvider {
         guard lat != 0 || lon != 0 else { return nil }
 
         let cityName = defaults.string(forKey: "lastCityName") ?? "Unknown"
+        let countryCode = defaults.string(forKey: "lastCountryCode")
         let now = Date()
         let cal = Calendar.current
-        let components = cal.dateComponents([.year, .month, .day], from: now)
-        let dateComponents = DateComponents(calendar: cal, year: components.year, month: components.month, day: components.day)
-        let coordinates = Coordinates(latitude: lat, longitude: lon)
-        let savedMethod = defaults.string(forKey: "calculationMethod")
-        let calcMethod: CalculationMethod = {
-            switch savedMethod {
-            case "Muslim World League": return .muslimWorldLeague
-            case "Egyptian General Authority": return .egyptian
-            case "University of Islamic Sciences, Karachi": return .karachi
-            case "Umm Al-Qura University, Makkah": return .ummAlQura
-            case "Dubai": return .dubai
-            case "Moonsighting Committee": return .moonsightingCommittee
-            case "ISNA (North America)": return .northAmerica
-            case "Kuwait": return .kuwait
-            case "Qatar": return .qatar
-            case "Singapore": return .singapore
-            case "Diyanet İşleri Başkanlığı, Turkey": return .turkey
-            case "Shia (Jafari)": return .tehran
-            default: return .muslimWorldLeague
-            }
-        }()
-        var params = calcMethod.params
-
-        // Apply Asr method (Madhab)
-        let savedAsr = defaults.string(forKey: "asrMethod")
-        if savedAsr == "Hanafi" {
-            params.madhab = .hanafi
-        } else {
-            params.madhab = .shafi
-        }
-
-        // Apply high latitude rule
-        let savedHighLat = defaults.string(forKey: "highLatitudeRule")
-        switch savedHighLat {
-        case "Seventh of the Night": params.highLatitudeRule = .seventhOfTheNight
-        case "Twilight Angle": params.highLatitudeRule = .twilightAngle
-        default: params.highLatitudeRule = .middleOfTheNight
-        }
+        let settings = CalculationSettingsStorage.load(from: defaults) ?? CalculationSettingsPayload()
+        let configuration = settings.selection.resolved(countryCode: countryCode)
+        let asrMethod = AsrJuristicMethod(rawValue: defaults.string(forKey: "asrMethod") ?? "") ?? .hanafi
+        let highLatitudeRule = HighLatitudeRuleOption(rawValue: defaults.string(forKey: "highLatitudeRule") ?? "") ?? .middleOfTheNight
+        let calculationCore = PrayerCalculationCore(calendar: cal)
 
         // Read manual adjustments
         let manualAdjustments: [String: Int] = {
@@ -198,63 +166,50 @@ struct PrayerTimelineProvider: TimelineProvider {
             return decoded
         }()
 
-        guard let prayerTimes = PrayerTimes(coordinates: coordinates, date: dateComponents, calculationParameters: params) else {
-            return nil
-        }
-
-        // Calculate Tahajjud: last third of the night
-        let tahajjudTime: Date = {
-            let cal = Calendar.current
-            if let yesterday = cal.date(byAdding: .day, value: -1, to: now) {
-                let yComps = cal.dateComponents([.year, .month, .day], from: yesterday)
-                let yDateComps = DateComponents(calendar: cal, year: yComps.year, month: yComps.month, day: yComps.day)
-                if let yPrayers = PrayerTimes(coordinates: coordinates, date: yDateComps, calculationParameters: params) {
-                    let nightDuration = prayerTimes.fajr.timeIntervalSince(yPrayers.isha)
-                    return yPrayers.isha.addingTimeInterval(nightDuration * 2.0 / 3.0)
-                }
+        func adjusted(_ prayers: [BasePrayerTime]) -> [(name: String, time: Date, isNext: Bool)] {
+            prayers.map { prayer in
+                let adjustment = manualAdjustments[prayer.prayer.rawValue] ?? 0
+                let time = cal.date(byAdding: .minute, value: adjustment, to: prayer.time) ?? prayer.time
+                return (name: prayer.prayer.rawValue, time: time, isNext: false)
             }
-            return prayerTimes.fajr.addingTimeInterval(-2 * 3600)
-        }()
-
-        let names = ["Tahajjud", "Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"]
-        let baseTimes = [tahajjudTime, prayerTimes.fajr, prayerTimes.dhuhr, prayerTimes.asr, prayerTimes.maghrib, prayerTimes.isha]
-        let times = zip(names, baseTimes).map { name, time -> Date in
-            let adj = manualAdjustments[name] ?? 0
-            return adj != 0 ? (cal.date(byAdding: .minute, value: adj, to: time) ?? time) : time
         }
+
+        let todayBase = calculationCore.calculate(
+            date: now,
+            latitude: lat,
+            longitude: lon,
+            configuration: configuration,
+            asrMethod: asrMethod,
+            highLatitudeRule: highLatitudeRule
+        )
+        guard !todayBase.isEmpty else { return nil }
+        let todayTimes = adjusted(todayBase)
 
         // Build today's full list
         var todayPrayers: [(name: String, time: Date, isNext: Bool)] = []
         var foundNext = false
-        for i in 0..<names.count {
-            let isNext = !foundNext && times[i] > now
+        for prayer in todayTimes {
+            let isNext = !foundNext && prayer.time > now
             if isNext { foundNext = true }
-            todayPrayers.append((name: names[i], time: times[i], isNext: isNext))
+            todayPrayers.append((name: prayer.name, time: prayer.time, isNext: isNext))
         }
 
         // Calculate tomorrow's prayers
         let tomorrow = cal.date(byAdding: .day, value: 1, to: now)!
-        let tComps = cal.dateComponents([.year, .month, .day], from: tomorrow)
-        let tDateComps = DateComponents(calendar: cal, year: tComps.year, month: tComps.month, day: tComps.day)
-        let tPrayerTimes = PrayerTimes(coordinates: coordinates, date: tDateComps, calculationParameters: params)
-
+        let tomorrowTimes = adjusted(calculationCore.calculate(
+            date: tomorrow,
+            latitude: lat,
+            longitude: lon,
+            configuration: configuration,
+            asrMethod: asrMethod,
+            highLatitudeRule: highLatitudeRule
+        ))
         var tomorrowPrayers: [(name: String, time: Date, isNext: Bool)] = []
-        if let tPrayerTimes {
-            let tTahajjud: Date = {
-                let nightDuration = tPrayerTimes.fajr.timeIntervalSince(prayerTimes.isha)
-                return prayerTimes.isha.addingTimeInterval(nightDuration * 2.0 / 3.0)
-            }()
-            let tBaseTimes = [tTahajjud, tPrayerTimes.fajr, tPrayerTimes.dhuhr, tPrayerTimes.asr, tPrayerTimes.maghrib, tPrayerTimes.isha]
-            let tTimes = zip(names, tBaseTimes).map { name, time -> Date in
-                let adj = manualAdjustments[name] ?? 0
-                return adj != 0 ? (cal.date(byAdding: .minute, value: adj, to: time) ?? time) : time
-            }
-            var tFoundNext = false
-            for i in 0..<names.count {
-                let isNext = !foundNext && !tFoundNext && tTimes[i] > now
-                if isNext { tFoundNext = true }
-                tomorrowPrayers.append((name: names[i], time: tTimes[i], isNext: isNext))
-            }
+        var tomorrowFoundNext = false
+        for prayer in tomorrowTimes {
+            let isNext = !foundNext && !tomorrowFoundNext && prayer.time > now
+            if isNext { tomorrowFoundNext = true }
+            tomorrowPrayers.append((name: prayer.name, time: prayer.time, isNext: isNext))
         }
 
         // Upcoming: today's remaining future prayers + tomorrow's prayers

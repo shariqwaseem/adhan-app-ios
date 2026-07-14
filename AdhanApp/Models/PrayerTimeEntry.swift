@@ -1,15 +1,6 @@
 import Foundation
 
-enum PrayerName: String, CaseIterable, Identifiable, Sendable, Codable {
-    case tahajjud = "Tahajjud"
-    case fajr = "Fajr"
-    case dhuhr = "Dhuhr"
-    case asr = "Asr"
-    case maghrib = "Maghrib"
-    case isha = "Isha"
-
-    var id: String { rawValue }
-
+extension PrayerName {
     var localizedName: String {
         String(localized: String.LocalizationValue(rawValue), bundle: LanguageManager.shared.bundle)
     }

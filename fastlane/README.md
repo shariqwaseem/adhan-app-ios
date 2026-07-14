@@ -31,6 +31,14 @@ Capture localized App Store screenshots
 
 Capture screenshots and add localized captions and device frames
 
+### ios prayer_detail_screenshots
+
+```sh
+[bundle exec] fastlane ios prayer_detail_screenshots
+```
+
+Regenerate only the localized prayer detail screenshot and frame it
+
 ### ios frame
 
 ```sh
