@@ -188,7 +188,11 @@ struct HomeView: View {
                     PrayerDetailView(prayer: entry.prayer)
                         .environment(\.colorScheme, systemColorScheme)
                 } label: {
-                    PrayerRow(entry: effectiveEntry, mode: currentMode(for: entry.prayer))
+                    PrayerRow(
+                        entry: effectiveEntry,
+                        mode: currentMode(for: entry.prayer),
+                        hasOffsetAlert: currentAlertTimingSettings(for: entry.prayer).isOffsetAlertEnabled
+                    )
                 }
                 .accessibilityIdentifier("prayer-row-\(entry.prayer.rawValue.lowercased())")
                 .tint(.primary)
@@ -365,6 +369,10 @@ struct HomeView: View {
         return mode
     }
 
+    private func currentAlertTimingSettings(for prayer: PrayerName) -> AlertTimingSettings {
+        prefs?.alertTimingSettings(for: prayer) ?? AlertTimingSettings()
+    }
+
     private func formattedCountdown(_ interval: TimeInterval) -> String {
         let total = Int(interval)
         let hours = total / 3600
@@ -406,10 +414,10 @@ struct CustomAlarmRow: View {
 
     var body: some View {
         HStack {
-            Image(systemName: alarm.mode.systemImage)
-                .font(.body)
-                .foregroundStyle(alarm.mode == .alarm ? .orange : alarm.mode == .notification ? Color.accentColor : .secondary)
-                .frame(width: 28)
+            HomeAlertModeIcon(
+                mode: alarm.mode,
+                hasOffsetAlert: alarm.alertTimingSettings.isOffsetAlertEnabled
+            )
 
             Text(alarm.title)
                 .font(.body.weight(isNext ? .semibold : .regular))
@@ -436,13 +444,11 @@ struct CustomAlarmRow: View {
 struct PrayerRow: View {
     let entry: PrayerTimeEntry
     var mode: PrayerNotificationMode = .notification
+    var hasOffsetAlert = false
 
     var body: some View {
         HStack {
-            Image(systemName: mode.systemImage)
-                .font(.body)
-                .foregroundStyle(mode == .alarm ? .orange : mode == .notification ? Color.accentColor : .secondary)
-                .frame(width: 28)
+            HomeAlertModeIcon(mode: mode, hasOffsetAlert: hasOffsetAlert)
 
             Text(entry.prayer.localizedName)
                 .font(.body.weight(entry.isNext ? .semibold : .regular))
@@ -460,6 +466,43 @@ struct PrayerRow: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 16)
+    }
+}
+
+private struct HomeAlertModeIcon: View {
+    let mode: PrayerNotificationMode
+    let hasOffsetAlert: Bool
+
+    private var color: Color {
+        switch mode {
+        case .alarm: .orange
+        case .notification: .accentColor
+        case .silent: .secondary
+        }
+    }
+
+    var body: some View {
+        Image(systemName: mode.systemImage)
+            .font(.system(size: 20, weight: .medium))
+            .foregroundStyle(color)
+            .overlay(alignment: .topTrailing) {
+                if hasOffsetAlert && mode != .silent {
+                    ZStack {
+                        Circle()
+                            .fill(color)
+                        Image("OffsetBadge")
+                            .resizable()
+                            .renderingMode(.template)
+                            .foregroundStyle(.white)
+                            .frame(width: 8, height: 5.6)
+                    }
+                    .frame(width: 13, height: 13)
+                    .offset(x: mode == .notification ? 8.5 : 12.5, y: -6)
+                    .accessibilityHidden(true)
+                }
+            }
+            .frame(width: 36)
+            .padding(.trailing, 7)
     }
 }
 

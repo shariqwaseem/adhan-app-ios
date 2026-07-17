@@ -1,3 +1,1 @@
-• Schedule prayer and custom alerts before, at, or after their set time—including the option to receive two alerts.
-• Choose automatic, preset, or custom prayer calculations, with controls for Fajr and Isha.
-• Improved settings sync, prayer-time transitions, alert scheduling, and widget reliability.
+Visual improvements and minor fixes.

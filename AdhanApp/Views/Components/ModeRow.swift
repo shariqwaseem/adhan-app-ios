@@ -27,6 +27,15 @@ struct ModeRow: View {
         return String(localized: "Requires alarm permission in Settings", bundle: bundle)
     }
 
+    private var iconColor: Color {
+        if isDisabled { return .secondary }
+        switch mode {
+        case .alarm: return .orange
+        case .notification: return .accentColor
+        case .silent: return .primary
+        }
+    }
+
     var body: some View {
         Button(action: {
             if !isDisabled {
@@ -35,7 +44,7 @@ struct ModeRow: View {
         }) {
             HStack {
                 Image(systemName: mode.systemImage)
-                    .foregroundStyle(isDisabled ? Color.secondary : (mode == .alarm ? Color.orange : Color.primary))
+                    .foregroundStyle(iconColor)
                     .frame(width: 28)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(mode.localizedName)
