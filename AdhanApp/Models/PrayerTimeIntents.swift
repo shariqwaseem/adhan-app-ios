@@ -123,17 +123,17 @@ struct SiriPrayerTimeService: Sendable {
         guard let location = SharedDataManager.loadLocation() else {
             return nil
         }
+        let settings = SharedDataManager.loadCalculationSettings() ?? CalculationSettingsPayload()
 
         return PrayerCalculationService().calculatePrayerTimes(
             date: date,
             latitude: location.latitude,
             longitude: location.longitude,
-            configuration: (SharedDataManager.loadCalculationSettings() ?? CalculationSettingsPayload())
-                .selection
-                .resolved(countryCode: location.countryCode),
+            configuration: settings.selection.resolved(countryCode: location.countryCode),
             asrMethod: SharedDataManager.loadAsrMethod() ?? .hanafi,
             highLatitudeRule: SharedDataManager.loadHighLatitudeRule() ?? .middleOfTheNight,
-            adjustments: SharedDataManager.loadManualAdjustments()
+            adjustments: SharedDataManager.loadManualAdjustments(),
+            moonSightingIshaTwilight: settings.moonSightingIshaTwilight
         )
     }
 }

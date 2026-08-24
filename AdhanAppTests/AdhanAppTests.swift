@@ -236,6 +236,13 @@ struct LocalizationTests {
         }
     }
 
+    @Test("All Moon Sighting Isha twilight options have non-empty localizedName")
+    func allMoonSightingTwilightOptionsHaveLocalizedName() {
+        for twilight in MoonSightingIshaTwilight.allCases {
+            #expect(!twilight.localizedName.isEmpty, "\(twilight.rawValue) has empty localizedName")
+        }
+    }
+
     @Test("All notification modes have non-empty localizedName")
     func allNotificationModesHaveLocalizedName() {
         for mode in PrayerNotificationMode.allCases {
@@ -386,6 +393,47 @@ struct CalculationSelectionTests {
             wasExplicitlySelected: false
         )
         #expect(CalculationSettingsStorage.preferred([migrationDefault, synced]) == synced)
+    }
+
+    @Test("Legacy version-one payloads default Moon Sighting Isha to General")
+    func legacyPayloadDefaultsToGeneralTwilight() throws {
+        let original = CalculationSettingsPayload(
+            selection: .preset(.MoonsightingCommittee),
+            updatedAt: Date(timeIntervalSince1970: 123),
+            wasExplicitlySelected: true
+        )
+        let encoded = try #require(CalculationSettingsStorage.encode(original))
+        var object = try #require(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+        object.removeValue(forKey: "moonSightingIshaTwilight")
+        let legacyData = try JSONSerialization.data(withJSONObject: object)
+
+        let decoded = try #require(CalculationSettingsStorage.decode(legacyData))
+        #expect(decoded.version == 1)
+        #expect(decoded.selection == original.selection)
+        #expect(decoded.updatedAt == original.updatedAt)
+        #expect(decoded.wasExplicitlySelected)
+        #expect(decoded.moonSightingIshaTwilight == .general)
+    }
+
+    @MainActor
+    @Test("Changing Moon Sighting twilight does not mark Auto as an explicit method selection")
+    func twilightChangePreservesCalculationSelectionSemantics() {
+        let initial = CalculationSettingsPayload(
+            selection: .automatic,
+            updatedAt: Date(timeIntervalSince1970: 1),
+            wasExplicitlySelected: false
+        )
+        let viewModel = PrayerTimesViewModel(
+            initialCalculationSettings: initial,
+            persistsCalculationSettings: false
+        )
+
+        viewModel.moonSightingIshaTwilight = .abyad
+
+        #expect(viewModel.calculationSelection == .automatic)
+        #expect(viewModel.calculationSettings.wasExplicitlySelected == false)
+        #expect(viewModel.moonSightingIshaTwilight == .abyad)
+        #expect(viewModel.calculationSettings.updatedAt > initial.updatedAt)
     }
 
     @Test("Custom values clamp to supported ranges")
@@ -587,7 +635,8 @@ struct PrayerAccuracyRegressionTests {
         let calendar = fixedCalendar(timeZoneID: "America/New_York")
         let payload = CalculationSettingsPayload(
             selection: .custom(CustomCalculationParameters(fajrAngle: 16.5, ishaRule: .angle(15.5))),
-            wasExplicitlySelected: true
+            wasExplicitlySelected: true,
+            moonSightingIshaTwilight: .abyad
         )
         let decoded = try #require(CalculationSettingsStorage.decode(CalculationSettingsStorage.encode(payload)))
         let configuration = decoded.selection.resolved(countryCode: "US")
@@ -598,7 +647,8 @@ struct PrayerAccuracyRegressionTests {
             longitude: -74.0060,
             configuration: configuration,
             asrMethod: .standard,
-            highLatitudeRule: .middleOfTheNight
+            highLatitudeRule: .middleOfTheNight,
+            moonSightingIshaTwilight: decoded.moonSightingIshaTwilight
         )
         let widgetResult = PrayerCalculationCore(calendar: calendar).calculate(
             date: date,
@@ -606,9 +656,152 @@ struct PrayerAccuracyRegressionTests {
             longitude: -74.0060,
             configuration: configuration,
             asrMethod: .standard,
-            highLatitudeRule: .middleOfTheNight
+            highLatitudeRule: .middleOfTheNight,
+            moonSightingIshaTwilight: decoded.moonSightingIshaTwilight
         )
         #expect(appResult == widgetResult)
+        #expect(decoded.moonSightingIshaTwilight == .abyad)
+    }
+
+    @Test("Moon Sighting twilight variants match upstream Isha fixtures and leave other prayers unchanged")
+    func moonSightingIshaTwilightFixtures() throws {
+        let calendar = fixedCalendar(timeZoneID: "America/Toronto")
+        let service = PrayerCalculationService(calendar: calendar)
+        let date = fixedDate(2021, 7, 1, 12, 0, calendar: calendar)
+
+        func entries(for twilight: MoonSightingIshaTwilight) -> [PrayerTimeEntry] {
+            service.calculatePrayerTimes(
+                date: date,
+                latitude: 43.494,
+                longitude: -79.844,
+                configuration: .preset(.MoonsightingCommittee),
+                asrMethod: .standard,
+                highLatitudeRule: .middleOfTheNight,
+                adjustments: [:],
+                moonSightingIshaTwilight: twilight
+            )
+        }
+
+        let general = entries(for: .general)
+        let ahmer = entries(for: .ahmer)
+        let abyad = entries(for: .abyad)
+        let defaultGeneral = service.calculatePrayerTimes(
+            date: date,
+            latitude: 43.494,
+            longitude: -79.844,
+            configuration: .preset(.MoonsightingCommittee),
+            asrMethod: .standard,
+            highLatitudeRule: .middleOfTheNight,
+            adjustments: [:]
+        )
+
+        for prayer in PrayerName.allCases where prayer != .isha {
+            let generalTime = try #require(general.first(where: { $0.prayer == prayer })?.time)
+            #expect(ahmer.first(where: { $0.prayer == prayer })?.time == generalTime)
+            #expect(abyad.first(where: { $0.prayer == prayer })?.time == generalTime)
+            #expect(defaultGeneral.first(where: { $0.prayer == prayer })?.time == generalTime)
+        }
+
+        let expected: [(MoonSightingIshaTwilight, [PrayerTimeEntry], Int, Int)] = [
+            (.general, general, 22, 22),
+            (.ahmer, ahmer, 22, 19),
+            (.abyad, abyad, 23, 17),
+        ]
+        for (twilight, result, hour, minute) in expected {
+            let isha = try #require(result.first(where: { $0.prayer == .isha }))
+            let expectedTime = fixedDate(2021, 7, 1, hour, minute, calendar: calendar)
+            #expect(
+                abs(isha.time.timeIntervalSince(expectedTime)) <= 60,
+                "Unexpected \(twilight.rawValue) Moon Sighting Isha"
+            )
+        }
+        #expect(defaultGeneral.first(where: { $0.prayer == .isha })?.time == general.first(where: { $0.prayer == .isha })?.time)
+    }
+
+    @Test("Moon Sighting twilight setting is ignored by other calculation methods")
+    func moonSightingTwilightDoesNotAffectOtherMethods() {
+        let calendar = fixedCalendar(timeZoneID: "Asia/Karachi")
+        let core = PrayerCalculationCore(calendar: calendar)
+        let date = fixedDate(2025, 6, 15, 12, 0, calendar: calendar)
+
+        func result(for twilight: MoonSightingIshaTwilight) -> [BasePrayerTime] {
+            core.calculate(
+                date: date,
+                latitude: 24.8607,
+                longitude: 67.0011,
+                configuration: .preset(.Karachi),
+                asrMethod: .hanafi,
+                highLatitudeRule: .middleOfTheNight,
+                moonSightingIshaTwilight: twilight
+            )
+        }
+
+        #expect(result(for: .general) == result(for: .ahmer))
+        #expect(result(for: .general) == result(for: .abyad))
+    }
+
+    @Test("Automatic high-latitude mode follows the upstream recommendation without changing stored explicit values")
+    func automaticHighLatitudeRule() {
+        let calendar = fixedCalendar(timeZoneID: "UTC")
+        let core = PrayerCalculationCore(calendar: calendar)
+        let date = fixedDate(2025, 6, 21, 12, 0, calendar: calendar)
+
+        func result(latitude: Double, rule: HighLatitudeRuleOption) -> [BasePrayerTime] {
+            core.calculate(
+                date: date,
+                latitude: latitude,
+                longitude: 0,
+                configuration: .preset(.MuslimWorldLeague),
+                asrMethod: .standard,
+                highLatitudeRule: rule
+            )
+        }
+
+        #expect(result(latitude: 48, rule: .automatic) == result(latitude: 48, rule: .middleOfTheNight))
+        #expect(result(latitude: 55, rule: .automatic) == result(latitude: 55, rule: .seventhOfTheNight))
+        #expect(result(latitude: 55, rule: .automatic) != result(latitude: 55, rule: .middleOfTheNight))
+        #expect(HighLatitudeRuleOption(rawValue: "Middle of the Night") == .middleOfTheNight)
+        #expect(HighLatitudeRuleOption(rawValue: "Seventh of the Night") == .seventhOfTheNight)
+        #expect(HighLatitudeRuleOption(rawValue: "Twilight Angle") == .twilightAngle)
+    }
+
+    @Test("Prayer ordering and daily continuity hold near the International Date Line")
+    func internationalDateLineRegression() throws {
+        let calendar = fixedCalendar(timeZoneID: "UTC")
+        let core = PrayerCalculationCore(calendar: calendar)
+        let firstDate = fixedDate(2025, 12, 1, 12, 0, calendar: calendar)
+        let secondDate = try #require(calendar.date(byAdding: .day, value: 1, to: firstDate))
+        let coordinates = [
+            (42.74674252600066, 177.2401196144623),
+            (47.082209457885355, 177.24642294208638),
+        ]
+
+        for (latitude, longitude) in coordinates {
+            func result(for date: Date) -> [BasePrayerTime] {
+                core.calculate(
+                    date: date,
+                    latitude: latitude,
+                    longitude: longitude,
+                    configuration: .preset(.MuslimWorldLeague),
+                    asrMethod: .standard,
+                    highLatitudeRule: .twilightAngle
+                )
+            }
+
+            let first = result(for: firstDate)
+            let second = result(for: secondDate)
+            #expect(first.count == 6)
+            #expect(second.count == 6)
+            for index in 1..<first.count {
+                #expect(first[index].time > first[index - 1].time)
+            }
+            for prayer in PrayerName.allCases {
+                let firstTime = try #require(first.first(where: { $0.prayer == prayer })?.time)
+                let secondTime = try #require(second.first(where: { $0.prayer == prayer })?.time)
+                let interval = secondTime.timeIntervalSince(firstTime)
+                #expect(interval > 20 * 60 * 60 && interval < 28 * 60 * 60)
+            }
+        }
     }
 
     @Test("Golden prayer times remain stable for Makkah, Karachi, and New York")
@@ -775,7 +968,8 @@ private struct FixedPrayerCalculationService: PrayerCalculationServiceProtocol {
         configuration: ResolvedCalculationConfiguration,
         asrMethod: AsrJuristicMethod,
         highLatitudeRule: HighLatitudeRuleOption,
-        adjustments: [PrayerName: Int]
+        adjustments: [PrayerName: Int],
+        moonSightingIshaTwilight: MoonSightingIshaTwilight = .general
     ) -> [PrayerTimeEntry] {
         let schedule: [(PrayerName, Int, Int)] = [
             (.tahajjud, 3, 0),
@@ -812,7 +1006,8 @@ private struct FixedPrayerCalculationService: PrayerCalculationServiceProtocol {
         configuration: ResolvedCalculationConfiguration,
         asrMethod: AsrJuristicMethod,
         highLatitudeRule: HighLatitudeRuleOption,
-        adjustments: [PrayerName: Int]
+        adjustments: [PrayerName: Int],
+        moonSightingIshaTwilight: MoonSightingIshaTwilight = .general
     ) -> [[PrayerTimeEntry]] {
         (0..<days).compactMap { offset in
             guard let date = calendar.date(byAdding: .day, value: offset, to: startDate) else { return nil }
@@ -823,7 +1018,8 @@ private struct FixedPrayerCalculationService: PrayerCalculationServiceProtocol {
                 configuration: configuration,
                 asrMethod: asrMethod,
                 highLatitudeRule: highLatitudeRule,
-                adjustments: adjustments
+                adjustments: adjustments,
+                moonSightingIshaTwilight: moonSightingIshaTwilight
             )
         }
     }

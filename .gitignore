@@ -1,7 +1,7 @@
 # Xcode
 *.xcodeproj/xcuserdata/
 *.xcworkspace/xcuserdata/
-*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
+*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/*
 DerivedData/
 build/
 *.pbxuser
@@ -22,6 +22,7 @@ build/
 .build/
 Packages/
 Package.resolved
+!AdhanApp.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
 
 # CocoaPods
 Pods/

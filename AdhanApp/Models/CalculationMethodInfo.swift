@@ -14,7 +14,21 @@ extension AsrJuristicMethod {
 
 extension HighLatitudeRuleOption {
     var localizedName: String {
-        String(localized: String.LocalizationValue(rawValue), bundle: LanguageManager.shared.bundle)
+        if self == .automatic {
+            return String(localized: "Auto", bundle: LanguageManager.shared.bundle)
+        }
+        return String(localized: String.LocalizationValue(rawValue), bundle: LanguageManager.shared.bundle)
+    }
+}
+
+extension MoonSightingIshaTwilight {
+    var localizedName: String {
+        let key: String.LocalizationValue = switch self {
+        case .general: "General"
+        case .ahmer: "Red Twilight (Shafi‘i, Maliki, Hanbali)"
+        case .abyad: "White Twilight (Hanafi)"
+        }
+        return String(localized: key, bundle: LanguageManager.shared.bundle)
     }
 }
 

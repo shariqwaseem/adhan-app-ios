@@ -231,7 +231,7 @@ struct BackgroundTaskService {
         }()
 
         // 4. Calculate prayer times for N days
-        AppLogger.background.info("performFullRefresh: calculating for (\(latitude), \(longitude)) method=\(calculationConfiguration.logName) hlr=\(highLatitudeRule.rawValue)")
+        AppLogger.background.info("performFullRefresh: calculating for (\(latitude), \(longitude)) method=\(calculationConfiguration.logName) hlr=\(highLatitudeRule.rawValue) moonIsha=\(calculationSettings.moonSightingIshaTwilight.rawValue)")
         let service = PrayerCalculationService()
         let days = Constants.NotificationBudget.daysToScheduleAhead
         let multiDayEntries = service.calculateMultipleDays(
@@ -242,7 +242,8 @@ struct BackgroundTaskService {
             configuration: calculationConfiguration,
             asrMethod: asrMethod,
             highLatitudeRule: highLatitudeRule,
-            adjustments: SharedDataManager.loadManualAdjustments()
+            adjustments: SharedDataManager.loadManualAdjustments(),
+            moonSightingIshaTwilight: calculationSettings.moonSightingIshaTwilight
         )
 
         // Log today's Isha specifically (the prayer we're debugging)
@@ -257,6 +258,8 @@ struct BackgroundTaskService {
                 "latitude": latitude,
                 "longitude": longitude,
                 "method": calculationConfiguration.logName,
+                "high_latitude_rule": highLatitudeRule.rawValue,
+                "moon_isha_twilight": calculationSettings.moonSightingIshaTwilight.rawValue,
                 "isha_hour": Calendar.current.component(.hour, from: isha.adjustedTime),
                 "isha_minute": Calendar.current.component(.minute, from: isha.adjustedTime)
             ])

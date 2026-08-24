@@ -65,9 +65,21 @@ enum AsrJuristicMethod: String, CaseIterable, Identifiable, Codable, Sendable {
 }
 
 enum HighLatitudeRuleOption: String, CaseIterable, Identifiable, Codable, Sendable {
+    case automatic = "Automatic (Recommended)"
     case middleOfTheNight = "Middle of the Night"
     case seventhOfTheNight = "Seventh of the Night"
     case twilightAngle = "Twilight Angle"
+
+    var id: String { rawValue }
+}
+
+/// The definition of evening twilight used by the Moon Sighting Committee
+/// calculation method. Raw values are stable persistence identifiers rather
+/// than user-facing labels.
+enum MoonSightingIshaTwilight: String, CaseIterable, Identifiable, Codable, Sendable {
+    case general
+    case ahmer
+    case abyad
 
     var id: String { rawValue }
 }
@@ -159,18 +171,56 @@ struct CalculationSettingsPayload: Codable, Equatable, Sendable {
     var savedCustomParameters: CustomCalculationParameters?
     var updatedAt: Date
     var wasExplicitlySelected: Bool
+    var moonSightingIshaTwilight: MoonSightingIshaTwilight
 
     init(
         selection: CalculationSelection = .automatic,
         savedCustomParameters: CustomCalculationParameters? = nil,
         updatedAt: Date = Date(),
-        wasExplicitlySelected: Bool = false
+        wasExplicitlySelected: Bool = false,
+        moonSightingIshaTwilight: MoonSightingIshaTwilight = .general
     ) {
         self.version = Self.currentVersion
         self.selection = selection
         self.savedCustomParameters = savedCustomParameters
         self.updatedAt = updatedAt
         self.wasExplicitlySelected = wasExplicitlySelected
+        self.moonSightingIshaTwilight = moonSightingIshaTwilight
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case version
+        case selection
+        case savedCustomParameters
+        case updatedAt
+        case wasExplicitlySelected
+        case moonSightingIshaTwilight
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        version = try container.decode(Int.self, forKey: .version)
+        selection = try container.decode(CalculationSelection.self, forKey: .selection)
+        savedCustomParameters = try container.decodeIfPresent(
+            CustomCalculationParameters.self,
+            forKey: .savedCustomParameters
+        )
+        updatedAt = try container.decode(Date.self, forKey: .updatedAt)
+        wasExplicitlySelected = try container.decode(Bool.self, forKey: .wasExplicitlySelected)
+        moonSightingIshaTwilight = try container.decodeIfPresent(
+            MoonSightingIshaTwilight.self,
+            forKey: .moonSightingIshaTwilight
+        ) ?? .general
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(version, forKey: .version)
+        try container.encode(selection, forKey: .selection)
+        try container.encodeIfPresent(savedCustomParameters, forKey: .savedCustomParameters)
+        try container.encode(updatedAt, forKey: .updatedAt)
+        try container.encode(wasExplicitlySelected, forKey: .wasExplicitlySelected)
+        try container.encode(moonSightingIshaTwilight, forKey: .moonSightingIshaTwilight)
     }
 }
 
@@ -231,7 +281,8 @@ struct PrayerCalculationCore: Sendable {
         longitude: Double,
         configuration: ResolvedCalculationConfiguration,
         asrMethod: AsrJuristicMethod,
-        highLatitudeRule: HighLatitudeRuleOption
+        highLatitudeRule: HighLatitudeRuleOption,
+        moonSightingIshaTwilight: MoonSightingIshaTwilight = .general
     ) -> [BasePrayerTime] {
         let coordinates = Coordinates(latitude: latitude, longitude: longitude)
         let dateComponents = dayComponents(for: date)
@@ -239,7 +290,8 @@ struct PrayerCalculationCore: Sendable {
             for: configuration,
             date: date,
             asrMethod: asrMethod,
-            highLatitudeRule: highLatitudeRule
+            highLatitudeRule: highLatitudeRule,
+            moonSightingIshaTwilight: moonSightingIshaTwilight
         )
 
         guard let prayerTimes = PrayerTimes(
@@ -256,7 +308,8 @@ struct PrayerCalculationCore: Sendable {
                 for: configuration,
                 date: yesterday,
                 asrMethod: asrMethod,
-                highLatitudeRule: highLatitudeRule
+                highLatitudeRule: highLatitudeRule,
+                moonSightingIshaTwilight: moonSightingIshaTwilight
             )
             if let yesterdayPrayers = PrayerTimes(
                 coordinates: coordinates,
@@ -306,7 +359,8 @@ struct PrayerCalculationCore: Sendable {
         for configuration: ResolvedCalculationConfiguration,
         date: Date,
         asrMethod: AsrJuristicMethod,
-        highLatitudeRule: HighLatitudeRuleOption
+        highLatitudeRule: HighLatitudeRuleOption,
+        moonSightingIshaTwilight: MoonSightingIshaTwilight
     ) -> CalculationParameters {
         var parameters: CalculationParameters
         switch configuration {
@@ -330,9 +384,17 @@ struct PrayerCalculationCore: Sendable {
         }
         parameters.madhab = asrMethod == .hanafi ? .hanafi : .shafi
         switch highLatitudeRule {
+        case .automatic: parameters.highLatitudeRule = nil
         case .middleOfTheNight: parameters.highLatitudeRule = .middleOfTheNight
         case .seventhOfTheNight: parameters.highLatitudeRule = .seventhOfTheNight
         case .twilightAngle: parameters.highLatitudeRule = .twilightAngle
+        }
+        if configuration.presetMethod == .MoonsightingCommittee {
+            switch moonSightingIshaTwilight {
+            case .general: parameters.shafaq = .general
+            case .ahmer: parameters.shafaq = .ahmer
+            case .abyad: parameters.shafaq = .abyad
+            }
         }
         return parameters
     }

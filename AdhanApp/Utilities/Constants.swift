@@ -22,6 +22,7 @@ enum Constants {
         static let asrMethod = "asrMethod"
         static let highLatitudeRule = "highLatitudeRule"
         static let manualAdjustments = "manualAdjustments"
+        static let hasSeenMoonSightingMethodNewTag = "hasSeenMoonSightingMethodNewTag"
     }
 
     enum NotificationBudget {

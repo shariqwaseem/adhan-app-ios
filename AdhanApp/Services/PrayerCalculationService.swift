@@ -17,7 +17,8 @@ protocol PrayerCalculationServiceProtocol: Sendable {
         configuration: ResolvedCalculationConfiguration,
         asrMethod: AsrJuristicMethod,
         highLatitudeRule: HighLatitudeRuleOption,
-        adjustments: [PrayerName: Int]
+        adjustments: [PrayerName: Int],
+        moonSightingIshaTwilight: MoonSightingIshaTwilight
     ) -> [PrayerTimeEntry]
 
     func calculateMultipleDays(
@@ -28,7 +29,8 @@ protocol PrayerCalculationServiceProtocol: Sendable {
         configuration: ResolvedCalculationConfiguration,
         asrMethod: AsrJuristicMethod,
         highLatitudeRule: HighLatitudeRuleOption,
-        adjustments: [PrayerName: Int]
+        adjustments: [PrayerName: Int],
+        moonSightingIshaTwilight: MoonSightingIshaTwilight
     ) -> [[PrayerTimeEntry]]
 
     func qiblaDirection(latitude: Double, longitude: Double) -> Double
@@ -50,7 +52,8 @@ struct PrayerCalculationService: PrayerCalculationServiceProtocol {
         configuration: ResolvedCalculationConfiguration,
         asrMethod: AsrJuristicMethod,
         highLatitudeRule: HighLatitudeRuleOption,
-        adjustments: [PrayerName: Int]
+        adjustments: [PrayerName: Int],
+        moonSightingIshaTwilight: MoonSightingIshaTwilight = .general
     ) -> [PrayerTimeEntry] {
         let entries = core.calculate(
             date: date,
@@ -58,7 +61,8 @@ struct PrayerCalculationService: PrayerCalculationServiceProtocol {
             longitude: longitude,
             configuration: configuration,
             asrMethod: asrMethod,
-            highLatitudeRule: highLatitudeRule
+            highLatitudeRule: highLatitudeRule,
+            moonSightingIshaTwilight: moonSightingIshaTwilight
         ).map { base in
             PrayerTimeEntry(
                 prayer: base.prayer,
@@ -72,7 +76,7 @@ struct PrayerCalculationService: PrayerCalculationServiceProtocol {
         tf.dateFormat = "yyyy-MM-dd HH:mm:ss"
         tf.timeZone = calendar.timeZone
         let timesLog = entries.map { "\($0.prayer.rawValue)=\(tf.string(from: $0.adjustedTime))" }.joined(separator: ", ")
-        AppLogger.calculation.info("Prayer times for \(tf.string(from: date)) at (\(latitude), \(longitude)) method=\(configuration.logName): \(timesLog)")
+        AppLogger.calculation.info("Prayer times for \(tf.string(from: date)) at (\(latitude), \(longitude)) method=\(configuration.logName) highLatitude=\(highLatitudeRule.rawValue) moonIsha=\(moonSightingIshaTwilight.rawValue): \(timesLog)")
 
         // Flag anomaly: Isha between midnight and 3 AM at non-extreme latitudes
         if let isha = entries.first(where: { $0.prayer == .isha })?.time,
@@ -85,7 +89,9 @@ struct PrayerCalculationService: PrayerCalculationServiceProtocol {
                 "time": tf.string(from: isha),
                 "latitude": latitude,
                 "longitude": longitude,
-                "method": configuration.logName
+                "method": configuration.logName,
+                "high_latitude_rule": highLatitudeRule.rawValue,
+                "moon_isha_twilight": moonSightingIshaTwilight.rawValue
             ])
             Crashlytics.crashlytics().record(error: anomalyError)
             #endif
@@ -95,7 +101,9 @@ struct PrayerCalculationService: PrayerCalculationServiceProtocol {
                 "isha_time": tf.string(from: isha),
                 "latitude": latitude,
                 "longitude": longitude,
-                "method": configuration.logName
+                "method": configuration.logName,
+                "high_latitude_rule": highLatitudeRule.rawValue,
+                "moon_isha_twilight": moonSightingIshaTwilight.rawValue
             ])
             #endif
         }
@@ -110,6 +118,8 @@ struct PrayerCalculationService: PrayerCalculationServiceProtocol {
         }
         crashlytics.setCustomValue("\(latitude),\(longitude)", forKey: "last_coordinates")
         crashlytics.setCustomValue(configuration.logName, forKey: "last_calc_method")
+        crashlytics.setCustomValue(highLatitudeRule.rawValue, forKey: "last_high_latitude_rule")
+        crashlytics.setCustomValue(moonSightingIshaTwilight.rawValue, forKey: "last_moon_isha_twilight")
         #endif
         return entries
     }
@@ -122,7 +132,8 @@ struct PrayerCalculationService: PrayerCalculationServiceProtocol {
         configuration: ResolvedCalculationConfiguration,
         asrMethod: AsrJuristicMethod,
         highLatitudeRule: HighLatitudeRuleOption,
-        adjustments: [PrayerName: Int]
+        adjustments: [PrayerName: Int],
+        moonSightingIshaTwilight: MoonSightingIshaTwilight = .general
     ) -> [[PrayerTimeEntry]] {
         return (0..<days).compactMap { offset in
             guard let date = calendar.date(byAdding: .day, value: offset, to: startDate) else { return nil }
@@ -133,7 +144,8 @@ struct PrayerCalculationService: PrayerCalculationServiceProtocol {
                 configuration: configuration,
                 asrMethod: asrMethod,
                 highLatitudeRule: highLatitudeRule,
-                adjustments: adjustments
+                adjustments: adjustments,
+                moonSightingIshaTwilight: moonSightingIshaTwilight
             )
         }
     }

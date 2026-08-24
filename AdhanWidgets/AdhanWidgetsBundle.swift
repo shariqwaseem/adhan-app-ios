@@ -180,7 +180,8 @@ struct PrayerTimelineProvider: TimelineProvider {
             longitude: lon,
             configuration: configuration,
             asrMethod: asrMethod,
-            highLatitudeRule: highLatitudeRule
+            highLatitudeRule: highLatitudeRule,
+            moonSightingIshaTwilight: settings.moonSightingIshaTwilight
         )
         guard !todayBase.isEmpty else { return nil }
         let todayTimes = adjusted(todayBase)
@@ -202,7 +203,8 @@ struct PrayerTimelineProvider: TimelineProvider {
             longitude: lon,
             configuration: configuration,
             asrMethod: asrMethod,
-            highLatitudeRule: highLatitudeRule
+            highLatitudeRule: highLatitudeRule,
+            moonSightingIshaTwilight: settings.moonSightingIshaTwilight
         ))
         var tomorrowPrayers: [(name: String, time: Date, isNext: Bool)] = []
         var tomorrowFoundNext = false

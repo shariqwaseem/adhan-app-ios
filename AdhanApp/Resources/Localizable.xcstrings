@@ -832,6 +832,34 @@
         }
       }
     },
+    "Auto" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تلقائي"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otomatis"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otomatik"
+          }
+        }
+      }
+    },
     "Bahasa Indonesia" : {
 
     },
@@ -1360,6 +1388,34 @@
         }
       }
     },
+    "General" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "عام"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "General"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umum"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Genel"
+          }
+        }
+      }
+    },
     "Get Next Prayer Time" : {
 
     },
@@ -1804,6 +1860,34 @@
     "Mixed" : {
 
     },
+    "Moon Sighting Isha" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "عشاء رؤية الهلال"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moon Sighting Isha"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Isya Pengamatan Bulan"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hilal Gözlem Yatsı"
+          }
+        }
+      }
+    },
     "Moonsighting Committee" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -1890,6 +1974,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hiçbir Namazı Kaçırmayın"
+          }
+        }
+      }
+    },
+    "New" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "جديد"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Baru"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni"
           }
         }
       }
@@ -2793,6 +2905,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ramazan %lld. Gün"
+          }
+        }
+      }
+    },
+    "Red Twilight (Shafi‘i, Maliki, Hanbali)" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الشفق الأحمر (شافعي، مالكي، حنبلي)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Red Twilight (Shafi‘i, Maliki, Hanbali)"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cahaya Senja Merah (Syafi'i, Maliki, Hanbali)"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kızıl Şafak (Şafii, Maliki, Hanbeli)"
           }
         }
       }
@@ -4051,6 +4191,34 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zaman"
+          }
+        }
+      }
+    },
+    "White Twilight (Hanafi)" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الشفق الأبيض (حنفي)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "White Twilight (Hanafi)"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cahaya Senja Putih (Hanafi)"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beyaz Şafak (Hanefi)"
           }
         }
       }

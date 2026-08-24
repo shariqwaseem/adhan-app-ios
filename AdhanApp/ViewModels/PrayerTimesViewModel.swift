@@ -64,6 +64,17 @@ final class PrayerTimesViewModel {
         CalculationSettingsStorage.encode(calculationSettings)
     }
 
+    var moonSightingIshaTwilight: MoonSightingIshaTwilight {
+        get { calculationSettings.moonSightingIshaTwilight }
+        set {
+            guard newValue != calculationSettings.moonSightingIshaTwilight else { return }
+            var settings = calculationSettings
+            settings.moonSightingIshaTwilight = newValue
+            settings.updatedAt = Date()
+            calculationSettings = settings
+        }
+    }
+
     var asrMethod: AsrJuristicMethod = .hanafi {
         didSet {
             UserDefaults.standard.set(asrMethod.rawValue, forKey: "asrMethod")
@@ -169,7 +180,8 @@ final class PrayerTimesViewModel {
             configuration: resolvedCalculationConfiguration,
             asrMethod: asrMethod,
             highLatitudeRule: highLatitudeRule,
-            adjustments: manualAdjustments
+            adjustments: manualAdjustments,
+            moonSightingIshaTwilight: moonSightingIshaTwilight
         )
 
         refreshPrayerState(at: now, recalculateDayIfNeeded: false)
@@ -204,7 +216,8 @@ final class PrayerTimesViewModel {
                 configuration: resolvedCalculationConfiguration,
                 asrMethod: asrMethod,
                 highLatitudeRule: highLatitudeRule,
-                adjustments: manualAdjustments
+                adjustments: manualAdjustments,
+                moonSightingIshaTwilight: moonSightingIshaTwilight
             )
         }.sorted { $0.adjustedTime < $1.adjustedTime }
 
@@ -253,7 +266,8 @@ final class PrayerTimesViewModel {
             configuration: resolvedCalculationConfiguration,
             asrMethod: asrMethod,
             highLatitudeRule: highLatitudeRule,
-            adjustments: manualAdjustments
+            adjustments: manualAdjustments,
+            moonSightingIshaTwilight: moonSightingIshaTwilight
         )
     }
 

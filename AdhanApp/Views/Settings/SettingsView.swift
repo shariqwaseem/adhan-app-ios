@@ -31,19 +31,43 @@ struct SettingsView: View {
                     }
 
                     @Bindable var vm = viewModel
-                    Picker("Asr Calculation", selection: $vm.asrMethod) {
-                        ForEach(AsrJuristicMethod.allCases) { method in
-                            Text(method.localizedName).tag(method)
-                        }
+                    NavigationLink {
+                        CalculationOptionSettingsView(
+                            title: "Asr Calculation",
+                            selection: $vm.asrMethod,
+                            options: AsrJuristicMethod.allCases,
+                            optionLabel: \AsrJuristicMethod.localizedName
+                        )
+                    } label: {
+                        LabeledContent("Asr Calculation", value: viewModel.asrMethod.localizedName)
                     }
-                    .pickerStyle(.navigationLink)
 
-                    Picker("High Latitude", selection: $vm.highLatitudeRule) {
-                        ForEach(HighLatitudeRuleOption.allCases) { rule in
-                            Text(rule.localizedName).tag(rule)
+                    NavigationLink {
+                        CalculationOptionSettingsView(
+                            title: "High Latitude",
+                            selection: $vm.highLatitudeRule,
+                            options: HighLatitudeRuleOption.allCases,
+                            optionLabel: \HighLatitudeRuleOption.localizedName
+                        )
+                    } label: {
+                        LabeledContent("High Latitude", value: viewModel.highLatitudeRule.localizedName)
+                    }
+
+                    if viewModel.effectiveCalculationMethod == .MoonsightingCommittee {
+                        NavigationLink {
+                            CalculationOptionSettingsView(
+                                title: "Moon Sighting Isha",
+                                selection: $vm.moonSightingIshaTwilight,
+                                options: MoonSightingIshaTwilight.allCases,
+                                optionLabel: \MoonSightingIshaTwilight.localizedName
+                            )
+                        } label: {
+                            LabeledContent(
+                                "Moon Sighting Isha",
+                                value: viewModel.moonSightingIshaTwilight.localizedName
+                            )
                         }
                     }
-                    .pickerStyle(.navigationLink)
                 }
 
                 Section("Display") {
@@ -138,6 +162,8 @@ struct SettingsView: View {
         Language: \(lang)
         Location: \(location)
         Calculation Method: \(calcMethod)
+        High Latitude Rule: \(viewModel.highLatitudeRule.rawValue)
+        Moon Sighting Isha: \(viewModel.moonSightingIshaTwilight.rawValue)
         ---
         """
     }
@@ -199,29 +225,28 @@ struct SettingsView: View {
 
 private struct CalculationMethodSettingsView: View {
     @Environment(PrayerTimesViewModel.self) private var viewModel
-    @Environment(\.dismiss) private var dismiss
+    @AppStorage(Constants.Keys.hasSeenMoonSightingMethodNewTag)
+    private var hasSeenMoonSightingMethodNewTag = false
 
     var body: some View {
         List {
             Section {
                 selectionButton(
                     label: autoCalculationLabel,
-                    selection: .automatic,
-                    dismissAfterSelection: true
+                    selection: .automatic
                 )
 
                 ForEach(CalculationMethodInfo.allCases) { method in
                     selectionButton(
                         label: method.localizedName,
                         selection: .preset(method),
-                        dismissAfterSelection: true
+                        showsNewTag: method == .MoonsightingCommittee
                     )
                 }
 
                 selectionButton(
                     label: String(localized: "Custom", bundle: LanguageManager.shared.bundle),
-                    selection: .custom(viewModel.customCalculationParameters),
-                    dismissAfterSelection: false
+                    selection: .custom(viewModel.customCalculationParameters)
                 )
             }
 
@@ -249,6 +274,7 @@ private struct CalculationMethodSettingsView: View {
         .navigationTitle("Method")
         .navigationBarTitleDisplayMode(.inline)
         .animation(.default, value: viewModel.calculationSelection)
+        .animation(.default, value: hasSeenMoonSightingMethodNewTag)
     }
 
     private var recommendedMethod: CalculationMethodInfo {
@@ -263,11 +289,14 @@ private struct CalculationMethodSettingsView: View {
     private func selectionButton(
         label: String,
         selection: CalculationSelection,
-        dismissAfterSelection: Bool
+        showsNewTag: Bool = false
     ) -> some View {
         let isSelected = isSelectionActive(selection)
 
         Button {
+            if showsNewTag {
+                hasSeenMoonSightingMethodNewTag = true
+            }
             if !isSelected {
                 switch selection {
                 case .custom:
@@ -276,14 +305,19 @@ private struct CalculationMethodSettingsView: View {
                     viewModel.setCalculationSelection(selection)
                 }
             }
-
-            if dismissAfterSelection {
-                dismiss()
-            }
         } label: {
             HStack {
                 Text(label)
                     .foregroundStyle(.primary)
+                if showsNewTag && !hasSeenMoonSightingMethodNewTag {
+                    Text(String(localized: "New", bundle: LanguageManager.shared.bundle))
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(.tint)
+                        .padding(.horizontal, 7)
+                        .padding(.vertical, 3)
+                        .background(.tint.opacity(0.12), in: Capsule())
+                        .accessibilityIdentifier("moon-sighting-new-tag")
+                }
                 Spacer()
                 if isSelected {
                     Image(systemName: "checkmark")
@@ -396,6 +430,38 @@ private struct CalculationMethodSettingsView: View {
 
     private func angleText(_ value: Double) -> String {
         String(format: "%.1f°", value)
+    }
+}
+
+private struct CalculationOptionSettingsView<Option: Identifiable & Hashable>: View {
+    let title: LocalizedStringKey
+    @Binding var selection: Option
+    let options: [Option]
+    let optionLabel: (Option) -> String
+
+    var body: some View {
+        List(options) { option in
+            let isSelected = option == selection
+
+            Button {
+                selection = option
+            } label: {
+                HStack {
+                    Text(optionLabel(option))
+                        .foregroundStyle(.primary)
+                    Spacer()
+                    if isSelected {
+                        Image(systemName: "checkmark")
+                            .foregroundStyle(.tint)
+                    }
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityAddTraits(isSelected ? .isSelected : [])
+        }
+        .navigationTitle(title)
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
