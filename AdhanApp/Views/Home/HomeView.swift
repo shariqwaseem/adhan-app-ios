@@ -184,6 +184,7 @@ struct HomeView: View {
                 let effectiveEntry = customAlarmIsNext
                     ? PrayerTimeEntry(prayer: entry.prayer, time: entry.time, isNext: false, isCurrent: entry.isCurrent, manualAdjustmentMinutes: entry.manualAdjustmentMinutes)
                     : entry
+                let alertTiming = currentAlertTimingSettings(for: entry.prayer)
                 NavigationLink {
                     PrayerDetailView(prayer: entry.prayer)
                         .environment(\.colorScheme, systemColorScheme)
@@ -191,7 +192,7 @@ struct HomeView: View {
                     PrayerRow(
                         entry: effectiveEntry,
                         mode: currentMode(for: entry.prayer),
-                        hasOffsetAlert: currentAlertTimingSettings(for: entry.prayer).isOffsetAlertEnabled
+                        offsetMinutes: alertTiming.isOffsetAlertEnabled ? alertTiming.offsetMinutes : nil
                     )
                 }
                 .accessibilityIdentifier("prayer-row-\(entry.prayer.rawValue.lowercased())")
@@ -416,7 +417,9 @@ struct CustomAlarmRow: View {
         HStack {
             HomeAlertModeIcon(
                 mode: alarm.mode,
-                hasOffsetAlert: alarm.alertTimingSettings.isOffsetAlertEnabled
+                offsetMinutes: alarm.alertTimingSettings.isOffsetAlertEnabled
+                    ? alarm.alertTimingSettings.offsetMinutes
+                    : nil
             )
 
             Text(alarm.title)
@@ -444,11 +447,11 @@ struct CustomAlarmRow: View {
 struct PrayerRow: View {
     let entry: PrayerTimeEntry
     var mode: PrayerNotificationMode = .notification
-    var hasOffsetAlert = false
+    var offsetMinutes: Int?
 
     var body: some View {
         HStack {
-            HomeAlertModeIcon(mode: mode, hasOffsetAlert: hasOffsetAlert)
+            HomeAlertModeIcon(mode: mode, offsetMinutes: offsetMinutes)
 
             Text(entry.prayer.localizedName)
                 .font(.body.weight(entry.isNext ? .semibold : .regular))
@@ -471,7 +474,7 @@ struct PrayerRow: View {
 
 private struct HomeAlertModeIcon: View {
     let mode: PrayerNotificationMode
-    let hasOffsetAlert: Bool
+    let offsetMinutes: Int?
 
     private var color: Color {
         switch mode {
@@ -486,7 +489,7 @@ private struct HomeAlertModeIcon: View {
             .font(.system(size: 20, weight: .medium))
             .foregroundStyle(color)
             .overlay(alignment: .topTrailing) {
-                if hasOffsetAlert && mode != .silent {
+                if let offsetMinutes, mode != .silent {
                     ZStack {
                         Circle()
                             .fill(color)
@@ -496,6 +499,7 @@ private struct HomeAlertModeIcon: View {
                             .foregroundStyle(.black)
                             .blendMode(.destinationOut)
                             .frame(width: 8, height: 5.6)
+                            .scaleEffect(x: offsetMinutes < 0 ? -1 : 1, y: 1)
                     }
                     .compositingGroup()
                     .frame(width: 13, height: 13)
