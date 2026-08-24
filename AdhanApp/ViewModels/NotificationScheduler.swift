@@ -17,6 +17,11 @@ import FirebaseAnalytics
 @Observable
 @MainActor
 final class NotificationScheduler {
+    enum RescheduleReason: Equatable {
+        case routine
+        case languageChange
+    }
+
     var isPermissionGranted: Bool = false
     private static var schedulingTask: (id: UUID, task: Task<Void, Never>)?
     var nextScheduledAlarmTime: Date? = nil
@@ -49,7 +54,8 @@ final class NotificationScheduler {
     func rescheduleAll(
         prayerEntries: [[PrayerTimeEntry]],
         preferences: UserPreferences?,
-        customAlarms: [CustomAlarm] = []
+        customAlarms: [CustomAlarm] = [],
+        reason: RescheduleReason = .routine
     ) async {
         // Location, time-zone, and foreground events can each create their own scheduler.
         // Queue every pass process-wide so cancel-and-rebuild operations cannot interleave.
@@ -60,7 +66,8 @@ final class NotificationScheduler {
             await self.performRescheduleAll(
                 prayerEntries: prayerEntries,
                 preferences: preferences,
-                customAlarms: customAlarms
+                customAlarms: customAlarms,
+                reason: reason
             )
         }
         Self.schedulingTask = (taskID, task)
@@ -74,16 +81,17 @@ final class NotificationScheduler {
     private func performRescheduleAll(
         prayerEntries: [[PrayerTimeEntry]],
         preferences: UserPreferences?,
-        customAlarms: [CustomAlarm]
+        customAlarms: [CustomAlarm],
+        reason: RescheduleReason
     ) async {
-        // Never reschedule while an alarm is actively ringing or snoozing —
-        // cancelAll() inside performScheduling would kill the live activity and alarm.
+        // Routine rebuilds use cancelAll(), so defer them while an alarm is active.
+        // Language changes use the active-alarm-safe cancellation path below.
         #if canImport(AlarmKit)
         if #available(iOS 26, *) {
             let hasActiveAlarmActivity = Activity<AlarmAttributes<AdhanAlarmMetadata>>.activities.contains {
                 $0.activityState == .active
             }
-            if hasActiveAlarmActivity {
+            if hasActiveAlarmActivity && reason != .languageChange {
                 AppLogger.scheduling.info("rescheduleAll: skipped — active alarm live activity detected")
                 #if canImport(FirebaseCrashlytics)
                 Crashlytics.crashlytics().log("rescheduleAll: skipped — active alarm live activity")
@@ -93,14 +101,13 @@ final class NotificationScheduler {
         }
         #endif
 
-        // Don't reschedule if an alarm fired (or was due) within the last 10 minutes —
-        // cancelAll() would silence a currently-ringing alarm.
+        // Routine rebuilds also respect the cooldown around a recently fired alarm.
         let now = Date()
         let recentlyFired = scheduledAlarmTimes.values.flatMap { $0 }.contains { fireTime in
             let elapsed = now.timeIntervalSince(fireTime)
             return elapsed >= -60 && elapsed < Self.alarmCooldown
         }
-        if recentlyFired {
+        if recentlyFired && reason != .languageChange {
             AppLogger.scheduling.info("rescheduleAll: skipped — in-memory cooldown active")
             #if canImport(FirebaseCrashlytics)
             Crashlytics.crashlytics().log("rescheduleAll: skipped — in-memory cooldown active")
@@ -111,7 +118,7 @@ final class NotificationScheduler {
         // Also check the persisted fire time (covers fresh instances, e.g. background tasks)
         if let fireTime = Constants.sharedDefaults?.object(forKey: Constants.Keys.nextAlarmFireTime) as? Date {
             let elapsed = now.timeIntervalSince(fireTime)
-            if elapsed >= -60 && elapsed < Self.alarmCooldown {
+            if elapsed >= -60 && elapsed < Self.alarmCooldown && reason != .languageChange {
                 AppLogger.scheduling.info("rescheduleAll: skipped — persisted cooldown active (fireTime=\(fireTime.formatted()))")
                 #if canImport(FirebaseCrashlytics)
                 Crashlytics.crashlytics().log("rescheduleAll: skipped — persisted cooldown active")
@@ -130,7 +137,8 @@ final class NotificationScheduler {
         await performScheduling(
             prayerEntries: prayerEntries,
             preferences: preferences,
-            customAlarms: customAlarms
+            customAlarms: customAlarms,
+            preserveActiveAlarms: reason == .languageChange
         )
 
         let scheduleDuration = Date().timeIntervalSince(scheduleStart)
@@ -144,12 +152,18 @@ final class NotificationScheduler {
     private func performScheduling(
         prayerEntries: [[PrayerTimeEntry]],
         preferences: UserPreferences?,
-        customAlarms: [CustomAlarm]
+        customAlarms: [CustomAlarm],
+        preserveActiveAlarms: Bool
     ) async {
-        // Nuclear clear: remove all pending notifications and alarms
+        // Rebuild all pending alerts. A language change may happen while an
+        // AlarmKit alarm is active, so preserve active alarms in that case.
         let center = UNUserNotificationCenter.current()
         center.removeAllPendingNotificationRequests()
-        alarmManager.cancelAll()
+        if preserveActiveAlarms {
+            alarmManager.cancelScheduledAlarmsPreservingActive()
+        } else {
+            alarmManager.cancelAll()
+        }
         scheduledAlarmTimes.removeAll()
 
         // Give iOS time to clean up cancelled notifications/alarms

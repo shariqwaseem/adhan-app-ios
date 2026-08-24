@@ -381,6 +381,44 @@ final class AdhanAlarmManager {
         #endif
         scheduledAlarmIDs.removeAll()
     }
+
+    /// Cancel future alarms without interrupting an alarm that is already active.
+    /// Used when rebuilding localized alarm presentations after a language change.
+    func cancelScheduledAlarmsPreservingActive() {
+        #if canImport(AlarmKit)
+        if #available(iOS 26, *) {
+            var preservedIDs = Set<UUID>()
+            do {
+                let alarms = try _manager.alarms
+                for alarm in alarms {
+                    switch alarm.state {
+                    case .scheduled:
+                        do {
+                            try _manager.cancel(id: alarm.id)
+                        } catch {
+                            preservedIDs.insert(alarm.id)
+                            AppLogger.alarm.error("cancelScheduledAlarmsPreservingActive: failed to cancel alarm \(alarm.id): \(error.localizedDescription)")
+                        }
+                    case .alerting, .countdown, .paused:
+                        preservedIDs.insert(alarm.id)
+                    @unknown default:
+                        preservedIDs.insert(alarm.id)
+                    }
+                }
+            } catch {
+                AppLogger.alarm.error("cancelScheduledAlarmsPreservingActive: failed to enumerate alarms: \(error.localizedDescription)")
+                return
+            }
+
+            scheduledAlarmIDs = scheduledAlarmIDs.compactMapValues { ids in
+                let preserved = ids.filter { preservedIDs.contains($0) }
+                return preserved.isEmpty ? nil : preserved
+            }
+            return
+        }
+        #endif
+        scheduledAlarmIDs.removeAll()
+    }
 }
 
 #if canImport(AlarmKit)

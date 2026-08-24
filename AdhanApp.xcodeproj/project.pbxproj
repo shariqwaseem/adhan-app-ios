@@ -904,7 +904,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.shariq.adhanapp;
 				PRODUCT_MODULE_NAME = AdhanApp;
 				PRODUCT_NAME = "Adhan alarm app";
@@ -995,7 +995,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.shariq.adhanapp;
 				PRODUCT_MODULE_NAME = AdhanApp;
 				PRODUCT_NAME = "Adhan alarm app";

@@ -493,9 +493,11 @@ private struct HomeAlertModeIcon: View {
                         Image("OffsetBadge")
                             .resizable()
                             .renderingMode(.template)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(.black)
+                            .blendMode(.destinationOut)
                             .frame(width: 8, height: 5.6)
                     }
+                    .compositingGroup()
                     .frame(width: 13, height: 13)
                     .offset(x: mode == .notification ? 8.5 : 12.5, y: -6)
                     .accessibilityHidden(true)

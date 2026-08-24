@@ -136,6 +136,17 @@ struct AdhanApp: App {
                         onBecameActive()
                     }
                 }
+                .onChange(of: LanguageManager.shared.currentLanguage) { _, _ in
+                    guard hasCompletedOnboarding else { return }
+                    Task { @MainActor in
+                        await notificationScheduler.rescheduleAll(
+                            prayerEntries: prayerTimesViewModel.multiDayTimes(),
+                            preferences: fetchPreferences(),
+                            customAlarms: fetchCustomAlarms(),
+                            reason: .languageChange
+                        )
+                    }
+                }
                 .onOpenURL { url in
                     guard url.scheme == "adhanpro" else { return }
 
