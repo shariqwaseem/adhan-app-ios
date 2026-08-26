@@ -136,6 +136,266 @@ struct PrayerCalculationTests {
     }
 }
 
+@Suite("Review Prompt Tests", .serialized)
+@MainActor
+struct ReviewPromptTests {
+    @Test("First request requires age, sessions, and distinct usage days")
+    func firstRequestRequiresEveryEngagementThreshold() throws {
+        let defaults = try makeDefaults()
+        defer { clear(defaults) }
+        let manager = makeManager(defaults: defaults)
+
+        let qualifyingOffsets = [
+            (0, 0), (0, 31),
+            (1, 0), (1, 31),
+            (2, 0), (3, 0), (4, 0), (4, 31)
+        ]
+
+        for offset in qualifyingOffsets.dropLast() {
+            manager.appBecameActive(
+                hasCompletedOnboarding: true,
+                isTakingScreenshots: false,
+                now: date(day: offset.0, minute: offset.1)
+            )
+        }
+        #expect(manager.recordedSessionCount == 7)
+        #expect(manager.recordedDistinctUsageDayCount == 5)
+        #expect(!manager.isEligible(at: date(day: 14)))
+
+        let finalOffset = try #require(qualifyingOffsets.last)
+        manager.appBecameActive(
+            hasCompletedOnboarding: true,
+            isTakingScreenshots: false,
+            now: date(day: finalOffset.0, minute: finalOffset.1)
+        )
+        #expect(manager.recordedSessionCount == 8)
+        #expect(!manager.isEligible(at: date(day: 13, minute: 1_439)))
+        #expect(manager.isEligible(at: date(day: 14)))
+
+        let fourDayDefaults = try makeDefaults()
+        defer { clear(fourDayDefaults) }
+        let fourDayManager = makeManager(defaults: fourDayDefaults)
+        for day in 0..<4 {
+            for minute in [0, 31] {
+                fourDayManager.appBecameActive(
+                    hasCompletedOnboarding: true,
+                    isTakingScreenshots: false,
+                    now: date(day: day, minute: minute)
+                )
+            }
+        }
+        #expect(fourDayManager.recordedSessionCount == 8)
+        #expect(fourDayManager.recordedDistinctUsageDayCount == 4)
+        #expect(!fourDayManager.isEligible(at: date(day: 14)))
+    }
+
+    @Test("Foreground transitions count only after thirty minutes")
+    func sessionSpacingPreventsRapidForegroundCounting() throws {
+        let defaults = try makeDefaults()
+        defer { clear(defaults) }
+        let manager = makeManager(defaults: defaults)
+
+        manager.appBecameActive(
+            hasCompletedOnboarding: true,
+            isTakingScreenshots: false,
+            now: date(day: 0)
+        )
+        manager.appBecameActive(
+            hasCompletedOnboarding: true,
+            isTakingScreenshots: false,
+            now: date(day: 0, minute: 29)
+        )
+        #expect(manager.recordedSessionCount == 1)
+
+        manager.appBecameActive(
+            hasCompletedOnboarding: true,
+            isTakingScreenshots: false,
+            now: date(day: 0, minute: 30)
+        )
+        #expect(manager.recordedSessionCount == 2)
+        #expect(manager.recordedDistinctUsageDayCount == 1)
+    }
+
+    @Test("Onboarding and screenshot runs never count")
+    func excludedRunsDoNotCreateEngagement() throws {
+        let defaults = try makeDefaults()
+        defer { clear(defaults) }
+        let manager = makeManager(defaults: defaults)
+
+        #expect(manager.appBecameActive(
+            hasCompletedOnboarding: false,
+            isTakingScreenshots: false,
+            now: date(day: 0)
+        ) == nil)
+        #expect(manager.appBecameActive(
+            hasCompletedOnboarding: true,
+            isTakingScreenshots: true,
+            now: date(day: 1)
+        ) == nil)
+        #expect(manager.recordedSessionCount == 0)
+        #expect(manager.recordedDistinctUsageDayCount == 0)
+    }
+
+    @Test("Request attempts persist and reset engagement")
+    func requestAttemptResetsTheEngagementCycle() throws {
+        let defaults = try makeDefaults()
+        defer { clear(defaults) }
+        let manager = makeManager(defaults: defaults, appVersion: "1.2.0")
+        recordInitialEngagement(with: manager)
+
+        let requestDate = date(day: 14)
+        let candidateID = try #require(manager.appBecameActive(
+            hasCompletedOnboarding: true,
+            isTakingScreenshots: false,
+            now: requestDate
+        ))
+        #expect(manager.recordRequestAttempt(candidateID: candidateID, now: requestDate))
+        #expect(manager.recordedSessionCount == 0)
+        #expect(manager.recordedDistinctUsageDayCount == 0)
+        #expect(defaults.object(forKey: ReviewPromptManager.StorageKeys.lastRequestDate) as? Date == requestDate)
+        #expect(defaults.string(forKey: ReviewPromptManager.StorageKeys.lastRequestedVersion) == "1.2.0")
+        #expect(!manager.recordRequestAttempt(candidateID: candidateID, now: requestDate))
+    }
+
+    @Test("Repeat requests require cooldown, a newer version, and new engagement")
+    func repeatRequestRequiresEveryGate() throws {
+        let defaults = try makeDefaults()
+        defer { clear(defaults) }
+        let originalVersion = makeManager(defaults: defaults, appVersion: "1.2.0")
+        recordInitialEngagement(with: originalVersion)
+
+        let firstRequestDate = date(day: 14)
+        let candidateID = try #require(originalVersion.appBecameActive(
+            hasCompletedOnboarding: true,
+            isTakingScreenshots: false,
+            now: firstRequestDate
+        ))
+        #expect(originalVersion.recordRequestAttempt(candidateID: candidateID, now: firstRequestDate))
+
+        let repeatOffsets = [
+            (15, 0), (15, 31),
+            (16, 0), (16, 31),
+            (17, 0), (18, 0), (19, 0)
+        ]
+        for offset in repeatOffsets {
+            originalVersion.appBecameActive(
+                hasCompletedOnboarding: true,
+                isTakingScreenshots: false,
+                now: date(day: offset.0, minute: offset.1)
+            )
+        }
+
+        let newVersion = makeManager(defaults: defaults, appVersion: "1.3.0")
+        #expect(!newVersion.isEligible(at: date(day: 104)))
+
+        originalVersion.appBecameActive(
+            hasCompletedOnboarding: true,
+            isTakingScreenshots: false,
+            now: date(day: 19, minute: 31)
+        )
+        #expect(!newVersion.isEligible(at: date(day: 103, minute: 1_439)))
+        #expect(!originalVersion.isEligible(at: date(day: 104)))
+        #expect(newVersion.isEligible(at: date(day: 104)))
+    }
+
+    @Test("Malformed persisted values restart safely")
+    func malformedPersistenceRestartsTheCycle() throws {
+        let defaults = try makeDefaults()
+        defer { clear(defaults) }
+        defaults.set("not-a-date", forKey: ReviewPromptManager.StorageKeys.cycleStartDate)
+        defaults.set("many", forKey: ReviewPromptManager.StorageKeys.cycleSessionCount)
+        defaults.set([1, 2, 3], forKey: ReviewPromptManager.StorageKeys.cycleUseDays)
+        defaults.set("not-a-date", forKey: ReviewPromptManager.StorageKeys.lastRequestDate)
+
+        let manager = makeManager(defaults: defaults)
+        #expect(manager.appBecameActive(
+            hasCompletedOnboarding: true,
+            isTakingScreenshots: false,
+            now: date(day: 0)
+        ) == nil)
+        #expect(manager.recordedSessionCount == 1)
+        #expect(manager.recordedDistinctUsageDayCount == 1)
+        #expect(!manager.isEligible(at: date(day: 100)))
+    }
+
+    @Test("Canceling presentation preserves eligibility for a later session")
+    func cancelingPresentationDoesNotConsumeTheAttempt() throws {
+        let defaults = try makeDefaults()
+        defer { clear(defaults) }
+        let manager = makeManager(defaults: defaults)
+        recordInitialEngagement(with: manager)
+
+        let firstCandidate = try #require(manager.appBecameActive(
+            hasCompletedOnboarding: true,
+            isTakingScreenshots: false,
+            now: date(day: 14)
+        ))
+        manager.cancelPendingPresentation(candidateID: firstCandidate)
+        #expect(manager.presentationCandidateID == nil)
+        #expect(!manager.recordRequestAttempt(candidateID: firstCandidate, now: date(day: 14)))
+        #expect(defaults.object(forKey: ReviewPromptManager.StorageKeys.lastRequestDate) == nil)
+
+        let laterCandidate = manager.appBecameActive(
+            hasCompletedOnboarding: true,
+            isTakingScreenshots: false,
+            now: date(day: 14, minute: 31)
+        )
+        #expect(laterCandidate != nil)
+        #expect(laterCandidate != firstCandidate)
+    }
+
+    private func makeDefaults() throws -> UserDefaults {
+        let suiteName = "ReviewPromptTests.\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suiteName))
+        defaults.set(suiteName, forKey: "ReviewPromptTests.suiteName")
+        return defaults
+    }
+
+    private func clear(_ defaults: UserDefaults) {
+        guard let suiteName = defaults.string(forKey: "ReviewPromptTests.suiteName") else { return }
+        defaults.removePersistentDomain(forName: suiteName)
+    }
+
+    private func makeManager(
+        defaults: UserDefaults,
+        appVersion: String = "1.2.0"
+    ) -> ReviewPromptManager {
+        ReviewPromptManager(
+            defaults: defaults,
+            calendar: Self.calendar,
+            appVersion: appVersion
+        )
+    }
+
+    private func recordInitialEngagement(with manager: ReviewPromptManager) {
+        let offsets = [
+            (0, 0), (0, 31),
+            (1, 0), (1, 31),
+            (2, 0), (3, 0), (4, 0), (4, 31)
+        ]
+        for offset in offsets {
+            manager.appBecameActive(
+                hasCompletedOnboarding: true,
+                isTakingScreenshots: false,
+                now: date(day: offset.0, minute: offset.1)
+            )
+        }
+    }
+
+    private func date(day: Int, minute: Int = 0) -> Date {
+        let seconds = TimeInterval((day * 24 * 60 + minute) * 60)
+        return Self.baseDate.addingTimeInterval(seconds)
+    }
+
+    private static var calendar: Calendar {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+        return calendar
+    }
+
+    private static let baseDate = Date(timeIntervalSince1970: 1_767_225_600)
+}
+
 @Suite("Hijri Date Tests")
 struct HijriDateTests {
     let service = HijriDateService()
@@ -1162,5 +1422,61 @@ struct AlertOffsetSettingsTests {
         )
 
         #expect(scheduler.nextScheduledAlarmTime == prayerTime.addingTimeInterval(60 * 60))
+    }
+}
+
+@Suite("Audio Download Safety Tests")
+struct AudioDownloadSafetyTests {
+    @Test("Download work never exceeds its concurrency limit")
+    func boundedConcurrency() {
+        var queue = DownloadWorkQueue<String>(maximumConcurrentCount: 2)
+
+        let firstClaim = queue.enqueue("first")
+        let secondClaim = queue.enqueue("second")
+        let thirdClaim = queue.enqueue("third")
+        #expect(firstClaim == ["first"])
+        #expect(secondClaim == ["second"])
+        #expect(thirdClaim.isEmpty)
+        #expect(queue.active == Set(["first", "second"]))
+        #expect(queue.pending == ["third"])
+
+        let nextClaim = queue.complete("first")
+        #expect(nextClaim == ["third"])
+        #expect(queue.active == Set(["second", "third"]))
+        #expect(queue.pending.isEmpty)
+    }
+
+    @Test("Queued downloads can be cancelled without consuming a slot")
+    func queuedCancellation() {
+        var queue = DownloadWorkQueue<String>(maximumConcurrentCount: 1)
+
+        let activeClaim = queue.enqueue("active")
+        let queuedClaim = queue.enqueue("queued")
+        let removedQueuedDownload = queue.removePending("queued")
+        let claimAfterCompletion = queue.complete("active")
+        #expect(activeClaim == ["active"])
+        #expect(queuedClaim.isEmpty)
+        #expect(removedQueuedDownload)
+        #expect(claimAfterCompletion.isEmpty)
+        #expect(queue.active.isEmpty)
+        #expect(queue.pending.isEmpty)
+    }
+
+    @Test("Progress delivery is limited to ten updates per second")
+    func throttledProgress() {
+        var throttler = DownloadProgressThrottler(minimumInterval: 0.1)
+
+        let initialEmission = throttler.shouldEmit(taskID: 7, progress: 0.01, at: 10)
+        let earlyEmission = throttler.shouldEmit(taskID: 7, progress: 0.25, at: 10.05)
+        let intervalEmission = throttler.shouldEmit(taskID: 7, progress: 0.30, at: 10.11)
+        let completionEmission = throttler.shouldEmit(taskID: 7, progress: 1, at: 10.12)
+        #expect(initialEmission)
+        #expect(!earlyEmission)
+        #expect(intervalEmission)
+        #expect(completionEmission)
+
+        throttler.reset(taskID: 7)
+        let postResetEmission = throttler.shouldEmit(taskID: 7, progress: 0.01, at: 10.13)
+        #expect(postResetEmission)
     }
 }

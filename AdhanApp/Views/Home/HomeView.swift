@@ -1,10 +1,14 @@
 import SwiftUI
 import SwiftData
+import StoreKit
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.requestReview) private var requestReview
     @Environment(PrayerTimesViewModel.self) private var viewModel
     @Environment(NotificationScheduler.self) private var scheduler
+    @Environment(ReviewPromptManager.self) private var reviewPromptManager
     @Query private var preferences: [UserPreferences]
     @Query(sort: \CustomAlarm.createdAt) private var customAlarms: [CustomAlarm]
 
@@ -76,9 +80,39 @@ struct HomeView: View {
             }
         }
         .environment(\.colorScheme, activeColorScheme)
+        .task(id: reviewPromptManager.presentationCandidateID) {
+            await presentReviewPromptIfAppropriate()
+        }
+        .onChange(of: showingNewAlarm) { _, isPresented in
+            if isPresented {
+                reviewPromptManager.cancelPendingPresentation()
+            }
+        }
+        .onDisappear {
+            reviewPromptManager.cancelPendingPresentation()
+        }
     }
 
     // MARK: - Countdown
+
+    private func presentReviewPromptIfAppropriate() async {
+        guard let candidateID = reviewPromptManager.presentationCandidateID,
+              scenePhase == .active,
+              !showingNewAlarm else { return }
+
+        do {
+            try await Task.sleep(for: .seconds(3))
+        } catch {
+            return
+        }
+
+        guard !Task.isCancelled,
+              scenePhase == .active,
+              !showingNewAlarm,
+              reviewPromptManager.recordRequestAttempt(candidateID: candidateID) else { return }
+
+        requestReview()
+    }
 
     private var optionsMenu: some View {
         Menu {
@@ -106,6 +140,9 @@ struct HomeView: View {
         } label: {
             Label(String(localized: "Options", bundle: langBundle), systemImage: "ellipsis.circle")
         }
+        .simultaneousGesture(TapGesture().onEnded {
+            reviewPromptManager.cancelPendingPresentation()
+        })
     }
 
     private var allAlarmsModeBinding: Binding<PrayerNotificationMode?> {

@@ -45,6 +45,7 @@
 		A3EECA01873A9EB4B272E85F /* PrayerTimesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1932D99F1773D9E6FCAE34F6 /* PrayerTimesViewModel.swift */; };
 		A472A548F63FB8417EA2D1EB /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 53968A960277545F61AC1D7B /* AppIcon.icon */; };
 		A5DA4A6A1BEB86858F3FD490 /* SharedDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFFBADFA6A7C46A434D9701F /* SharedDataManager.swift */; };
+		AABBCCDDEEFF001122334455 /* ReviewPromptManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABBCCDDEEFF001122334456 /* ReviewPromptManager.swift */; };
 		ACA1ED7B263089DF9604B509 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121298217F8A6F74B7D203DC /* Constants.swift */; };
 		AF1E3C3D74A8D3E8264F80AD /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF8F8F171C8ED9654BFC5E4 /* MainTabView.swift */; };
 		AF4D38C1CD6594D9E491350A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59679D2A29CBC5E5F4214ED7 /* Assets.xcassets */; };
@@ -151,6 +152,7 @@
 		9A43415A2AEE8127C9947D6B /* AdhanWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdhanWidgetsBundle.swift; sourceTree = "<group>"; };
 		A111B222C333D444E555F667 /* PrayerTimeIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTimeIntents.swift; sourceTree = "<group>"; };
 		A5317978492FF0BF787E9508 /* TimeOfDayBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeOfDayBackground.swift; sourceTree = "<group>"; };
+		AABBCCDDEEFF001122334456 /* ReviewPromptManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPromptManager.swift; sourceTree = "<group>"; };
 		AEF8F8F171C8ED9654BFC5E4 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		B418092ED3E3003E65974D05 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		B5F77D78FA3060412FC7C158 /* SignificantLocationChangeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignificantLocationChangeService.swift; sourceTree = "<group>"; };
@@ -345,6 +347,7 @@
 				5EECB229A2224CF25B692062 /* HijriDateService.swift */,
 				4C71623B4DE8036E0A637A27 /* PrayerCalculationService.swift */,
 				CC7B3F41DDEE129AABBFF8E6 /* RamadanDetectionService.swift */,
+				AABBCCDDEEFF001122334456 /* ReviewPromptManager.swift */,
 				7599B0628E2E92E1A4DF20E6 /* SyncManager.swift */,
 			);
 			path = Services;
@@ -671,6 +674,7 @@
 				F7991B7A5F1B21DF9502B5D8 /* QiblaViewModel.swift in Sources */,
 				BD9B8CD656D5FF4687E6D496 /* RamadanBanner.swift in Sources */,
 				2088F8CA1E2269AE4FE99E44 /* RamadanDetectionService.swift in Sources */,
+				AABBCCDDEEFF001122334455 /* ReviewPromptManager.swift in Sources */,
 				C4F552F58B62EAD8041EB0A0 /* SettingsView.swift in Sources */,
 				A5DA4A6A1BEB86858F3FD490 /* SharedDataManager.swift in Sources */,
 				FF660011223344556677AABB /* CancelSnoozeIntent.swift in Sources */,

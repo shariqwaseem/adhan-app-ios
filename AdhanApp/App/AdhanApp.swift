@@ -89,10 +89,12 @@ struct AdhanApp: App {
     @State private var locationManager = LocationManager()
     @State private var notificationScheduler = NotificationScheduler()
     @State private var downloadManager = AdhanAudioDownloadManager()
+    @State private var reviewPromptManager = ReviewPromptManager()
     @State private var selectedTab = "prayer"
     @State private var isActivating = false
     @State private var locationChangedDuringActivation = false
     @State private var lastForegroundSchedule: Date?
+    @State private var hasHandledInitialReviewActivation = false
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
 
     var sharedModelContainer: ModelContainer = {
@@ -113,11 +115,17 @@ struct AdhanApp: App {
                 .environment(locationManager)
                 .environment(notificationScheduler)
                 .environment(downloadManager)
+                .environment(reviewPromptManager)
                 .environment(LanguageManager.shared)
                 .environment(\.locale, LanguageManager.shared.locale)
                 .environment(\.layoutDirection, LanguageManager.shared.isRTL ? .rightToLeft : .leftToRight)
                 .task {
                     configureForScreenshotsIfNeeded()
+                    let shouldHandleInitialActivation = !hasHandledInitialReviewActivation
+                    hasHandledInitialReviewActivation = true
+                    if shouldHandleInitialActivation, scenePhase == .active {
+                        recordReviewPromptSession()
+                    }
                 }
                 .onChange(of: locationManager.latitude) { _, _ in
                     onLocationChanged()
@@ -134,6 +142,9 @@ struct AdhanApp: App {
                 .onChange(of: scenePhase) { _, newPhase in
                     if newPhase == .active {
                         onBecameActive()
+                        recordReviewPromptSession()
+                    } else {
+                        reviewPromptManager.appBecameInactive()
                     }
                 }
                 .onChange(of: LanguageManager.shared.currentLanguage) { _, _ in
@@ -387,6 +398,9 @@ struct AdhanApp: App {
     private func onOnboardingCompleted() {
         guard !UserDefaults.standard.bool(forKey: "FASTLANE_SCREENSHOTS") else { return }
 
+        if scenePhase == .active {
+            recordReviewPromptSession()
+        }
         onLocationChanged()
         requestSiriAuthorizationIfNeeded()
 
@@ -399,6 +413,15 @@ struct AdhanApp: App {
         Task { @MainActor in
             SignificantLocationChangeService.shared.startMonitoringIfAuthorized()
         }
+    }
+
+    private func recordReviewPromptSession() {
+        let defaults = UserDefaults.standard
+        reviewPromptManager.appBecameActive(
+            hasCompletedOnboarding: hasCompletedOnboarding,
+            isTakingScreenshots: defaults.bool(forKey: "FASTLANE_SCREENSHOTS")
+                || defaults.bool(forKey: "FASTLANE_SNAPSHOT")
+        )
     }
 
     private func requestSiriAuthorizationIfNeeded() {
