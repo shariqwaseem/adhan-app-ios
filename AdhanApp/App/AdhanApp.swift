@@ -36,7 +36,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             BackgroundTaskService.scheduleProcessingTask()
         }
 
-        // Significant-change monitoring is started after onboarding completes
+        // The on-device travel boundary is started after onboarding completes
         // (see AdhanApp.onBecameActive) to avoid prompting for location
         // permission before the user reaches the onboarding location step.
         let wasLaunchedForLocation = launchOptions?[.location] != nil
@@ -357,7 +357,7 @@ struct AdhanApp: App {
             locationManager.requestLocation()
         }
 
-        // Start significant-change monitoring once onboarding is done (handles the case
+        // Start travel-boundary monitoring once onboarding is done (handles the case
         // where the app launched during onboarding and skipped it in AppDelegate).
         if hasCompletedOnboarding {
             Task { @MainActor in

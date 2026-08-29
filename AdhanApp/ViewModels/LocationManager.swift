@@ -17,6 +17,7 @@ final class LocationManager: NSObject {
 
     private let manager = CLLocationManager()
     private let geocoder = CLGeocoder()
+    private var requestsLocationAfterAuthorization = false
 
     override init() {
         super.init()
@@ -27,6 +28,7 @@ final class LocationManager: NSObject {
     }
 
     func requestWhenInUsePermission() {
+        requestsLocationAfterAuthorization = true
         manager.requestWhenInUseAuthorization()
     }
 
@@ -109,8 +111,11 @@ extension LocationManager: CLLocationManagerDelegate {
         MainActor.assumeIsolated {
             self.authorizationStatus = status
             updateIsAuthorized()
-            if isAuthorized {
+            if isAuthorized && requestsLocationAfterAuthorization {
+                requestsLocationAfterAuthorization = false
                 self.manager.requestLocation()
+            } else if status == .denied || status == .restricted {
+                requestsLocationAfterAuthorization = false
             }
             SignificantLocationChangeService.shared.startMonitoringIfAuthorized()
         }

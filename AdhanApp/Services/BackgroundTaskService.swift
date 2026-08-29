@@ -138,16 +138,6 @@ struct BackgroundTaskService {
         Crashlytics.crashlytics().log("performFullRefresh: started (newCoords=\(newLatitude != nil))")
         #endif
 
-        // Don't reschedule if an alarm was due within the last 10 minutes —
-        // cancelAll() inside rescheduleAll would silence a currently-ringing alarm.
-        if let fireTime = Constants.sharedDefaults?.object(forKey: Constants.Keys.nextAlarmFireTime) as? Date {
-            let elapsed = Date().timeIntervalSince(fireTime)
-            if elapsed >= -60 && elapsed < 600 {
-                AppLogger.background.info("performFullRefresh: skipped — cooldown active (fireTime=\(fireTime.formatted()))")
-                return
-            }
-        }
-
         // 1. Determine location
         var latitude: Double
         var longitude: Double
@@ -155,7 +145,7 @@ struct BackgroundTaskService {
         var countryCode: String?
 
         if let newLat = newLatitude, let newLon = newLongitude {
-            // New coordinates provided (e.g. from significant location change)
+            // New coordinates provided (e.g. after leaving the travel boundary)
             latitude = newLat
             longitude = newLon
             cityName = "Unknown"
@@ -186,6 +176,18 @@ struct BackgroundTaskService {
         } else {
             // No location available — nothing to do
             return
+        }
+
+        // Don't reschedule if an alarm was due within the last 10 minutes —
+        // cancelAll() inside rescheduleAll would silence a currently-ringing alarm.
+        // A travel-triggered location is already persisted above so the next
+        // refresh uses it even when scheduling must wait for this cooldown.
+        if let fireTime = Constants.sharedDefaults?.object(forKey: Constants.Keys.nextAlarmFireTime) as? Date {
+            let elapsed = Date().timeIntervalSince(fireTime)
+            if elapsed >= -60 && elapsed < 600 {
+                AppLogger.background.info("performFullRefresh: skipped — cooldown active (fireTime=\(fireTime.formatted()))")
+                return
+            }
         }
 
         // 2. Load preferences and custom alarms from SwiftData
@@ -231,7 +233,7 @@ struct BackgroundTaskService {
         }()
 
         // 4. Calculate prayer times for N days
-        AppLogger.background.info("performFullRefresh: calculating for (\(latitude), \(longitude)) method=\(calculationConfiguration.logName) hlr=\(highLatitudeRule.rawValue) moonIsha=\(calculationSettings.moonSightingIshaTwilight.rawValue)")
+        AppLogger.background.info("performFullRefresh: calculating method=\(calculationConfiguration.logName) hlr=\(highLatitudeRule.rawValue) moonIsha=\(calculationSettings.moonSightingIshaTwilight.rawValue)")
         let service = PrayerCalculationService()
         let days = Constants.NotificationBudget.daysToScheduleAhead
         let multiDayEntries = service.calculateMultipleDays(
@@ -255,8 +257,6 @@ struct BackgroundTaskService {
             #endif
             #if canImport(FirebaseAnalytics)
             Analytics.logEvent("background_refresh", parameters: [
-                "latitude": latitude,
-                "longitude": longitude,
                 "method": calculationConfiguration.logName,
                 "high_latitude_rule": highLatitudeRule.rawValue,
                 "moon_isha_twilight": calculationSettings.moonSightingIshaTwilight.rawValue,

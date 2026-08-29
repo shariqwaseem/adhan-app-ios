@@ -77,25 +77,25 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "يستخدم أذان موقعك في الخلفية لتحديث أوقات الصلاة عند انتقالك إلى منطقة جديدة."
+            "value" : "يستخدم أذان نطاق سفر بمسافة 25 كم على جهازك في الخلفية لتحديث أوقات الصلاة بعد انتقالك إلى منطقة جديدة."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Adhan uses significant location changes in the background to update prayer times after you travel to a new area."
+            "value" : "Adhan uses an on-device 25 km travel boundary in the background to update prayer times after you travel to a new area."
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Adhan menggunakan lokasi Anda di latar belakang untuk memperbarui waktu sholat saat Anda pindah ke daerah baru."
+            "value" : "Adhan menggunakan batas perjalanan 25 km di perangkat Anda di latar belakang untuk memperbarui waktu sholat setelah Anda bepergian ke area baru."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Adhan, yeni bir bölgeye taşındığınızda namaz vakitlerini güncellemek için arka planda konumunuzu kullanır."
+            "value" : "Adhan, yeni bir bölgeye seyahat ettiğinizde namaz vakitlerini güncellemek için cihazınızda arka planda 25 km'lik bir seyahat sınırı kullanır."
           }
         }
       }
