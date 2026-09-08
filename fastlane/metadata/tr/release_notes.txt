@@ -1,1 +1,3 @@
-Görsel iyileştirmeler ve küçük düzeltmeler.
+• Gelişmiş seyahat algılama sayesinde yeni bir bölgeye geçtiğinizde namaz vakitleri daha güvenilir şekilde güncelleniyor.
+• Ezan sesi indirmeleri daha güvenilir.
+• Çeşitli hata düzeltmeleri ve iyileştirmeler.

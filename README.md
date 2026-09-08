@@ -6,7 +6,7 @@ A beautiful, open-source Islamic prayer times app for iOS built with SwiftUI and
 
 **Prayer Times** - Accurate daily times for Tahajjud, Fajr, Dhuhr, Asr, Maghrib, and Isha with a live countdown to the next prayer. Supports manual per-prayer time adjustments.
 
-**Alarms & Notifications** - Three modes per prayer: silent, notification, or full alarm (iOS 26+) that plays the adhan even in Silent Mode via [AlarmKit](https://developer.apple.com/documentation/alarmkit). Pre-alarm support for Fajr and Tahajjud (10-120 minutes before).
+**Alarms & Notifications** - Three modes per prayer: silent, notification, or full alarm that plays the adhan even in Silent Mode via [AlarmKit](https://developer.apple.com/documentation/alarmkit). Pre-alarm support for Fajr and Tahajjud (10-120 minutes before).
 
 **Custom Alarms** - Create unlimited daily alarms independent of prayer times, each with its own delivery mode and adhan sound.
 
@@ -30,7 +30,7 @@ Supports both Standard and Hanafi Asr juristic methods, plus high-latitude rules
 
 - **SwiftUI** + **Swift 6** with strict concurrency
 - **SwiftData** for persistence
-- **AlarmKit** (iOS 26+) for native alarm scheduling
+- **AlarmKit** for native alarm scheduling
 - **WidgetKit** for home screen and lock screen widgets
 - **CoreLocation** for GPS, geocoding, and compass
 - **BackgroundTasks** for automatic daily refresh
@@ -38,9 +38,8 @@ Supports both Standard and Hanafi Asr juristic methods, plus high-latitude rules
 
 ## Requirements
 
-- iOS 18.0+
+- iOS 26.0+
 - Xcode 16+
-- AlarmKit features require iOS 26+
 
 ## Building
 
@@ -62,11 +61,25 @@ This project is open source. See [LICENSE](LICENSE) for details.
 ## App Store screenshots
 
 Fastlane captures the Home, Qibla, and Settings screens in English, Arabic,
-Indonesian, and Turkish on an iPhone 17 Pro Max simulator.
+Indonesian, and Turkish on an iPhone 17 Pro simulator.
+
+Framing happens at the simulator's native 1206x2622 so the device frame fits the
+screenshot exactly, then `fastlane/resize_framed.py` rescales each `_framed.png`
+to **1242x2688** — App Store Connect only accepts 1242x2688 or 1284x2778 in its
+6.5" slot, and no current iPhone captures at those sizes. Raw (unframed)
+screenshots stay at 1206x2622; the framed ones are what you upload.
 
 ```sh
-brew install fastlane imagemagick
+brew install fastlane imagemagick librsvg
 fastlane ios screenshots_framed
+```
+
+Requires fastlane 2.238.0 or newer — earlier releases have no iPhone 15/16/17
+device frames and fail with `Unsupported screen size`. The simulator must be
+named exactly `iPhone 17 Pro`; create it once with:
+
+```sh
+xcrun simctl create "iPhone 17 Pro" com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro com.apple.CoreSimulator.SimRuntime.iOS-26-5
 ```
 
 Raw and framed images are written to `fastlane/screenshots`, with an HTML

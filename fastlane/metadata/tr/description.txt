@@ -1,13 +1,25 @@
-Adhan, göz alıcı bir namaz vakitleri uygulamasıdır. %100 ücretsizdir, her zaman reklamsızdır ve gizliliğinize saygı duyar.
+Adhan, sizi meşgul etmeyen bir namaz vakitleri uygulamasıdır. Ücretsiz, reklamsız ve gizliliğinize saygılı: her şey cihazınızda hesaplanır; arkasında ne bir hesap ne de bir sunucu vardır.
 
-Özellikler:
-- Doğru Namaz Vakitleri: Teheccüd, Fecr (Sabah), Öğle, İkindi, Akşam ve Yatsı vakitleri için canlı geri sayım.
-- Tam Ezan Alarmları (AlarmKit): Cihazınız Sessiz Modda olsa bile çalan, yüksek sesli ve tam ezan alarmları planlayın (iOS 26+).
-- 17 Ezan Sesi: Dünya genelindeki müezzinlerden yüksek kaliteli kayıtlar. Her vakit için farklı bir ezan sesi atayın.
-- Teheccüd ve Sabah Ön Alarmları: Namazdan 10 ila 120 dakika önce çalan hafif uyandırma alarmları.
-- Özel Günlük Alarmlar: Sınırsız sayıda özel alarm oluşturun.
-- Şık Widget'lar ve Canlı Etkinlikler: Ana Ekran ve Kilit Ekranı için 6 farklı boyutta widget ve Dynamic Island üzerinde canlı takip (Live Activities).
-- Kıble Pusulası: Hizalandığında titreşimli (haptik) geri bildirim veren gerçek zamanlı akıllı pusula.
-- Akıllı Hesaplama Yöntemleri: Konumunuza göre otomatik seçilen 13 hesaplama yöntemi, Hanefi/Standart Asr kuralları ve yüksek enlem ayarları.
+Namaz vakitleri
+Teheccüd, İmsak, Öğle, İkindi, Akşam ve Yatsı, bir sonraki namaza canlı geri sayımla birlikte. Konumunuz otomatik algılanır ve seyahat ettiğinizde vakitler kendiliğinden güncellenir; dilerseniz herhangi bir şehri elle seçin.
 
-İngilizce, Arapça (tam RTL desteği), Endonezce ve Türkçe dillerinde tamamen yerelleştirilmiştir.
+Hatırlatmalar
+Her namaz için hiçbir şey, bildirim ya da tam alarm seçin. Alarmlar, telefon sessizde ya da Odak modunda olsa bile ezanın tamamını yüksek sesle çalar. Namazdan önce veya sonra ikinci bir hatırlatma ekleyin, örneğin imsaktan önce uyanmak için, ve kendi günlük alarmlarınızı oluşturun.
+
+Ezan kayıtları
+Dünyanın farklı yerlerinden müezzinlerin kayıtları; dilerseniz her namaz için farklı bir kayıt. Seçildiğinde indirilir, böylece uygulama hafif kalır.
+
+Widget'lar
+Ana Ekran ve Kilit Ekranı widget'ları bir sonraki namazı ya da günün tamamını gösterir.
+
+Kıble
+Kıbleyi gösteren ve doğru yöne döndüğünüzde hafifçe titreşen bir pusula.
+
+Hesaplama
+Yöntem konumunuza göre otomatik seçilir. İsterseniz kendiniz seçebilir, İmsak ve Yatsı açılarını belirleyebilir, Hanefi ya da Standart İkindi'yi tercih edebilir ve yüksek enlemler için ayarlama yapabilirsiniz.
+
+Siri
+Siri'ye bir sonraki namazı ya da belirli bir namazın vaktini sorun.
+
+Diller
+Türkçe, İngilizce, Arapça ve Endonezce; Arapça için tam sağdan sola yazım desteği.

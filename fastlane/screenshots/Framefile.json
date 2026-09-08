@@ -20,7 +20,7 @@
     "title_min_height": "22%",
     "padding": "6%x4%",
     "interline_spacing": 4,
-    "frame": "BLACK",
+    "frame": "COSMIC_ORANGE",
     "use_platform": "IOS"
   },
   "data": [

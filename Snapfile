@@ -1,5 +1,5 @@
 devices([
-  "iPhone 11 Pro Max"
+  "iPhone 17 Pro"
 ])
 ios_version("26.5")
 

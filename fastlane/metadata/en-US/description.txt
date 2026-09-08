@@ -1,13 +1,25 @@
-Adhan is a beautiful prayer times app. It is 100% free, forever ad-free, and respects your privacy.
+Adhan is a prayer times app that stays out of your way. Free, no ads, and private: everything is calculated on your device, with no account or backend behind it.
 
-Features:
-- Accurate Prayer Times: Real-time countdowns for Tahajjud, Fajr, Dhuhr, Asr, Maghrib, and Isha.
-- Full Adhan Alarms (AlarmKit): Schedule loud, full-length adhan alarms that play even in Silent Mode (iOS 26+).
-- 17 Adhan Sounds: High-fidelity recordings from muezzins worldwide. Customize the sound for each prayer.
-- Tahajjud & Fajr Pre-Alarms: Gentle wake-up alerts 10 to 120 minutes before prayers.
-- Custom Daily Alarms: Create unlimited custom alarms.
-- Elegant Widgets & Live Activities: 6 Home and Lock Screen widget sizes, plus real-time Live Activities on your Dynamic Island.
-- Qibla Finder: Smart compass with haptic feedback when aligned.
-- Smart Calculations: 13 calculation methods with automatic location selection, Hanafi/Standard Asr rules, and high-latitude adjustments.
+Prayer times
+Tahajjud, Fajr, Dhuhr, Asr, Maghrib and Isha, with a live countdown to the next prayer. Your location is detected automatically and times update on their own when you travel, or pick any city by hand.
 
-Fully localized in English, Arabic, Indonesian, and Turkish.
+Alerts
+For each prayer choose nothing, a notification, or a full alarm. Alarms play the complete adhan out loud even on silent or in a Focus. Add a second alert before or after the prayer, for example to wake ahead of Fajr, and create your own daily alarms.
+
+Adhan recordings
+Recordings of muezzins from around the world, with a different one for each prayer if you like. They download when selected, so the app stays small.
+
+Widgets
+Home Screen and Lock Screen widgets show the next prayer or the whole day.
+
+Qibla
+A compass that points to the Qibla and taps gently when you are facing the right way.
+
+Calculation
+The method is chosen automatically from your location. You can also pick one yourself, set custom Fajr and Isha angles, choose Hanafi or Standard Asr, and adjust for high latitudes.
+
+Siri
+Ask Siri for the next prayer or the time of a specific one.
+
+Languages
+English, Arabic, Indonesian and Turkish, with full right-to-left support for Arabic.

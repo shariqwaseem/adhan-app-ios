@@ -1,13 +1,25 @@
-Adhan adalah aplikasi waktu salat yang indah. 100% gratis, selamanya bebas iklan, dan menjaga privasi Anda.
+Adhan adalah aplikasi waktu salat yang tidak mengganggu. Gratis, tanpa iklan, dan menjaga privasi Anda: semuanya dihitung di perangkat Anda, tanpa akun dan tanpa server di baliknya.
 
-Fitur Utama:
-- Waktu Salat Akurat: Hitung mundur waktu nyata untuk Tahajjud, Subuh, Dzuhur, Ashar, Maghrib, dan Isya.
-- Alarm Azan Penuh (AlarmKit): Atur alarm azan lengkap dengan suara nyaring yang tetap berbunyi meski perangkat dalam Mode Hening (iOS 26+).
-- 17 Suara Azan: Rekaman berkualitas tinggi dari muazin di seluruh dunia. Sesuaikan suara azan yang berbeda untuk setiap waktu salat.
-- Pra-Alarm Tahajjud & Subuh: Pengingat bangun tidur yang lembut antara 10 hingga 120 menit sebelum waktu salat.
-- Alarm Harian Kustom: Buat alarm kustom tanpa batas.
-- Widget Indah & Live Activities: Tersedia 6 ukuran widget untuk Layar Utama & Layar Kunci, serta Live Activities di Dynamic Island Anda.
-- Kompas Kiblat: Petunjuk arah Kiblat waktu nyata dengan umpan balik haptic (getaran) saat posisi sudah sejajar.
-- Metode Perhitungan Pintar: 13 metode perhitungan otomatis berdasarkan lokasi Anda, pilihan Madzhab Hanafi/Standar, dan penyesuaian lintang tinggi.
+Waktu salat
+Tahajud, Subuh, Dzuhur, Ashar, Maghrib, dan Isya, dengan hitung mundur langsung ke salat berikutnya. Lokasi terdeteksi otomatis dan waktu diperbarui sendiri saat Anda bepergian, atau pilih kota mana pun secara manual.
 
-Tersedia dalam bahasa Inggris, Arab (dukungan RTL penuh), Indonesia, dan Turki.
+Pengingat
+Untuk setiap salat, pilih tanpa pengingat, notifikasi, atau alarm penuh. Alarm memutar azan secara utuh dengan suara nyaring meski dalam mode hening atau Fokus. Tambahkan pengingat kedua sebelum atau sesudah salat, misalnya untuk bangun sebelum Subuh, dan buat alarm harian Anda sendiri.
+
+Rekaman azan
+Rekaman para muazin dari berbagai belahan dunia, dengan pilihan rekaman berbeda untuk setiap salat. Diunduh saat dipilih, sehingga aplikasi tetap ringan.
+
+Widget
+Widget Layar Utama dan Layar Kunci menampilkan salat berikutnya atau seluruh jadwal hari ini.
+
+Kiblat
+Kompas yang menunjuk ke arah Kiblat dan bergetar halus saat Anda menghadap ke arah yang benar.
+
+Perhitungan
+Metode dipilih otomatis berdasarkan lokasi Anda. Anda juga bisa memilihnya sendiri, mengatur sudut Subuh dan Isya, memilih Ashar Hanafi atau Standar, serta menyesuaikan untuk lintang tinggi.
+
+Siri
+Tanyakan kepada Siri salat berikutnya atau waktu salat tertentu.
+
+Bahasa
+Indonesia, Inggris, Arab, dan Turki, dengan dukungan penuh tulisan kanan-ke-kiri untuk bahasa Arab.
