@@ -18,8 +18,12 @@ import FirebaseAnalytics
 @MainActor
 final class NotificationScheduler {
     enum RescheduleReason: Equatable {
-        case routine
+        case routine          // app did it: launch, location, time zone, background
         case languageChange
+        case settingsChange   // user did it
+
+        /// User-triggered rebuilds are never skipped and never stop a ringing alarm.
+        var isUserTriggered: Bool { self != .routine }
     }
 
     var isPermissionGranted: Bool = false
@@ -85,13 +89,13 @@ final class NotificationScheduler {
         reason: RescheduleReason
     ) async {
         // Routine rebuilds use cancelAll(), so defer them while an alarm is active.
-        // Language changes use the active-alarm-safe cancellation path below.
+        // User-triggered rebuilds use the active-alarm-safe cancellation path below.
         #if canImport(AlarmKit)
         if #available(iOS 26, *) {
             let hasActiveAlarmActivity = Activity<AlarmAttributes<AdhanAlarmMetadata>>.activities.contains {
                 $0.activityState == .active
             }
-            if hasActiveAlarmActivity && reason != .languageChange {
+            if hasActiveAlarmActivity && !reason.isUserTriggered {
                 AppLogger.scheduling.info("rescheduleAll: skipped — active alarm live activity detected")
                 #if canImport(FirebaseCrashlytics)
                 Crashlytics.crashlytics().log("rescheduleAll: skipped — active alarm live activity")
@@ -107,7 +111,7 @@ final class NotificationScheduler {
             let elapsed = now.timeIntervalSince(fireTime)
             return elapsed >= -60 && elapsed < Self.alarmCooldown
         }
-        if recentlyFired && reason != .languageChange {
+        if recentlyFired && !reason.isUserTriggered {
             AppLogger.scheduling.info("rescheduleAll: skipped — in-memory cooldown active")
             #if canImport(FirebaseCrashlytics)
             Crashlytics.crashlytics().log("rescheduleAll: skipped — in-memory cooldown active")
@@ -118,7 +122,7 @@ final class NotificationScheduler {
         // Also check the persisted fire time (covers fresh instances, e.g. background tasks)
         if let fireTime = Constants.sharedDefaults?.object(forKey: Constants.Keys.nextAlarmFireTime) as? Date {
             let elapsed = now.timeIntervalSince(fireTime)
-            if elapsed >= -60 && elapsed < Self.alarmCooldown && reason != .languageChange {
+            if elapsed >= -60 && elapsed < Self.alarmCooldown && !reason.isUserTriggered {
                 AppLogger.scheduling.info("rescheduleAll: skipped — persisted cooldown active (fireTime=\(fireTime.formatted()))")
                 #if canImport(FirebaseCrashlytics)
                 Crashlytics.crashlytics().log("rescheduleAll: skipped — persisted cooldown active")
@@ -138,7 +142,7 @@ final class NotificationScheduler {
             prayerEntries: prayerEntries,
             preferences: preferences,
             customAlarms: customAlarms,
-            preserveActiveAlarms: reason == .languageChange
+            preserveActiveAlarms: reason.isUserTriggered
         )
 
         let scheduleDuration = Date().timeIntervalSince(scheduleStart)

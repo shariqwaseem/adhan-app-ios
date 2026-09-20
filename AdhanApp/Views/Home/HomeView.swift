@@ -311,7 +311,8 @@ struct HomeView: View {
             await scheduler.rescheduleAll(
                 prayerEntries: viewModel.multiDayTimes(),
                 preferences: prefs,
-                customAlarms: customAlarms
+                customAlarms: customAlarms,
+                reason: .settingsChange
             )
         }
     }
