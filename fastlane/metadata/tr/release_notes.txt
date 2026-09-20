@@ -1,3 +1,1 @@
-• Gelişmiş seyahat algılama sayesinde yeni bir bölgeye geçtiğinizde namaz vakitleri daha güvenilir şekilde güncelleniyor.
-• Ezan sesi indirmeleri daha güvenilir.
-• Çeşitli hata düzeltmeleri ve iyileştirmeler.
+Bazı kullanıcıların bildirdiği, ayar değişikliklerinin bazen uygulanmaması sorunu giderildi.

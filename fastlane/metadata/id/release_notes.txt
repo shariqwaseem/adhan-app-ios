@@ -1,3 +1,1 @@
-• Deteksi perjalanan yang lebih baik, sehingga waktu salat diperbarui lebih andal saat Anda pindah ke wilayah baru.
-• Unduhan audio azan lebih andal.
-• Berbagai perbaikan dan peningkatan.
+Memperbaiki masalah yang dilaporkan sebagian pengguna, yaitu perubahan pengaturan terkadang tidak diterapkan.

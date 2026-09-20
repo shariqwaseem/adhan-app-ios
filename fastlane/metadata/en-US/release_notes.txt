@@ -1,3 +1,1 @@
-• Improved travel detection, so prayer times refresh more reliably when you move to a new area.
-• More reliable adhan audio downloads.
-• Various fixes and improvements.
+Fixed an issue some people reported where changed settings sometimes didn't take effect.
