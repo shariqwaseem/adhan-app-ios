@@ -1541,28 +1541,6 @@
         }
       }
     },
-    "Full Adhan Alarms" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "تنبيهات الأذان الكاملة"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alarm Adzan Penuh"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tam Ezan Alarmları"
-          }
-        }
-      }
-    },
     "Full adhan · tap to preview" : {
       "localizations" : {
         "ar" : {
@@ -1581,6 +1559,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tam ezan · dinlemek için dokunun"
+          }
+        }
+      }
+    },
+    "Full Adhan Alarms" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تنبيهات الأذان الكاملة"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm Adzan Penuh"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tam Ezan Alarmları"
           }
         }
       }
@@ -1687,7 +1687,6 @@
       }
     },
     "Hanafi" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {

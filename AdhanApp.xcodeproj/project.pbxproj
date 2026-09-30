@@ -736,7 +736,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.shariq.adhanapp.widgets;
 				PRODUCT_NAME = AdhanWidgets;
 				SDKROOT = iphoneos;
@@ -760,7 +760,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.shariq.adhanapp.widgets;
 				PRODUCT_NAME = AdhanWidgets;
 				SDKROOT = iphoneos;
@@ -912,7 +912,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.1;
+				MARKETING_VERSION = 1.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.shariq.adhanapp;
 				PRODUCT_MODULE_NAME = AdhanApp;
 				PRODUCT_NAME = "Adhan alarm app";
@@ -1003,7 +1003,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.1;
+				MARKETING_VERSION = 1.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.shariq.adhanapp;
 				PRODUCT_MODULE_NAME = AdhanApp;
 				PRODUCT_NAME = "Adhan alarm app";
