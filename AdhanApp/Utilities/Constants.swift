@@ -15,6 +15,7 @@ enum Constants {
         static let lastLocationLongitude = "lastLocationLongitude"
         static let lastCityName = "lastCityName"
         static let lastCountryCode = "lastCountryCode"
+        static let usesManualLocation = "usesManualLocation"
         static let lastBackgroundRefreshDate = "lastBackgroundRefreshDate"
         static let nextAlarmFireTime = "nextAlarmFireTime"
         static let calculationMethod = "calculationMethod"

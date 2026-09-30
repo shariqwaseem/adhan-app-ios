@@ -116,7 +116,7 @@ final class UserPreferences {
     var calculationSettingsData: Data?
     var calculationMethodRawValue: String = CalculationMethodInfo.MuslimWorldLeague.rawValue
     var asrJuristicMethodRawValue: String = AsrJuristicMethod.automatic.rawValue
-    var highLatitudeRuleRawValue: String = HighLatitudeRuleOption.middleOfTheNight.rawValue
+    var highLatitudeRuleRawValue: String = HighLatitudeRuleOption.automatic.rawValue
 
     // Per-prayer notification mode: silent / notification / alarm
     var tahajjudNotificationMode: String = PrayerNotificationMode.silent.rawValue

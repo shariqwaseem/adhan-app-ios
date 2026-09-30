@@ -353,6 +353,7 @@
       }
     },
     "A banner with a short sound" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -926,6 +927,28 @@
         }
       }
     },
+    "Automatic" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تلقائي"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otomatis"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otomatik"
+          }
+        }
+      }
+    },
     "Bahasa Indonesia" : {
 
     },
@@ -1109,6 +1132,7 @@
       }
     },
     "Currently set to %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -1542,6 +1566,7 @@
       }
     },
     "Full adhan · tap to preview" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -3403,6 +3428,7 @@
       }
     },
     "Rings even on silent or in Focus mode" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -4159,6 +4185,7 @@
       }
     },
     "The standard alarm tone" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -4365,6 +4392,7 @@
       }
     },
     "Type a city name..." : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -4433,6 +4461,7 @@
       }
     },
     "Use Current Location" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {

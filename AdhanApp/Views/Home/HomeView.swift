@@ -155,13 +155,13 @@ struct HomeView: View {
                 Button {
                     showingAlarmSound = true
                 } label: {
-                    Label(String(localized: "Alarm Sound", bundle: langBundle), systemImage: "speaker.wave.2")
+                    Label(String(localized: "Alarm Sound", bundle: langBundle), systemImage: "speaker.wave.2.fill")
                     Text(allAlarmsSoundName)
                 }
                 .disabled(prefs?.alarmModePrayers.isEmpty ?? true)
             }
         } label: {
-            Label(String(localized: "Options", bundle: langBundle), systemImage: "ellipsis.circle")
+            Label(String(localized: "Options", bundle: langBundle), systemImage: "ellipsis")
         }
         .simultaneousGesture(TapGesture().onEnded {
             reviewPromptManager.cancelPendingPresentation()

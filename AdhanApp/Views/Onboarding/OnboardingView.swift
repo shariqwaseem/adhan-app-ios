@@ -204,7 +204,6 @@ struct OnboardingView: View {
                 OnboardingOptionCard(
                     icon: "alarm.fill",
                     title: String(localized: "Alarms", bundle: bundle),
-                    subtitle: String(localized: "Rings even on silent or in Focus mode", bundle: bundle),
                     isSelected: alertStyle == .alarm
                 ) {
                     alertStyle = .alarm
@@ -212,7 +211,6 @@ struct OnboardingView: View {
                 OnboardingOptionCard(
                     icon: "bell.fill",
                     title: String(localized: "Notifications", bundle: bundle),
-                    subtitle: String(localized: "A banner with a short sound", bundle: bundle),
                     isSelected: alertStyle == .notification
                 ) {
                     alertStyle = .notification
@@ -224,7 +222,6 @@ struct OnboardingView: View {
                 OnboardingOptionCard(
                     icon: previewPlayer != nil ? "stop.circle.fill" : "play.circle.fill",
                     title: String(localized: "Adhan (Al Maluke)", bundle: bundle),
-                    subtitle: String(localized: "Full adhan · tap to preview", bundle: bundle),
                     isSelected: useAdhanSound
                 ) {
                     if useAdhanSound && previewPlayer != nil {
@@ -237,7 +234,6 @@ struct OnboardingView: View {
                 OnboardingOptionCard(
                     icon: "alarm",
                     title: String(localized: "Default Alarm", bundle: bundle),
-                    subtitle: String(localized: "The standard alarm tone", bundle: bundle),
                     isSelected: !useAdhanSound
                 ) {
                     useAdhanSound = false
@@ -295,7 +291,7 @@ struct OnboardingView: View {
                 Task {
                     // iOS shows no prompt when location was granted with "Allow Once",
                     // so no status/scene change arrives — advance instead of leaving the button stuck.
-                    try? await Task.sleep(for: .seconds(1))
+                    try? await Task.sleep(for: .seconds(6))
                     if !permissionPromptWasPresented {
                         finishPermissionRequest(for: .backgroundLocation, shouldAdvance: true)
                     }
@@ -419,7 +415,6 @@ private enum OnboardingStepType {
 private struct OnboardingOptionCard: View {
     let icon: String
     let title: String
-    let subtitle: String
     let isSelected: Bool
     let action: () -> Void
 
@@ -430,14 +425,9 @@ private struct OnboardingOptionCard: View {
                     .font(.title2)
                     .foregroundStyle(.white)
                     .frame(width: 32)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(title)
-                        .font(.headline)
-                        .foregroundStyle(.white)
-                    Text(subtitle)
-                        .font(.caption)
-                        .foregroundStyle(.white.opacity(0.7))
-                }
+                Text(title)
+                    .font(.headline)
+                    .foregroundStyle(.white)
                 Spacer()
                 Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
                     .font(.title3)

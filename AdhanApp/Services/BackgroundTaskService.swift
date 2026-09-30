@@ -224,14 +224,15 @@ struct BackgroundTaskService {
             return .automatic
         }().resolved(countryCode: countryCode)
 
+        // App-group value first, for the same reason as Asr above.
         let highLatitudeRule: HighLatitudeRuleOption = {
-            if let prefs, let rule = HighLatitudeRuleOption(rawValue: prefs.highLatitudeRuleRawValue) {
-                return rule
-            }
             if let rule = SharedDataManager.loadHighLatitudeRule() {
                 return rule
             }
-            return .middleOfTheNight
+            if let prefs, let rule = HighLatitudeRuleOption(rawValue: prefs.highLatitudeRuleRawValue) {
+                return rule
+            }
+            return .automatic
         }()
 
         // 4. Calculate prayer times for N days

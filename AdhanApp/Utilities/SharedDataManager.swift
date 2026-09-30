@@ -27,6 +27,15 @@ struct SharedDataManager: Sendable {
         defaults.set(countryCode, forKey: Constants.Keys.lastCountryCode)
     }
 
+    /// Manual mode pins prayer times to a chosen city; GPS and travel updates are ignored.
+    static func saveUsesManualLocation(_ usesManual: Bool) {
+        Constants.sharedDefaults?.set(usesManual, forKey: Constants.Keys.usesManualLocation)
+    }
+
+    static func loadUsesManualLocation() -> Bool {
+        Constants.sharedDefaults?.bool(forKey: Constants.Keys.usesManualLocation) ?? false
+    }
+
     static func saveCalculationMethod(_ rawValue: String) {
         guard let defaults = Constants.sharedDefaults else { return }
         defaults.set(rawValue, forKey: Constants.Keys.calculationMethod)

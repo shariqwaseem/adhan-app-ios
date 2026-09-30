@@ -39,7 +39,8 @@ final class SignificantLocationChangeService: NSObject {
         // must be unconditional because that registration survives app exits.
         manager.stopMonitoringSignificantLocationChanges()
 
-        guard CLLocationManager.locationServicesEnabled(),
+        guard !SharedDataManager.loadUsesManualLocation(),
+              CLLocationManager.locationServicesEnabled(),
               manager.authorizationStatus == .authorizedAlways else {
             stopMonitoring()
             return
@@ -196,6 +197,11 @@ final class SignificantLocationChangeService: NSObject {
 
     private func handleBoundaryLocation(_ location: CLLocation) {
         guard isResolvingExit else { return }
+        guard !SharedDataManager.loadUsesManualLocation() else {
+            isResolvingExit = false
+            locationRequestAttempts = 0
+            return
+        }
 
         guard isUsable(location) else {
             if locationRequestAttempts < 2 {

@@ -155,7 +155,7 @@ struct PrayerTimelineProvider: TimelineProvider {
         let configuration = settings.selection.resolved(countryCode: countryCode)
         let asrMethod = (AsrJuristicMethod(rawValue: defaults.string(forKey: "asrMethod") ?? "") ?? .automatic)
             .resolved(countryCode: countryCode)
-        let highLatitudeRule = HighLatitudeRuleOption(rawValue: defaults.string(forKey: "highLatitudeRule") ?? "") ?? .middleOfTheNight
+        let highLatitudeRule = HighLatitudeRuleOption(rawValue: defaults.string(forKey: "highLatitudeRule") ?? "") ?? .automatic
         let calculationCore = PrayerCalculationCore(calendar: cal)
 
         // Read manual adjustments

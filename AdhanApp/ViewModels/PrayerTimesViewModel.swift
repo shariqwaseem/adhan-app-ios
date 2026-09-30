@@ -92,7 +92,7 @@ final class PrayerTimesViewModel {
         guard method == .automatic else { return method.localizedName }
         return "\(method.localizedShortName) (\(method.resolved(countryCode: countryCode).localizedShortName))"
     }
-    var highLatitudeRule: HighLatitudeRuleOption = .middleOfTheNight {
+    var highLatitudeRule: HighLatitudeRuleOption = .automatic {
         didSet {
             UserDefaults.standard.set(highLatitudeRule.rawValue, forKey: "highLatitudeRule")
             SharedDataManager.saveHighLatitudeRule(highLatitudeRule.rawValue)

@@ -5,77 +5,52 @@ struct LocationSettings: View {
     @Environment(PrayerTimesViewModel.self) private var viewModel
     @Environment(\.dismiss) private var dismiss
     @State private var searchText = ""
-    @State private var searchResults: [(name: String, latitude: Double, longitude: Double, countryCode: String?)] = []
+    @State private var searchResults: [CitySearchResult] = []
     @State private var isSearching = false
     @State private var searchTask: Task<Void, Never>?
-    @State private var isLocating = false
 
     var body: some View {
         List {
             Section {
-                if locationManager.isAuthorized {
-                    Button {
-                        isLocating = true
-                        locationManager.requestLocation()
-                    } label: {
-                        HStack {
-                            Label("Use Current Location", systemImage: "location.fill")
-                            if isLocating {
-                                Spacer()
-                                ProgressView()
-                            }
-                        }
-                    }
-                    .disabled(isLocating)
-                } else {
-                    Button {
-                        if let url = URL(string: UIApplication.openSettingsURLString) {
-                            UIApplication.shared.open(url)
-                        }
-                    } label: {
-                        Label("Allow Location Permission", systemImage: "location.slash.fill")
-                    }
+                Toggle("Automatic", isOn: automaticBinding)
+                    .disabled(!locationManager.isAuthorized)
+
+                if !locationManager.isAuthorized {
+                    Button("Allow Location Permission", action: requestPermission)
                 }
-            } footer: {
-                if viewModel.cityName.isEmpty == false {
-                    Text("Currently set to \(viewModel.cityName)")
+
+                LabeledContent("City") {
+                    if locationManager.isLocating {
+                        ProgressView()
+                    } else {
+                        Text(viewModel.cityName.isEmpty ? String(localized: "Not Set", bundle: LanguageManager.shared.bundle) : viewModel.cityName)
+                    }
                 }
             }
 
-            Section("Search City") {
-                TextField("Type a city name...", text: $searchText)
-                    .textContentType(.addressCity)
-                    .autocorrectionDisabled()
+            if !locationManager.isAutomatic {
+                Section {
+                    TextField("Search City", text: $searchText)
+                        .textContentType(.addressCity)
+                        .autocorrectionDisabled()
 
-                if isSearching {
-                    HStack {
-                        Spacer()
+                    if isSearching {
                         ProgressView()
-                        Spacer()
+                            .frame(maxWidth: .infinity)
                     }
-                }
 
-                ForEach(Array(searchResults.enumerated()), id: \.offset) { _, result in
-                    Button {
-                        selectCity(result)
-                    } label: {
-                        Label {
-                            Text(result.name)
-                                .foregroundStyle(.primary)
-                        } icon: {
-                            Image(systemName: "mappin.circle.fill")
-                                .foregroundStyle(.secondary)
+                    ForEach(Array(searchResults.enumerated()), id: \.offset) { _, result in
+                        Button(result.fullName) {
+                            selectCity(result)
                         }
+                        .foregroundStyle(.primary)
                     }
                 }
             }
         }
         .navigationTitle("Location")
-        .onChange(of: locationManager.lastLocationUpdate) { _, _ in
-            guard isLocating else { return }
-            isLocating = false
-            dismiss()
-        }
+        .animation(.default, value: locationManager.isAutomatic)
+        .animation(.default, value: locationManager.isAuthorized)
         .onChange(of: searchText) { _, newValue in
             searchTask?.cancel()
             let trimmed = newValue.trimmingCharacters(in: .whitespaces)
@@ -98,11 +73,31 @@ struct LocationSettings: View {
         }
     }
 
-    private func selectCity(_ result: (name: String, latitude: Double, longitude: Double, countryCode: String?)) {
-        viewModel.updateLocation(
+    private var automaticBinding: Binding<Bool> {
+        Binding {
+            locationManager.isAutomatic
+        } set: { isOn in
+            locationManager.prefersAutomatic = isOn
+            // Refresh right away so turning Automatic on immediately replaces the manual city.
+            if isOn {
+                locationManager.requestLocation()
+            }
+        }
+    }
+
+    private func requestPermission() {
+        if locationManager.authorizationStatus == .notDetermined {
+            locationManager.requestLocation()
+        } else if let url = URL(string: UIApplication.openSettingsURLString) {
+            UIApplication.shared.open(url)
+        }
+    }
+
+    private func selectCity(_ result: CitySearchResult) {
+        locationManager.setManualLocation(
             latitude: result.latitude,
             longitude: result.longitude,
-            cityName: result.name,
+            cityName: result.cityName,
             countryCode: result.countryCode
         )
         dismiss()

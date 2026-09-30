@@ -14,6 +14,21 @@ final class LocationManager: NSObject {
     var isAuthorized: Bool = false
     var locationError: String? = nil
     var lastLocationUpdate: Date? = nil
+    var isLocating = false
+
+    /// The user's choice. Automatic follows GPS (and travel); manual keeps the chosen city.
+    var prefersAutomatic: Bool = !SharedDataManager.loadUsesManualLocation() {
+        didSet {
+            guard oldValue != prefersAutomatic else { return }
+            SharedDataManager.saveUsesManualLocation(!prefersAutomatic)
+            SignificantLocationChangeService.shared.startMonitoringIfAuthorized()
+        }
+    }
+
+    /// Automatic is only in effect while location access is granted.
+    var isAutomatic: Bool {
+        prefersAutomatic && isAuthorized
+    }
 
     private let manager = CLLocationManager()
     private let geocoder = CLGeocoder()
@@ -41,10 +56,11 @@ final class LocationManager: NSObject {
             requestWhenInUsePermission()
             return
         }
+        isLocating = true
         manager.requestLocation()
     }
 
-    func searchCity(_ query: String) async -> [(name: String, latitude: Double, longitude: Double, countryCode: String?)] {
+    func searchCity(_ query: String) async -> [CitySearchResult] {
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = query
         request.resultTypes = .address
@@ -53,12 +69,11 @@ final class LocationManager: NSObject {
             let response = try await search.start()
             return response.mapItems.compactMap { item in
                 let placemark = item.placemark
-                let name = [placemark.locality, placemark.administrativeArea, placemark.country]
-                    .compactMap { $0 }
-                    .joined(separator: ", ")
-                guard !name.isEmpty else { return nil }
-                return (
-                    name: name,
+                let parts = [placemark.locality, placemark.administrativeArea, placemark.country].compactMap { $0 }
+                guard let cityName = parts.first else { return nil }
+                return CitySearchResult(
+                    fullName: parts.joined(separator: ", "),
+                    cityName: cityName,
                     latitude: placemark.coordinate.latitude,
                     longitude: placemark.coordinate.longitude,
                     countryCode: placemark.isoCountryCode
@@ -69,19 +84,42 @@ final class LocationManager: NSObject {
         }
     }
 
+    /// Pins prayer times to a chosen city. Only counts as choosing manual mode when
+    /// automatic was available; without permission it's a fallback until access is granted.
+    func setManualLocation(latitude: Double, longitude: Double, cityName: String, countryCode: String?) {
+        if isAuthorized {
+            prefersAutomatic = false
+        }
+        isLocating = false
+        apply(latitude: latitude, longitude: longitude, cityName: cityName, countryCode: countryCode)
+    }
+
     private func reverseGeocode(_ location: CLLocation) {
         Task {
-            do {
-                let placemarks = try await geocoder.reverseGeocodeLocation(location)
-                if let placemark = placemarks.first {
-                    self.cityName = placemark.locality ?? placemark.administrativeArea ?? "Unknown"
-                    self.countryCode = placemark.isoCountryCode
-                }
-            } catch {
-                self.cityName = "Lat: \(String(format: "%.2f", location.coordinate.latitude)), Lon: \(String(format: "%.2f", location.coordinate.longitude))"
+            var name = "Lat: \(String(format: "%.2f", location.coordinate.latitude)), Lon: \(String(format: "%.2f", location.coordinate.longitude))"
+            var country: String?
+            if let placemark = try? await geocoder.reverseGeocodeLocation(location).first {
+                name = placemark.locality ?? placemark.administrativeArea ?? "Unknown"
+                country = placemark.isoCountryCode
             }
-            self.lastLocationUpdate = Date()
+            self.isLocating = false
+            // The user may have switched to manual while geocoding.
+            guard self.isAutomatic else { return }
+            self.apply(
+                latitude: location.coordinate.latitude,
+                longitude: location.coordinate.longitude,
+                cityName: name,
+                countryCode: country
+            )
         }
+    }
+
+    private func apply(latitude: Double, longitude: Double, cityName: String, countryCode: String?) {
+        self.latitude = latitude
+        self.longitude = longitude
+        self.cityName = cityName
+        self.countryCode = countryCode
+        lastLocationUpdate = Date()
     }
 
     private func updateIsAuthorized() {
@@ -93,9 +131,11 @@ extension LocationManager: CLLocationManagerDelegate {
     nonisolated func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
         MainActor.assumeIsolated {
-            self.latitude = location.coordinate.latitude
-            self.longitude = location.coordinate.longitude
             self.locationError = nil
+            guard self.isAutomatic else {
+                self.isLocating = false
+                return
+            }
             reverseGeocode(location)
         }
     }
@@ -103,16 +143,21 @@ extension LocationManager: CLLocationManagerDelegate {
     nonisolated func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         MainActor.assumeIsolated {
             self.locationError = error.localizedDescription
+            self.isLocating = false
         }
     }
 
     nonisolated func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         let status = manager.authorizationStatus
         MainActor.assumeIsolated {
+            let wasAuthorized = isAuthorized
             self.authorizationStatus = status
             updateIsAuthorized()
-            if isAuthorized && requestsLocationAfterAuthorization {
+            // Newly granted access re-enables automatic mode, so fetch right away.
+            let becameAutomatic = !wasAuthorized && isAutomatic
+            if isAuthorized && (requestsLocationAfterAuthorization || becameAutomatic) {
                 requestsLocationAfterAuthorization = false
+                isLocating = true
                 self.manager.requestLocation()
             } else if status == .denied || status == .restricted {
                 requestsLocationAfterAuthorization = false
@@ -120,4 +165,14 @@ extension LocationManager: CLLocationManagerDelegate {
             SignificantLocationChangeService.shared.startMonitoringIfAuthorized()
         }
     }
+}
+
+struct CitySearchResult {
+    /// "Karachi, Sindh, Pakistan" — shown in search results to tell places apart.
+    let fullName: String
+    /// "Karachi" — what's saved and shown once selected.
+    let cityName: String
+    let latitude: Double
+    let longitude: Double
+    let countryCode: String?
 }

@@ -138,11 +138,9 @@ struct AdhanApp: App {
                         recordReviewPromptSession()
                     }
                 }
-                .onChange(of: locationManager.latitude) { _, _ in
-                    onLocationChanged()
-                }
-                .onChange(of: locationManager.cityName) { _, newCity in
-                    guard newCity != "Set Location" else { return }
+                // Fires once per applied location (GPS fix after geocoding, or a
+                // manual city pick), even when the coordinates are unchanged.
+                .onChange(of: locationManager.lastLocationUpdate) { _, _ in
                     onLocationChanged()
                 }
                 .onChange(of: hasCompletedOnboarding) { _, completed in
@@ -362,7 +360,8 @@ struct AdhanApp: App {
 
         // Request a fresh location only if stale (>30 min) — avoids unnecessary
         // location fetches when rapidly switching in/out of the app.
-        if locationManager.isAuthorized,
+        if locationManager.isAutomatic,
+           locationManager.isAuthorized,
            locationManager.lastLocationUpdate == nil ||
            locationManager.lastLocationUpdate!.timeIntervalSinceNow < -1800 {
             locationManager.requestLocation()
@@ -415,7 +414,8 @@ struct AdhanApp: App {
         onLocationChanged()
         requestSiriAuthorizationIfNeeded()
 
-        if locationManager.isAuthorized,
+        if locationManager.isAutomatic,
+           locationManager.isAuthorized,
            (locationManager.cityName == "Set Location" ||
             (locationManager.latitude == 0 && locationManager.longitude == 0)) {
             locationManager.requestLocation()

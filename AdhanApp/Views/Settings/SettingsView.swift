@@ -4,6 +4,7 @@ import MessageUI
 
 struct SettingsView: View {
     @Environment(PrayerTimesViewModel.self) private var viewModel
+    @Environment(LocationManager.self) private var locationManager
     @Environment(NotificationScheduler.self) private var scheduler
     @Environment(\.modelContext) private var modelContext
     @Query private var preferences: [UserPreferences]
@@ -19,7 +20,15 @@ struct SettingsView: View {
                     NavigationLink {
                         LocationSettings()
                     } label: {
-                        LabeledContent("City", value: viewModel.cityName.isEmpty ? String(localized: "Not Set", bundle: LanguageManager.shared.bundle) : viewModel.cityName)
+                        LabeledContent("City") {
+                            HStack(spacing: 4) {
+                                if locationManager.isAutomatic {
+                                    Image(systemName: "location.fill")
+                                        .font(.caption)
+                                }
+                                Text(viewModel.cityName.isEmpty ? String(localized: "Not Set", bundle: LanguageManager.shared.bundle) : viewModel.cityName)
+                            }
+                        }
                     }
                 }
 
@@ -160,7 +169,7 @@ struct SettingsView: View {
         iOS Version: \(device.systemVersion)
         Device: \(device.model)
         Language: \(lang)
-        Location: \(location)
+        Location: \(location) (\(locationManager.isAutomatic ? "automatic" : "manual"))
         Calculation Method: \(calcMethod)
         Asr: \(viewModel.asrMethod.rawValue) → \(viewModel.resolvedAsrMethod.rawValue)
         High Latitude Rule: \(viewModel.highLatitudeRule.rawValue)
