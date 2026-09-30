@@ -212,15 +212,17 @@ struct BackgroundTaskService {
         ]) ?? CalculationSettingsPayload()
         let calculationConfiguration = calculationSettings.selection.resolved(countryCode: countryCode)
 
+        // App-group value first: the view model rewrites it on every launch, whereas
+        // UserPreferences can still hold the old pre-Auto "Hanafi" default.
         let asrMethod: AsrJuristicMethod = {
-            if let prefs, let method = AsrJuristicMethod(rawValue: prefs.asrJuristicMethodRawValue) {
-                return method
-            }
             if let method = SharedDataManager.loadAsrMethod() {
                 return method
             }
-            return .hanafi
-        }()
+            if let prefs, let method = AsrJuristicMethod(rawValue: prefs.asrJuristicMethodRawValue) {
+                return method
+            }
+            return .automatic
+        }().resolved(countryCode: countryCode)
 
         let highLatitudeRule: HighLatitudeRuleOption = {
             if let prefs, let rule = HighLatitudeRuleOption(rawValue: prefs.highLatitudeRuleRawValue) {
@@ -233,7 +235,7 @@ struct BackgroundTaskService {
         }()
 
         // 4. Calculate prayer times for N days
-        AppLogger.background.info("performFullRefresh: calculating method=\(calculationConfiguration.logName) hlr=\(highLatitudeRule.rawValue) moonIsha=\(calculationSettings.moonSightingIshaTwilight.rawValue)")
+        AppLogger.background.info("performFullRefresh: calculating method=\(calculationConfiguration.logName) asr=\(asrMethod.rawValue) hlr=\(highLatitudeRule.rawValue) moonIsha=\(calculationSettings.moonSightingIshaTwilight.rawValue)")
         let service = PrayerCalculationService()
         let days = Constants.NotificationBudget.daysToScheduleAhead
         let multiDayEntries = service.calculateMultipleDays(

@@ -26,6 +26,9 @@ struct AdhanAudioFile: Identifiable, Hashable {
 enum AdhanAudioCatalog {
     static let baseURL = "https://pub-266c20788f114addb715d76354fbf729.r2.dev/adhan_audio"
 
+    /// Shipped in the app bundle and installed into Library/Sounds on launch.
+    static let bundledID = "Al-Maluke"
+
     static let allFiles: [AdhanAudioFile] = [
         "Adhan-Makkah-New",
         "Al-Aassaf-Iraq",

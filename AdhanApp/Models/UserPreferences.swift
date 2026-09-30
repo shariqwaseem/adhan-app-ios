@@ -115,7 +115,7 @@ final class UserPreferences {
     /// lightweight SwiftData compatibility but is no longer a source of truth.
     var calculationSettingsData: Data?
     var calculationMethodRawValue: String = CalculationMethodInfo.MuslimWorldLeague.rawValue
-    var asrJuristicMethodRawValue: String = AsrJuristicMethod.hanafi.rawValue
+    var asrJuristicMethodRawValue: String = AsrJuristicMethod.automatic.rawValue
     var highLatitudeRuleRawValue: String = HighLatitudeRuleOption.middleOfTheNight.rawValue
 
     // Per-prayer notification mode: silent / notification / alarm
@@ -171,6 +171,50 @@ final class UserPreferences {
         allSettings[prayer.rawValue] = settings.normalized
         alertTimingSettingsData = try? JSONEncoder().encode(allSettings)
         setLegacyPreAlarmMinutes(0, for: prayer)
+    }
+
+    func alarmAudio(for prayer: PrayerName) -> String {
+        switch prayer {
+        case .tahajjud: return tahajjudAlarmAudio
+        case .fajr: return fajrAlarmAudio
+        case .dhuhr: return dhuhrAlarmAudio
+        case .asr: return asrAlarmAudio
+        case .maghrib: return maghribAlarmAudio
+        case .isha: return ishaAlarmAudio
+        }
+    }
+
+    func setAlarmAudio(_ value: String, for prayer: PrayerName) {
+        switch prayer {
+        case .tahajjud: tahajjudAlarmAudio = value
+        case .fajr: fajrAlarmAudio = value
+        case .dhuhr: dhuhrAlarmAudio = value
+        case .asr: asrAlarmAudio = value
+        case .maghrib: maghribAlarmAudio = value
+        case .isha: ishaAlarmAudio = value
+        }
+    }
+
+    /// Prayers whose delivery mode is currently Alarm.
+    var alarmModePrayers: [PrayerName] {
+        PrayerName.allCases.filter { prayer in
+            let raw: String
+            switch prayer {
+            case .tahajjud: raw = tahajjudNotificationMode
+            case .fajr: raw = fajrNotificationMode
+            case .dhuhr: raw = dhuhrNotificationMode
+            case .asr: raw = asrNotificationMode
+            case .maghrib: raw = maghribNotificationMode
+            case .isha: raw = ishaNotificationMode
+            }
+            return PrayerNotificationMode(rawValue: raw) == .alarm
+        }
+    }
+
+    /// The sound shared by every Alarm-mode prayer, or nil when they differ or none exist.
+    var sharedAlarmAudio: String? {
+        let sounds = Set(alarmModePrayers.map { alarmAudio(for: $0) })
+        return sounds.count == 1 ? sounds.first : nil
     }
 
     private func decodedAlertTimingSettings() -> [String: AlertTimingSettings] {

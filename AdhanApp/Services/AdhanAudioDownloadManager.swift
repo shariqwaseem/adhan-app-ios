@@ -10,12 +10,17 @@ enum DownloadState: Sendable, Equatable {
 
 // MARK: - Module-level download session with progress delegate
 
+private let downloadSessionIdentifier = "com.shariq.adhanapp.audio-downloads"
+
 private let downloadSessionDelegate = DownloadSessionDelegate()
 
+/// Background session so downloads keep running (and complete) while the app is
+/// suspended or terminated, instead of dropping the connection and restarting.
 private let downloadSession: URLSession = {
-    let config = URLSessionConfiguration.default
-    config.timeoutIntervalForRequest = 30
-    config.timeoutIntervalForResource = 300
+    let config = URLSessionConfiguration.background(withIdentifier: downloadSessionIdentifier)
+    config.isDiscretionary = false
+    config.sessionSendsLaunchEvents = true
+    config.timeoutIntervalForResource = 3600
     config.httpMaximumConnectionsPerHost = 2
     return URLSession(configuration: config, delegate: downloadSessionDelegate, delegateQueue: nil)
 }()
@@ -90,6 +95,10 @@ struct DownloadProgressThrottler {
 @Observable
 @MainActor
 final class AdhanAudioDownloadManager {
+    /// Single instance: the background URLSession and its in-flight tasks are process-wide,
+    /// so a second manager would re-adopt and steal the first one's tasks.
+    static let shared = AdhanAudioDownloadManager()
+
     var downloadStates: [String: DownloadState] = [:]
     private var activeTasks: [String: Task<Void, Never>] = [:]
     private var workQueue = DownloadWorkQueue<AdhanAudioFile>(maximumConcurrentCount: 2)
@@ -99,9 +108,24 @@ final class AdhanAudioDownloadManager {
         return libraryDir.appendingPathComponent("Sounds")
     }
 
-    init() {
+    private init() {
         ensureSoundsDirectory()
+        installBundledSounds()
         syncDownloadStates()
+        downloadSessionDelegate.onUnclaimedDownloadFinished = { [weak self] in
+            Task { @MainActor in self?.syncDownloadStates() }
+        }
+        Task { await adoptInFlightDownloads() }
+    }
+
+    /// Called from the app delegate when iOS relaunches the app for background download events.
+    nonisolated static func handleBackgroundSessionEvents(
+        identifier: String,
+        completionHandler: @escaping @Sendable () -> Void
+    ) {
+        guard identifier == downloadSessionIdentifier else { return }
+        downloadSessionDelegate.backgroundEventsCompletionHandler = completionHandler
+        _ = downloadSession // Reconnect to the session so pending events are delivered.
     }
 
     // MARK: - Download
@@ -136,17 +160,46 @@ final class AdhanAudioDownloadManager {
         downloadStates[id] ?? .notDownloaded
     }
 
-    private func startDownloads(_ files: [AdhanAudioFile]) {
+    /// Re-attaches to downloads still running in the background session from a previous
+    /// app process, so they continue instead of being restarted.
+    private func adoptInFlightDownloads() async {
+        let tasks = await downloadSession.allTasks
+        for case let task as URLSessionDownloadTask in tasks {
+            guard task.state == .running || task.state == .suspended,
+                  let id = task.taskDescription,
+                  let file = AdhanAudioCatalog.file(forID: id) else {
+                task.cancel()
+                continue
+            }
+            // Already started by this process (tapped before this lookup returned).
+            if workQueue.contains(file) { continue }
+            guard !file.isDownloaded else {
+                task.cancel()
+                continue
+            }
+            guard workQueue.enqueue(file) == [file] else {
+                workQueue.removePending(file)
+                task.cancel()
+                continue
+            }
+            let expected = task.countOfBytesExpectedToReceive
+            let progress = expected > 0 ? Double(task.countOfBytesReceived) / Double(expected) : 0
+            downloadStates[file.id] = .downloading(progress: progress)
+            startDownloads([file], existingTask: task)
+        }
+    }
+
+    private func startDownloads(_ files: [AdhanAudioFile], existingTask: URLSessionDownloadTask? = nil) {
         for file in files {
             let task = Task { [weak self] in
                 guard let self else { return }
-                await self.performDownload(file)
+                await self.performDownload(file, existingTask: existingTask)
             }
             activeTasks[file.id] = task
         }
     }
 
-    private func performDownload(_ file: AdhanAudioFile) async {
+    private func performDownload(_ file: AdhanAudioFile, existingTask: URLSessionDownloadTask? = nil) async {
         var lastError: Error?
         let maxAttempts = 3
 
@@ -158,15 +211,25 @@ final class AdhanAudioDownloadManager {
                     finishDownload(file, state: .notDownloaded)
                     return
                 }
-                downloadStates[file.id] = .downloading(progress: 0)
             }
 
             do {
                 try Task.checkCancellation()
 
-                let downloadTask = downloadSession.downloadTask(with: file.downloadURL)
+                // Resume from where the failed attempt stopped when the server allows it.
+                let resumeData = (lastError as? URLError)?.downloadTaskResumeData
+                let downloadTask: URLSessionDownloadTask
+                if attempt == 0, let existingTask {
+                    downloadTask = existingTask
+                } else if let resumeData {
+                    downloadTask = downloadSession.downloadTask(withResumeData: resumeData)
+                } else {
+                    downloadStates[file.id] = .downloading(progress: 0)
+                    downloadTask = downloadSession.downloadTask(with: file.downloadURL)
+                }
+                downloadTask.taskDescription = file.id
 
-                let tempURL: URL = try await withTaskCancellationHandler {
+                try await withTaskCancellationHandler {
                     try await withCheckedThrowingContinuation { continuation in
                         downloadSessionDelegate.register(
                             taskID: downloadTask.taskIdentifier,
@@ -186,17 +249,11 @@ final class AdhanAudioDownloadManager {
                     downloadTask.cancel()
                 }
 
-                if let http = downloadTask.response as? HTTPURLResponse,
-                   !(200...299).contains(http.statusCode) {
-                    try? FileManager.default.removeItem(at: tempURL)
-                    throw URLError(.badServerResponse)
+                // The delegate has already moved the file into place; honour a late cancel.
+                if Task.isCancelled {
+                    try? FileManager.default.removeItem(at: file.localFileURL)
+                    throw CancellationError()
                 }
-
-                try Task.checkCancellation()
-
-                let destinationURL = file.localFileURL
-                try? FileManager.default.removeItem(at: destinationURL)
-                try FileManager.default.moveItem(at: tempURL, to: destinationURL)
 
                 finishDownload(file, state: .downloaded)
                 return
@@ -244,6 +301,15 @@ final class AdhanAudioDownloadManager {
 
     // MARK: - Private
 
+    /// Copies the bundled adhan into Library/Sounds so it behaves like a downloaded file
+    /// (AlarmKit lookup, preview playback, download state).
+    private func installBundledSounds() {
+        guard let file = AdhanAudioCatalog.file(forID: AdhanAudioCatalog.bundledID),
+              !file.isDownloaded,
+              let bundledURL = Bundle.main.url(forResource: file.id, withExtension: "caf") else { return }
+        try? FileManager.default.copyItem(at: bundledURL, to: file.localFileURL)
+    }
+
     private func ensureSoundsDirectory() {
         let url = soundsDirectoryURL
         if !FileManager.default.fileExists(atPath: url.path) {
@@ -257,19 +323,52 @@ final class AdhanAudioDownloadManager {
 private final class DownloadSessionDelegate: NSObject, URLSessionDownloadDelegate, @unchecked Sendable {
     private let lock = NSLock()
     private var progressHandlers: [Int: @Sendable (Double) -> Void] = [:]
-    private var completionHandlers: [Int: CheckedContinuation<URL, Error>] = [:]
+    private var completionHandlers: [Int: CheckedContinuation<Void, Error>] = [:]
+    /// Results of tasks that finished before anyone registered for them (e.g. adopted tasks).
+    private var unclaimedResults: [Int: Result<Void, Error>] = [:]
     private var progressThrottler = DownloadProgressThrottler(minimumInterval: 0.1)
+    private var _backgroundEventsCompletionHandler: (@Sendable () -> Void)?
+    private var _onUnclaimedDownloadFinished: (@Sendable () -> Void)?
+
+    var backgroundEventsCompletionHandler: (@Sendable () -> Void)? {
+        get { lock.withLock { _backgroundEventsCompletionHandler } }
+        set { lock.withLock { _backgroundEventsCompletionHandler = newValue } }
+    }
+
+    var onUnclaimedDownloadFinished: (@Sendable () -> Void)? {
+        get { lock.withLock { _onUnclaimedDownloadFinished } }
+        set { lock.withLock { _onUnclaimedDownloadFinished = newValue } }
+    }
 
     func register(
         taskID: Int,
         progress: @escaping @Sendable (Double) -> Void,
-        continuation: CheckedContinuation<URL, Error>
+        continuation: CheckedContinuation<Void, Error>
     ) {
         lock.lock()
+        if let result = unclaimedResults.removeValue(forKey: taskID) {
+            lock.unlock()
+            continuation.resume(with: result)
+            return
+        }
         progressHandlers[taskID] = progress
         completionHandlers[taskID] = continuation
         progressThrottler.reset(taskID: taskID)
         lock.unlock()
+    }
+
+    private func complete(taskID: Int, with result: Result<Void, Error>) {
+        lock.lock()
+        let continuation = completionHandlers.removeValue(forKey: taskID)
+        progressHandlers.removeValue(forKey: taskID)
+        progressThrottler.reset(taskID: taskID)
+        if continuation == nil {
+            unclaimedResults[taskID] = result
+        }
+        let onUnclaimed = continuation == nil ? _onUnclaimedDownloadFinished : nil
+        lock.unlock()
+        continuation?.resume(with: result)
+        onUnclaimed?()
     }
 
     func urlSession(
@@ -298,24 +397,21 @@ private final class DownloadSessionDelegate: NSObject, URLSessionDownloadDelegat
         downloadTask: URLSessionDownloadTask,
         didFinishDownloadingTo location: URL
     ) {
-        // Must copy before returning — the system deletes the temp file after this method returns
-        let tempCopy = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".tmp")
-        do {
-            try FileManager.default.copyItem(at: location, to: tempCopy)
-            lock.lock()
-            let continuation = completionHandlers.removeValue(forKey: downloadTask.taskIdentifier)
-            progressHandlers.removeValue(forKey: downloadTask.taskIdentifier)
-            progressThrottler.reset(taskID: downloadTask.taskIdentifier)
-            lock.unlock()
-            continuation?.resume(returning: tempCopy)
-        } catch {
-            lock.lock()
-            let continuation = completionHandlers.removeValue(forKey: downloadTask.taskIdentifier)
-            progressHandlers.removeValue(forKey: downloadTask.taskIdentifier)
-            progressThrottler.reset(taskID: downloadTask.taskIdentifier)
-            lock.unlock()
-            continuation?.resume(throwing: error)
+        // Move into Library/Sounds here, before returning — the system deletes the temp file
+        // afterwards, and the app may have been relaunched with no one awaiting this task.
+        let result: Result<Void, Error>
+        if let http = downloadTask.response as? HTTPURLResponse, !(200...299).contains(http.statusCode) {
+            result = .failure(URLError(.badServerResponse))
+        } else if let id = downloadTask.taskDescription,
+                  let file = AdhanAudioCatalog.file(forID: id) {
+            result = Result {
+                try? FileManager.default.removeItem(at: file.localFileURL)
+                try FileManager.default.moveItem(at: location, to: file.localFileURL)
+            }
+        } else {
+            result = .failure(URLError(.fileDoesNotExist))
         }
+        complete(taskID: downloadTask.taskIdentifier, with: result)
     }
 
     func urlSession(
@@ -324,11 +420,12 @@ private final class DownloadSessionDelegate: NSObject, URLSessionDownloadDelegat
         didCompleteWithError error: Error?
     ) {
         guard let error = error else { return } // Success handled in didFinishDownloadingTo
-        lock.lock()
-        let continuation = completionHandlers.removeValue(forKey: task.taskIdentifier)
-        progressHandlers.removeValue(forKey: task.taskIdentifier)
-        progressThrottler.reset(taskID: task.taskIdentifier)
-        lock.unlock()
-        continuation?.resume(throwing: error)
+        complete(taskID: task.taskIdentifier, with: .failure(error))
+    }
+
+    func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
+        guard let handler = backgroundEventsCompletionHandler else { return }
+        backgroundEventsCompletionHandler = nil
+        DispatchQueue.main.async { handler() }
     }
 }

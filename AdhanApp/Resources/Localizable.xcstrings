@@ -352,6 +352,28 @@
         }
       }
     },
+    "A banner with a short sound" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إشعار مع صوت قصير"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Banner dengan suara singkat"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kısa sesli bir bildirim"
+          }
+        }
+      }
+    },
     "About" : {
       "localizations" : {
         "ar" : {
@@ -376,6 +398,28 @@
     },
     "Add Alarm" : {
 
+    },
+    "Adhan (Al Maluke)" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الأذان (Al Maluke)"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Azan (Al Maluke)"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ezan (Al Maluke)"
+          }
+        }
+      }
     },
     "Adhan Sounds" : {
       "localizations" : {
@@ -576,6 +620,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alarm Sesi"
+          }
+        }
+      }
+    },
+    "Alarms" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المنبهات"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarmlar"
           }
         }
       }
@@ -954,6 +1020,50 @@
         }
       }
     },
+    "Changes the sound for every prayer set to Alarm." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يغيّر الصوت لكل صلاة مضبوطة على المنبه."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mengubah suara untuk setiap salat yang diatur ke Alarm."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarma ayarlı tüm namazların sesini değiştirir."
+          }
+        }
+      }
+    },
+    "Choose what plays when it's time to pray." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اختر ما يُشغَّل عند حلول وقت الصلاة."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pilih suara yang diputar saat waktu salat tiba."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Namaz vakti geldiğinde ne çalacağını seçin."
+          }
+        }
+      }
+    },
     "City" : {
       "localizations" : {
         "ar" : {
@@ -972,6 +1082,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Şehir"
+          }
+        }
+      }
+    },
+    "Continue" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "متابعة"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lanjutkan"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Devam"
           }
         }
       }
@@ -1044,6 +1176,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Varsayılan"
+          }
+        }
+      }
+    },
+    "Default Alarm" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المنبه الافتراضي"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarm Bawaan"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Varsayılan Alarm"
           }
         }
       }
@@ -1177,6 +1331,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Diyanet İşleri Başkanlığı"
+          }
+        }
+      }
+    },
+    "Done" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تم"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selesai"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitti"
           }
         }
       }
@@ -1343,6 +1519,28 @@
         }
       }
     },
+    "For All Prayers" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لجميع الصلوات"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Untuk Semua Salat"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tüm Namazlar İçin"
+          }
+        }
+      }
+    },
     "Full Adhan Alarms" : {
       "localizations" : {
         "ar" : {
@@ -1361,6 +1559,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tam Ezan Alarmları"
+          }
+        }
+      }
+    },
+    "Full adhan · tap to preview" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أذان كامل · اضغط للاستماع"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Azan lengkap · ketuk untuk mendengar"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tam ezan · dinlemek için dokunun"
           }
         }
       }
@@ -1530,6 +1750,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ana Sayfa"
+          }
+        }
+      }
+    },
+    "How Should We Remind You?" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "كيف تود أن نذكّرك؟"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bagaimana Anda ingin diingatkan?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nasıl hatırlatalım?"
           }
         }
       }
@@ -2142,6 +2384,28 @@
         }
       }
     },
+    "No prayers set to Alarm" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لا توجد صلوات مضبوطة على المنبه"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tidak ada salat yang diatur ke Alarm"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alarma ayarlı namaz yok"
+          }
+        }
+      }
+    },
     "Not Set" : {
       "localizations" : {
         "ar" : {
@@ -2271,6 +2535,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bildirim adı"
+          }
+        }
+      }
+    },
+    "Notifications" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الإشعارات"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifikasi"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildirimler"
           }
         }
       }
@@ -3117,6 +3403,28 @@
         }
       }
     },
+    "Rings even on silent or in Focus mode" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يرن حتى في الوضع الصامت أو وضع التركيز"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Berbunyi meski dalam mode senyap atau Fokus"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sessiz veya Odak modunda bile çalar"
+          }
+        }
+      }
+    },
     "Save" : {
       "localizations" : {
         "ar" : {
@@ -3160,9 +3468,6 @@
           }
         }
       }
-    },
-    "Set for all" : {
-
     },
     "Set Time Only" : {
       "localizations" : {
@@ -3481,6 +3786,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ses"
+          }
+        }
+      }
+    },
+    "Standard" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "معياري"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standar"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standart"
           }
         }
       }
@@ -3828,6 +4155,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@ için ayarlanan saat %2$lld dk önceydi"
+          }
+        }
+      }
+    },
+    "The standard alarm tone" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نغمة المنبه القياسية"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nada alarm standar"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standart alarm sesi"
           }
         }
       }
@@ -4219,6 +4568,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Beyaz Şafak (Hanefi)"
+          }
+        }
+      }
+    },
+    "You can change this for each prayer later." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يمكنك تغيير ذلك لكل صلاة لاحقًا."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anda dapat mengubahnya untuk setiap salat nanti."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bunu daha sonra her namaz için değiştirebilirsiniz."
           }
         }
       }

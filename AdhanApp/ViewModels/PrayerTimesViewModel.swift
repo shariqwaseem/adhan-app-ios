@@ -75,11 +75,22 @@ final class PrayerTimesViewModel {
         }
     }
 
-    var asrMethod: AsrJuristicMethod = .hanafi {
+    // The standard-defaults key is only written when the user picks in Settings,
+    // so anyone who never chose (new or existing install) starts on Auto.
+    var asrMethod: AsrJuristicMethod = .automatic {
         didSet {
             UserDefaults.standard.set(asrMethod.rawValue, forKey: "asrMethod")
             SharedDataManager.saveAsrMethod(asrMethod.rawValue)
         }
+    }
+
+    var resolvedAsrMethod: AsrJuristicMethod {
+        asrMethod.resolved(countryCode: countryCode)
+    }
+
+    func asrMethodLabel(for method: AsrJuristicMethod) -> String {
+        guard method == .automatic else { return method.localizedName }
+        return "\(method.localizedShortName) (\(method.resolved(countryCode: countryCode).localizedShortName))"
     }
     var highLatitudeRule: HighLatitudeRuleOption = .middleOfTheNight {
         didSet {
@@ -178,7 +189,7 @@ final class PrayerTimesViewModel {
             latitude: latitude,
             longitude: longitude,
             configuration: resolvedCalculationConfiguration,
-            asrMethod: asrMethod,
+            asrMethod: resolvedAsrMethod,
             highLatitudeRule: highLatitudeRule,
             adjustments: manualAdjustments,
             moonSightingIshaTwilight: moonSightingIshaTwilight
@@ -214,7 +225,7 @@ final class PrayerTimesViewModel {
                 latitude: latitude,
                 longitude: longitude,
                 configuration: resolvedCalculationConfiguration,
-                asrMethod: asrMethod,
+                asrMethod: resolvedAsrMethod,
                 highLatitudeRule: highLatitudeRule,
                 adjustments: manualAdjustments,
                 moonSightingIshaTwilight: moonSightingIshaTwilight
@@ -264,7 +275,7 @@ final class PrayerTimesViewModel {
             latitude: latitude,
             longitude: longitude,
             configuration: resolvedCalculationConfiguration,
-            asrMethod: asrMethod,
+            asrMethod: resolvedAsrMethod,
             highLatitudeRule: highLatitudeRule,
             adjustments: manualAdjustments,
             moonSightingIshaTwilight: moonSightingIshaTwilight

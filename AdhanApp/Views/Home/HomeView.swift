@@ -14,6 +14,7 @@ struct HomeView: View {
 
     @Environment(\.colorScheme) private var systemColorScheme
     @State private var showingNewAlarm = false
+    @State private var showingAlarmSound = false
 
     private var prefs: UserPreferences? { preferences.first }
     private var langBundle: Bundle { LanguageManager.shared.bundle }
@@ -60,10 +61,24 @@ struct HomeView: View {
             .sheet(isPresented: $showingNewAlarm) {
                 CustomAlarmDetailView()
             }
+            .sheet(isPresented: $showingAlarmSound) {
+                NavigationStack {
+                    AdhanAudioSelectionView(prayer: nil)
+                        .toolbar {
+                            ToolbarItem(placement: .confirmationAction) {
+                                Button(String(localized: "Done", bundle: langBundle)) {
+                                    showingAlarmSound = false
+                                }
+                            }
+                        }
+                }
+                .environment(\.colorScheme, systemColorScheme)
+            }
             .onAppear {
                 viewModel.calculateToday()
             }
             .task {
+                await refreshPermissions()
                 try? await Task.sleep(for: .milliseconds(300))
                 scheduler.refreshNextAlarmTime(
                     prayerEntries: viewModel.multiDayTimes().flatMap { $0 },
@@ -82,6 +97,11 @@ struct HomeView: View {
         .environment(\.colorScheme, activeColorScheme)
         .task(id: reviewPromptManager.presentationCandidateID) {
             await presentReviewPromptIfAppropriate()
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active {
+                Task { await refreshPermissions() }
+            }
         }
         .onChange(of: showingNewAlarm) { _, isPresented in
             if isPresented {
@@ -122,20 +142,23 @@ struct HomeView: View {
                 Label(String(localized: "Add Alarm", bundle: langBundle), systemImage: "plus")
             }
 
-            Section(String(localized: "Set for all", bundle: langBundle)) {
-                Picker(String(localized: "Delivery Mode", bundle: langBundle), selection: allAlarmsModeBinding) {
-                    if allAlarmsMode == nil {
-                        Text(String(localized: "Mixed", bundle: langBundle))
-                            .tag(Optional<PrayerNotificationMode>.none)
-                    }
-
-                    ForEach(PrayerNotificationMode.allCases) { mode in
+            // Toggles instead of an inline Picker: an inline Picker becomes its own
+            // menu section and swallows this section's header.
+            Section(String(localized: "For All Prayers", bundle: langBundle)) {
+                ForEach(PrayerNotificationMode.allCases) { mode in
+                    Toggle(isOn: allAlarmsModeBinding(for: mode)) {
                         Label(mode.localizedName, systemImage: mode.systemImage)
-                            .tag(Optional(mode))
-                            .disabled(mode == .alarm && !AdhanAlarmManager.isAlarmSupported)
                     }
+                    .disabled(!isModeAvailable(mode))
                 }
-                .pickerStyle(.inline)
+
+                Button {
+                    showingAlarmSound = true
+                } label: {
+                    Label(String(localized: "Alarm Sound", bundle: langBundle), systemImage: "speaker.wave.2")
+                    Text(allAlarmsSoundName)
+                }
+                .disabled(prefs?.alarmModePrayers.isEmpty ?? true)
             }
         } label: {
             Label(String(localized: "Options", bundle: langBundle), systemImage: "ellipsis.circle")
@@ -145,12 +168,36 @@ struct HomeView: View {
         })
     }
 
-    private var allAlarmsModeBinding: Binding<PrayerNotificationMode?> {
+    private var allAlarmsSoundName: String {
+        guard let prefs, !prefs.alarmModePrayers.isEmpty else {
+            return String(localized: "No prayers set to Alarm", bundle: langBundle)
+        }
+        guard let shared = prefs.sharedAlarmAudio else {
+            return String(localized: "Mixed", bundle: langBundle)
+        }
+        return AdhanAudioCatalog.displayName(forID: shared)
+    }
+
+    private func isModeAvailable(_ mode: PrayerNotificationMode) -> Bool {
+        switch mode {
+        case .alarm: AdhanAlarmManager.isAlarmSupported && scheduler.alarmManager.isAuthorized
+        case .notification: scheduler.isPermissionGranted
+        case .silent: true
+        }
+    }
+
+    private func refreshPermissions() async {
+        await scheduler.checkNotificationPermission()
+        scheduler.alarmManager.checkAuthorization()
+    }
+
+    /// Checked only when every prayer uses `mode`; none is checked when modes are mixed.
+    private func allAlarmsModeBinding(for mode: PrayerNotificationMode) -> Binding<Bool> {
         Binding(
-            get: { allAlarmsMode },
-            set: { newValue in
-                guard let newValue else { return }
-                setAllAlarmsMode(newValue)
+            get: { allAlarmsMode == mode },
+            set: { isOn in
+                guard isOn else { return }
+                setAllAlarmsMode(mode)
             }
         )
     }
@@ -283,7 +330,7 @@ struct HomeView: View {
     }
 
     private func setAllAlarmsMode(_ mode: PrayerNotificationMode) {
-        guard mode != .alarm || AdhanAlarmManager.isAlarmSupported else { return }
+        guard isModeAvailable(mode) else { return }
         let prefs = writablePreferences()
 
         withAnimation(.easeInOut(duration: 0.3)) {

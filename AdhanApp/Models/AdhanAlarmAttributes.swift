@@ -58,10 +58,37 @@ enum CalculationMethodInfo: String, CaseIterable, Identifiable, Codable, Sendabl
 }
 
 enum AsrJuristicMethod: String, CaseIterable, Identifiable, Codable, Sendable {
+    case automatic = "Auto"
     case standard = "Standard (Shafi'i, Maliki, Hanbali)"
     case hanafi = "Hanafi"
 
     var id: String { rawValue }
+
+    private static let hanafiCountryCodes: Set<String> = ["PK", "IN", "BD", "AF"]
+    /// Urdu, Hindi, Bengali, Pashto — catches South Asians living abroad (e.g. in the Gulf).
+    private static let hanafiLanguageCodes: Set<String> = ["ur", "hi", "bn", "ps"]
+
+    /// Resolves `.automatic` to a concrete madhab; explicit choices are returned unchanged.
+    func resolved(
+        countryCode: String?,
+        preferredLanguages: [String] = Locale.preferredLanguages
+    ) -> AsrJuristicMethod {
+        guard self == .automatic else { return self }
+        return Self.recommendedMethod(forCountryCode: countryCode, preferredLanguages: preferredLanguages)
+    }
+
+    static func recommendedMethod(
+        forCountryCode code: String?,
+        preferredLanguages: [String] = Locale.preferredLanguages
+    ) -> AsrJuristicMethod {
+        if let code = code?.uppercased(), hanafiCountryCodes.contains(code) {
+            return .hanafi
+        }
+        let speaksHanafiLanguage = preferredLanguages.contains { identifier in
+            hanafiLanguageCodes.contains(Locale(identifier: identifier).language.languageCode?.identifier ?? "")
+        }
+        return speaksHanafiLanguage ? .hanafi : .standard
+    }
 }
 
 enum HighLatitudeRuleOption: String, CaseIterable, Identifiable, Codable, Sendable {

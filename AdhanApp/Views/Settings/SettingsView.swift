@@ -36,10 +36,10 @@ struct SettingsView: View {
                             title: "Asr Calculation",
                             selection: $vm.asrMethod,
                             options: AsrJuristicMethod.allCases,
-                            optionLabel: \AsrJuristicMethod.localizedName
+                            optionLabel: viewModel.asrMethodLabel(for:)
                         )
                     } label: {
-                        LabeledContent("Asr Calculation", value: viewModel.asrMethod.localizedName)
+                        LabeledContent("Asr Calculation", value: viewModel.asrMethodLabel(for: viewModel.asrMethod))
                     }
 
                     NavigationLink {
@@ -162,6 +162,7 @@ struct SettingsView: View {
         Language: \(lang)
         Location: \(location)
         Calculation Method: \(calcMethod)
+        Asr: \(viewModel.asrMethod.rawValue) → \(viewModel.resolvedAsrMethod.rawValue)
         High Latitude Rule: \(viewModel.highLatitudeRule.rawValue)
         Moon Sighting Isha: \(viewModel.moonSightingIshaTwilight.rawValue)
         ---

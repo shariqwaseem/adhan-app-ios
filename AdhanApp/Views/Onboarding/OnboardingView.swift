@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import UserNotifications
+import AVFoundation
 
 struct OnboardingView: View {
     @Environment(LocationManager.self) private var locationManager
@@ -13,6 +14,19 @@ struct OnboardingView: View {
     @State private var currentStep = 0
     @State private var pendingPermissionStep: OnboardingStepType?
     @State private var permissionPromptWasPresented = false
+    @State private var alertStyle: PrayerNotificationMode = .alarm
+    @State private var useAdhanSound = true
+    @State private var previewPlayer: AVAudioPlayer?
+
+    /// Mode saved for fajr…isha, based on which permissions were granted and the user's choice.
+    private var finalMode: PrayerNotificationMode {
+        let notificationsGranted = notificationScheduler.isPermissionGranted
+        let alarmsGranted = notificationScheduler.alarmManager.isAuthorized
+        if alarmsGranted && (!notificationsGranted || alertStyle == .alarm) {
+            return .alarm
+        }
+        return notificationsGranted ? .notification : .silent
+    }
 
     private var steps: [OnboardingStep] {
         let bundle = LanguageManager.shared.bundle
@@ -57,14 +71,34 @@ struct OnboardingView: View {
             ),
         ]
 
-        if AdhanAlarmManager.isAlarmSupported {
+        result.append(OnboardingStep(
+            type: .alarms,
+            icon: "alarm.waves.left.and.right.fill",
+            iconColor: .green,
+            title: String(localized: "Full Adhan Alarms", bundle: bundle),
+            subtitle: String(localized: "This app supports full-length alarms and adhan sounds that play even when your phone is on silent or in Focus mode.", bundle: bundle),
+            buttonTitle: String(localized: "Allow Alarms", bundle: bundle)
+        ))
+
+        if notificationScheduler.isPermissionGranted && notificationScheduler.alarmManager.isAuthorized {
             result.append(OnboardingStep(
-                type: .alarms,
-                icon: "alarm.waves.left.and.right.fill",
+                type: .alertStyle,
+                icon: "bell.and.waves.left.and.right.fill",
+                iconColor: .orange,
+                title: String(localized: "How Should We Remind You?", bundle: bundle),
+                subtitle: String(localized: "You can change this for each prayer later.", bundle: bundle),
+                buttonTitle: String(localized: "Continue", bundle: bundle)
+            ))
+        }
+
+        if finalMode == .alarm {
+            result.append(OnboardingStep(
+                type: .alarmSound,
+                icon: "speaker.wave.3.fill",
                 iconColor: .green,
-                title: String(localized: "Full Adhan Alarms", bundle: bundle),
-                subtitle: String(localized: "This app supports full-length alarms and adhan sounds that play even when your phone is on silent or in Focus mode.", bundle: bundle),
-                buttonTitle: String(localized: "Allow Alarms", bundle: bundle)
+                title: String(localized: "Alarm Sound", bundle: bundle),
+                subtitle: String(localized: "Choose what plays when it's time to pray.", bundle: bundle),
+                buttonTitle: String(localized: "Continue", bundle: bundle)
             ))
         }
 
@@ -101,6 +135,7 @@ struct OnboardingView: View {
                     .font(.system(size: 32, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
                     .multilineTextAlignment(.center)
+                    .padding(.horizontal, 40)
                     .id("title-\(currentStep)")
                     .transition(.push(from: .trailing))
 
@@ -115,16 +150,13 @@ struct OnboardingView: View {
                     .id("subtitle-\(currentStep)")
                     .transition(.push(from: .trailing))
 
-                Spacer()
+                choiceOptions
+                    .padding(.top, 24)
+                    .padding(.horizontal, 40)
+                    .id("options-\(currentStep)")
+                    .transition(.push(from: .trailing))
 
-                HStack(spacing: 8) {
-                    ForEach(0..<steps.count, id: \.self) { index in
-                        Circle()
-                            .fill(index == currentStep ? Color.white : Color.white.opacity(0.3))
-                            .frame(width: 8, height: 8)
-                    }
-                }
-                .padding(.bottom, 32)
+                Spacer()
 
                 Button {
                     handleStepAction()
@@ -156,6 +188,87 @@ struct OnboardingView: View {
                 handlePermissionPromptReturn()
             }
         }
+        .onDisappear {
+            stopPreview()
+        }
+    }
+
+    // MARK: - Choice Steps
+
+    @ViewBuilder
+    private var choiceOptions: some View {
+        let bundle = LanguageManager.shared.bundle
+        switch steps[currentStep].type {
+        case .alertStyle:
+            VStack(spacing: 12) {
+                OnboardingOptionCard(
+                    icon: "alarm.fill",
+                    title: String(localized: "Alarms", bundle: bundle),
+                    subtitle: String(localized: "Rings even on silent or in Focus mode", bundle: bundle),
+                    isSelected: alertStyle == .alarm
+                ) {
+                    alertStyle = .alarm
+                }
+                OnboardingOptionCard(
+                    icon: "bell.fill",
+                    title: String(localized: "Notifications", bundle: bundle),
+                    subtitle: String(localized: "A banner with a short sound", bundle: bundle),
+                    isSelected: alertStyle == .notification
+                ) {
+                    alertStyle = .notification
+                }
+            }
+
+        case .alarmSound:
+            VStack(spacing: 12) {
+                OnboardingOptionCard(
+                    icon: previewPlayer != nil ? "stop.circle.fill" : "play.circle.fill",
+                    title: String(localized: "Adhan (Al Maluke)", bundle: bundle),
+                    subtitle: String(localized: "Full adhan · tap to preview", bundle: bundle),
+                    isSelected: useAdhanSound
+                ) {
+                    if useAdhanSound && previewPlayer != nil {
+                        stopPreview()
+                    } else {
+                        useAdhanSound = true
+                        playPreview()
+                    }
+                }
+                OnboardingOptionCard(
+                    icon: "alarm",
+                    title: String(localized: "Default Alarm", bundle: bundle),
+                    subtitle: String(localized: "The standard alarm tone", bundle: bundle),
+                    isSelected: !useAdhanSound
+                ) {
+                    useAdhanSound = false
+                    stopPreview()
+                }
+            }
+
+        default:
+            EmptyView()
+        }
+    }
+
+    private func playPreview() {
+        stopPreview()
+        guard let url = AdhanAudioCatalog.file(forID: AdhanAudioCatalog.bundledID)?.playbackURL else { return }
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback)
+            try AVAudioSession.sharedInstance().setActive(true)
+            let player = try AVAudioPlayer(contentsOf: url)
+            player.play()
+            previewPlayer = player
+        } catch {
+            previewPlayer = nil
+        }
+    }
+
+    private func stopPreview() {
+        guard let previewPlayer else { return }
+        previewPlayer.stop()
+        self.previewPlayer = nil
+        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
     }
 
     private func handleStepAction() {
@@ -179,6 +292,14 @@ struct OnboardingView: View {
             } else if locationManager.authorizationStatus == .authorizedWhenInUse {
                 beginPermissionRequest(for: .backgroundLocation)
                 locationManager.requestAlwaysPermission()
+                Task {
+                    // iOS shows no prompt when location was granted with "Allow Once",
+                    // so no status/scene change arrives — advance instead of leaving the button stuck.
+                    try? await Task.sleep(for: .seconds(1))
+                    if !permissionPromptWasPresented {
+                        finishPermissionRequest(for: .backgroundLocation, shouldAdvance: true)
+                    }
+                }
             } else {
                 advanceStep(from: .backgroundLocation)
             }
@@ -198,6 +319,13 @@ struct OnboardingView: View {
                 await notificationScheduler.alarmManager.requestAuthorization()
                 finishPermissionRequest(for: .alarms, shouldAdvance: true)
             }
+
+        case .alertStyle:
+            advanceStep()
+
+        case .alarmSound:
+            stopPreview()
+            advanceStep()
         }
     }
 
@@ -266,21 +394,64 @@ struct OnboardingView: View {
         prefs.asrJuristicMethodRawValue = prayerTimesViewModel.asrMethod.rawValue
         prefs.highLatitudeRuleRawValue = prayerTimesViewModel.highLatitudeRule.rawValue
 
-        // New installs use standard notifications regardless of AlarmKit authorization.
         // Tahajjud stays silent via UserPreferences' default value.
-        let notification = PrayerNotificationMode.notification.rawValue
-        prefs.fajrNotificationMode = notification
-        prefs.dhuhrNotificationMode = notification
-        prefs.asrNotificationMode = notification
-        prefs.maghribNotificationMode = notification
-        prefs.ishaNotificationMode = notification
+        let mode = finalMode
+        prefs.fajrNotificationMode = mode.rawValue
+        prefs.dhuhrNotificationMode = mode.rawValue
+        prefs.asrNotificationMode = mode.rawValue
+        prefs.maghribNotificationMode = mode.rawValue
+        prefs.ishaNotificationMode = mode.rawValue
+
+        if mode == .alarm && useAdhanSound {
+            for prayer: PrayerName in [.fajr, .dhuhr, .asr, .maghrib, .isha] {
+                prefs.setAlarmAudio(AdhanAudioCatalog.bundledID, for: prayer)
+            }
+        }
 
         modelContext.insert(prefs)
     }
 }
 
 private enum OnboardingStepType {
-    case welcome, location, backgroundLocation, notifications, alarms
+    case welcome, location, backgroundLocation, notifications, alarms, alertStyle, alarmSound
+}
+
+private struct OnboardingOptionCard: View {
+    let icon: String
+    let title: String
+    let subtitle: String
+    let isSelected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 14) {
+                Image(systemName: icon)
+                    .font(.title2)
+                    .foregroundStyle(.white)
+                    .frame(width: 32)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.headline)
+                        .foregroundStyle(.white)
+                    Text(subtitle)
+                        .font(.caption)
+                        .foregroundStyle(.white.opacity(0.7))
+                }
+                Spacer()
+                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                    .font(.title3)
+                    .foregroundStyle(isSelected ? .white : .white.opacity(0.4))
+            }
+            .padding(16)
+            .background(.white.opacity(isSelected ? 0.2 : 0.08), in: .rect(cornerRadius: 16))
+            .overlay {
+                RoundedRectangle(cornerRadius: 16)
+                    .strokeBorder(.white.opacity(isSelected ? 0.6 : 0.15), lineWidth: 1)
+            }
+        }
+        .buttonStyle(.plain)
+    }
 }
 
 private struct OnboardingStep {

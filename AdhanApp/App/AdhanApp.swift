@@ -55,6 +55,17 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
         return true
     }
+
+    func application(
+        _ application: UIApplication,
+        handleEventsForBackgroundURLSession identifier: String,
+        completionHandler: @escaping () -> Void
+    ) {
+        nonisolated(unsafe) let completionHandler = completionHandler
+        AdhanAudioDownloadManager.handleBackgroundSessionEvents(identifier: identifier) {
+            completionHandler()
+        }
+    }
 }
 
 class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
@@ -88,7 +99,7 @@ struct AdhanApp: App {
     @State private var prayerTimesViewModel = PrayerTimesViewModel()
     @State private var locationManager = LocationManager()
     @State private var notificationScheduler = NotificationScheduler()
-    @State private var downloadManager = AdhanAudioDownloadManager()
+    @State private var downloadManager = AdhanAudioDownloadManager.shared
     @State private var reviewPromptManager = ReviewPromptManager()
     @State private var selectedTab = "prayer"
     @State private var isActivating = false

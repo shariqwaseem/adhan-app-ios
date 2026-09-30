@@ -130,7 +130,7 @@ struct SiriPrayerTimeService: Sendable {
             latitude: location.latitude,
             longitude: location.longitude,
             configuration: settings.selection.resolved(countryCode: location.countryCode),
-            asrMethod: SharedDataManager.loadAsrMethod() ?? .hanafi,
+            asrMethod: (SharedDataManager.loadAsrMethod() ?? .automatic).resolved(countryCode: location.countryCode),
             highLatitudeRule: SharedDataManager.loadHighLatitudeRule() ?? .middleOfTheNight,
             adjustments: SharedDataManager.loadManualAdjustments(),
             moonSightingIshaTwilight: settings.moonSightingIshaTwilight

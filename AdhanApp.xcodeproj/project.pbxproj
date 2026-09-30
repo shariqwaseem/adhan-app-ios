@@ -59,6 +59,7 @@
 		DBE50F6F2F7FF68D007B3C16 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = DBE50F6E2F7FF68D007B3C16 /* FirebaseCore */; };
 		DBE50F712F7FF68D007B3C16 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = DBE50F702F7FF68D007B3C16 /* FirebaseCrashlytics */; };
 		DBE50F732F7FFA16007B3C16 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DBE50F722F7FFA16007B3C16 /* GoogleService-Info.plist */; };
+		DBE50F752F7FFA16007B3C16 /* Al-Maluke.caf in Resources */ = {isa = PBXBuildFile; fileRef = DBE50F742F7FFA16007B3C16 /* Al-Maluke.caf */; };
 		DBE50F762F7FFBB5007B3C16 /* AppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBE50F752F7FFBB5007B3C16 /* AppLogger.swift */; };
 		DD44EE55FF66001122BB33CC /* AdhanAlarmAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BCC5F38A7A0B6C53346BA7D /* AdhanAlarmAttributes.swift */; };
 		E0A91FCDBDEA0DFF21E1E1D4 /* AdhanAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F428D792497229FB8FDC77 /* AdhanAudio.swift */; };
@@ -164,6 +165,7 @@
 		CC7B3F41DDEE129AABBFF8E6 /* RamadanDetectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RamadanDetectionService.swift; sourceTree = "<group>"; };
 		CFFBADFA6A7C46A434D9701F /* SharedDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedDataManager.swift; sourceTree = "<group>"; };
 		DBE50F722F7FFA16007B3C16 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		DBE50F742F7FFA16007B3C16 /* Al-Maluke.caf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Al-Maluke.caf"; path = "AdhanAudio/Al-Maluke.caf"; sourceTree = SOURCE_ROOT; };
 		DBE50F752F7FFBB5007B3C16 /* AppLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLogger.swift; sourceTree = "<group>"; };
 		E5EA650E7B60A519EA577FA9 /* AdhanWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AdhanWidgets.entitlements; sourceTree = "<group>"; };
 		E6F428D792497229FB8FDC77 /* AdhanAudio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdhanAudio.swift; sourceTree = "<group>"; };
@@ -329,6 +331,7 @@
 			isa = PBXGroup;
 			children = (
 				DBE50F722F7FFA16007B3C16 /* GoogleService-Info.plist */,
+				DBE50F742F7FFA16007B3C16 /* Al-Maluke.caf */,
 				20FB1934B420504F126B97A3 /* AdhanApp */,
 				00942DACC36A5776F6AD0512 /* AdhanAppTests */,
 				15BA13F66EF929A6153ABF61 /* AdhanAppUITests */,
@@ -575,6 +578,7 @@
 				A472A548F63FB8417EA2D1EB /* AppIcon.icon in Resources */,
 				264D0EDB778A248CD554F889 /* Assets.xcassets in Resources */,
 				DBE50F732F7FFA16007B3C16 /* GoogleService-Info.plist in Resources */,
+				DBE50F752F7FFA16007B3C16 /* Al-Maluke.caf in Resources */,
 				381679F9856CDC2F7CB625BB /* InfoPlist.xcstrings in Resources */,
 				3F541F4219E39869A8652076 /* Localizable.xcstrings in Resources */,
 			);

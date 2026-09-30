@@ -10,6 +10,15 @@ extension AsrJuristicMethod {
     var localizedName: String {
         String(localized: String.LocalizationValue(rawValue), bundle: LanguageManager.shared.bundle)
     }
+
+    var localizedShortName: String {
+        let key: String.LocalizationValue = switch self {
+        case .automatic: "Auto"
+        case .standard: "Standard"
+        case .hanafi: "Hanafi"
+        }
+        return String(localized: key, bundle: LanguageManager.shared.bundle)
+    }
 }
 
 extension HighLatitudeRuleOption {

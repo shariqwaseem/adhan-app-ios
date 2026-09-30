@@ -3,10 +3,14 @@ import SwiftData
 import AVFoundation
 
 struct AdhanAudioSelectionView: View {
-    let prayer: PrayerName
+    /// nil = apply to every prayer currently set to Alarm.
+    let prayer: PrayerName?
     @Environment(\.modelContext) private var modelContext
     @Environment(AdhanAudioDownloadManager.self) private var downloadManager
+    @Environment(NotificationScheduler.self) private var scheduler
+    @Environment(PrayerTimesViewModel.self) private var viewModel
     @Query private var preferences: [UserPreferences]
+    @Query(sort: \CustomAlarm.createdAt) private var customAlarms: [CustomAlarm]
 
     @State private var player: AVAudioPlayer?
     @State private var playingID: String?
@@ -18,7 +22,8 @@ struct AdhanAudioSelectionView: View {
         return new
     }
 
-    private var selectedID: String {
+    /// nil on the all-prayers screen when alarm prayers use different sounds.
+    private var selectedID: String? {
         getAudioSelection()
     }
 
@@ -26,6 +31,10 @@ struct AdhanAudioSelectionView: View {
         List {
             Section {
                 audioRow(id: "", displayName: "Default")
+            } footer: {
+                if prayer == nil {
+                    Text("Changes the sound for every prayer set to Alarm.")
+                }
             }
 
             Section("Adhan Sounds") {
@@ -149,25 +158,27 @@ struct AdhanAudioSelectionView: View {
 
     // MARK: - Preference Get/Set
 
-    private func getAudioSelection() -> String {
-        switch prayer {
-        case .tahajjud: return prefs.tahajjudAlarmAudio
-        case .fajr: return prefs.fajrAlarmAudio
-        case .dhuhr: return prefs.dhuhrAlarmAudio
-        case .asr: return prefs.asrAlarmAudio
-        case .maghrib: return prefs.maghribAlarmAudio
-        case .isha: return prefs.ishaAlarmAudio
+    private func getAudioSelection() -> String? {
+        if let prayer {
+            return prefs.alarmAudio(for: prayer)
         }
+        return prefs.sharedAlarmAudio
     }
 
     private func setAudioSelection(_ value: String) {
-        switch prayer {
-        case .tahajjud: prefs.tahajjudAlarmAudio = value
-        case .fajr: prefs.fajrAlarmAudio = value
-        case .dhuhr: prefs.dhuhrAlarmAudio = value
-        case .asr: prefs.asrAlarmAudio = value
-        case .maghrib: prefs.maghribAlarmAudio = value
-        case .isha: prefs.ishaAlarmAudio = value
+        let targets = prayer.map { [$0] } ?? prefs.alarmModePrayers
+        for target in targets {
+            prefs.setAlarmAudio(value, for: target)
+        }
+        try? modelContext.save()
+
+        Task {
+            await scheduler.rescheduleAll(
+                prayerEntries: viewModel.multiDayTimes(),
+                preferences: prefs,
+                customAlarms: customAlarms,
+                reason: .settingsChange
+            )
         }
     }
 }

@@ -82,6 +82,34 @@ struct PrayerCalculationTests {
         #expect(CalculationMethodInfo.recommendedMethod(forCountryCode: nil) == .MuslimWorldLeague)
     }
 
+    @Test("Auto Asr is Hanafi for South Asia and Standard elsewhere")
+    func asrRecommendationByCountry() {
+        let english = ["en-US"]
+        for code in ["PK", "IN", "BD", "AF", "pk"] {
+            #expect(AsrJuristicMethod.recommendedMethod(forCountryCode: code, preferredLanguages: english) == .hanafi)
+        }
+        for code in ["SA", "AE", "QA", "KW", "BH", "OM", "GB", "US"] {
+            #expect(AsrJuristicMethod.recommendedMethod(forCountryCode: code, preferredLanguages: english) == .standard)
+        }
+        #expect(AsrJuristicMethod.recommendedMethod(forCountryCode: nil, preferredLanguages: english) == .standard)
+    }
+
+    @Test("Auto Asr is Hanafi abroad when the device uses a South Asian language")
+    func asrRecommendationByLanguage() {
+        #expect(AsrJuristicMethod.recommendedMethod(forCountryCode: "AE", preferredLanguages: ["en-AE", "ur-PK"]) == .hanafi)
+        #expect(AsrJuristicMethod.recommendedMethod(forCountryCode: "SA", preferredLanguages: ["hi-IN"]) == .hanafi)
+        #expect(AsrJuristicMethod.recommendedMethod(forCountryCode: "QA", preferredLanguages: ["bn"]) == .hanafi)
+        #expect(AsrJuristicMethod.recommendedMethod(forCountryCode: "SA", preferredLanguages: ["ar-SA", "en"]) == .standard)
+    }
+
+    @Test("Explicit Asr choices are never overridden by Auto resolution")
+    func explicitAsrChoiceIsKept() {
+        #expect(AsrJuristicMethod.hanafi.resolved(countryCode: "SA", preferredLanguages: ["ar"]) == .hanafi)
+        #expect(AsrJuristicMethod.standard.resolved(countryCode: "PK", preferredLanguages: ["ur"]) == .standard)
+        #expect(AsrJuristicMethod.automatic.resolved(countryCode: "SA", preferredLanguages: ["ar"]) == .standard)
+        #expect(AsrJuristicMethod.automatic.resolved(countryCode: "PK", preferredLanguages: ["en"]) == .hanafi)
+    }
+
     @Test("Manual adjustments are applied")
     func manualAdjustments() {
         let date = createDate(year: 2025, month: 6, day: 15)
