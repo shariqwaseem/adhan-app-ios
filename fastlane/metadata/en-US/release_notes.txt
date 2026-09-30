@@ -1,1 +1,4 @@
-Fixed an issue some people reported where changed settings sometimes didn't take effect.
+• Asr time now adjusts to your region, so it's correct in Saudi Arabia, the UAE and other Gulf countries.
+• Change the alarm sound for all prayers at once from the menu on the home screen.
+• Adhan downloads now keep going in the background.
+• Bug fixes and improvements.

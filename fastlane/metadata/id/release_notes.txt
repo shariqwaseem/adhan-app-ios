@@ -1,1 +1,4 @@
-Memperbaiki masalah yang dilaporkan sebagian pengguna, yaitu perubahan pengaturan terkadang tidak diterapkan.
+• Waktu Ashar kini menyesuaikan wilayah Anda, sehingga tepat di Arab Saudi, UEA, dan negara Teluk lainnya.
+• Ubah suara alarm untuk semua salat sekaligus dari menu di layar utama.
+• Unduhan azan kini tetap berjalan di latar belakang.
+• Berbagai perbaikan dan peningkatan.
