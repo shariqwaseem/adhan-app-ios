@@ -1,4 +1,5 @@
-• İkindi vakti artık bölgenize göre ayarlanıyor; Suudi Arabistan, BAE ve diğer Körfez ülkelerinde doğru vakit gösteriliyor.
-• Tüm namazların alarm sesini ana ekrandaki menüden tek seferde değiştirin.
-• Ezan indirmeleri artık arka planda devam ediyor.
-• Çeşitli hata düzeltmeleri ve iyileştirmeler.
+• İkindi vakti artık bölgenize uygun; Suudi Arabistan ve Körfez dahil.
+• Otomatik konumu seçin veya şehrinizi elle belirleyin.
+• Tüm alarm seslerini ana ekran menüsünden tek seferde değiştirin.
+• Ezan indirmeleri arka planda devam ediyor.
+• Hata düzeltmeleri ve iyileştirmeler.
