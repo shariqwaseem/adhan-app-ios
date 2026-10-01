@@ -1,5 +1,1 @@
-• İkindi vakti artık bölgenize uygun; Suudi Arabistan ve Körfez dahil.
-• Otomatik konumu seçin veya şehrinizi elle belirleyin.
-• Tüm alarm seslerini ana ekran menüsünden tek seferde değiştirin.
-• Ezan indirmeleri arka planda devam ediyor.
 • Hata düzeltmeleri ve iyileştirmeler.

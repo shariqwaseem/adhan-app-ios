@@ -16,12 +16,16 @@ struct QiblaView: View {
                     .ignoresSafeArea()
                     .animation(.easeOut(duration: 0.3), value: qiblaViewModel.isAligned)
 
-                Image(systemName: "location.north.fill")
-                    .font(.system(size: 300, weight: .ultraLight))
-                    .foregroundStyle(qiblaViewModel.isAligned ? .white : .accentColor)
-                    .rotationEffect(.degrees(qiblaAngle))
-                    .animation(.easeOut(duration: 0.15), value: qiblaAngle)
+                if qiblaViewModel.hasHeading {
+                    Image(systemName: "location.north.fill")
+                        .font(.system(size: 300, weight: .ultraLight))
+                        .foregroundStyle(qiblaViewModel.isAligned ? .white : .accentColor)
+                        .rotationEffect(.degrees(qiblaAngle))
+                        .animation(.smooth(duration: 0.25), value: qiblaAngle)
+                        .transition(.opacity)
+                }
             }
+            .animation(.easeOut(duration: 0.2), value: qiblaViewModel.hasHeading)
             .overlay(alignment: .bottom) {
                 if !locationManager.isAuthorized {
                     Text("Qibla direction requires location access to work accurately.")

@@ -1,5 +1,1 @@
-• Asr time now matches your region, including Saudi Arabia and the Gulf.
-• Choose automatic location or set your city manually.
-• Change all alarm sounds at once from the home screen menu.
-• Adhan downloads continue in the background.
 • Bug fixes and improvements.
